@@ -1,4 +1,4 @@
-package com.cashund.cashund
+package com.cashund.app
 
 import io.flutter.embedding.android.FlutterActivity
 
