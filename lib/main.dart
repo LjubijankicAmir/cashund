@@ -1,7 +1,9 @@
+import 'package:cashund/core/di/injection.dart';
 import 'package:cashund/core/theme/cashund_theme.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  configureDependencies();
   runApp(const CashundApp());
 }
 
