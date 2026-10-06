@@ -1,0 +1,7 @@
+{
+  "@@locale": "en",
+  "appTitle": "Cashund",
+  "@appTitle": {
+    "description": "App name, shown in the task switcher and on the home screen."
+  }
+}

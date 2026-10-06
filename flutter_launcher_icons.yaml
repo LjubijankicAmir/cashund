@@ -1,0 +1,13 @@
+flutter_launcher_icons:
+  image_path: assets/app_icon/cashund-ios-1024.png
+
+  ios: true
+  remove_alpha_ios: true
+  image_path_ios_dark_transparent: assets/app_icon/cashund-ios-dark-1024.png
+
+  android: true
+  adaptive_icon_background: "#2F4BFF"
+  adaptive_icon_foreground: assets/app_icon/cashund-android-foreground-432.png
+  adaptive_icon_monochrome: assets/app_icon/cashund-android-monochrome-432.png
+  # The foreground is already drawn for the 108dp canvas with a 66dp safe zone.
+  adaptive_icon_foreground_inset: 0

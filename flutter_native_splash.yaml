@@ -1,0 +1,11 @@
+flutter_native_splash:
+  color: "#2F4BFF"
+  color_dark: "#2A3FD6"
+  # iOS and Android 11 and older. 4x density: 960px wide = 240pt on screen.
+  image: assets/splash/cashund-splash.png
+
+  # Android 12+ splash API: 1152px canvas, content inside the 768px safe circle.
+  android_12:
+    color: "#2F4BFF"
+    color_dark: "#2A3FD6"
+    image: assets/splash/cashund-splash-android12.png
