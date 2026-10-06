@@ -5,7 +5,7 @@ void main() {
 }
 
 class CashundApp extends StatelessWidget {
-  const new({super.key});
+  const CashundApp({super.key});
 
   @override
   Widget build(BuildContext context) {

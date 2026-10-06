@@ -16,3 +16,5 @@ linter:
   rules:
     public_member_api_docs: false
     lines_longer_than_80_chars: false
+    # Keep classic `ClassName(...)` constructors; freezed and other generators rely on them.
+    unnecessary_type_name_in_constructor: false
