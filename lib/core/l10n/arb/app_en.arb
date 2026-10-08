@@ -3,5 +3,50 @@
   "appTitle": "Cashund",
   "@appTitle": {
     "description": "App name, shown in the task switcher and on the home screen."
+  },
+
+  "back": "Back",
+  "continueAction": "Continue",
+  "skip": "Skip",
+
+  "onboardingWelcomeTitle": "Meet {buddyName},\nyour money buddy.",
+  "@onboardingWelcomeTitle": {
+    "description": "Welcome screen title on the brand band.",
+    "placeholders": { "buddyName": { "type": "String", "example": "Biscuit" } }
+  },
+  "onboardingWelcomeHeading": "Your money, watched over by a good dog.",
+  "onboardingWelcomeLog": "Log what you spend and earn in a few taps.",
+  "onboardingWelcomeOverview": "See your day, week and month at a glance.",
+  "onboardingWelcomePrivacy": "Everything stays on this phone. No account, no cloud.",
+  "onboardingGetStarted": "Get started",
+
+  "onboardingCurrencyTitle": "Which currency do you use?",
+  "onboardingCurrencySubtitle": "Every amount in the app uses it. You can change it later in Settings.",
+  "onboardingCurrencySearchHint": "Search currencies",
+  "onboardingCurrencyNoResults": "No currency matches “{query}”.",
+  "@onboardingCurrencyNoResults": {
+    "placeholders": { "query": { "type": "String", "example": "peso" } }
+  },
+  "onboardingCurrencyPreview": "Preview:",
+  "@onboardingCurrencyPreview": {
+    "description": "Label before a sample amount formatted in the selected currency."
+  },
+
+  "onboardingBuddyTitle": "Name your buddy",
+  "onboardingBuddySubtitle": "This little dachshund keeps an eye on your money and chats with you now and then. What should we call them?",
+  "onboardingBuddyNameLabel": "Buddy’s name",
+  "onboardingBuddyNameHelper": "You can rename them anytime in Settings.",
+  "onboardingBuddyNameIdeas": "Ideas",
+
+  "onboardingWeekTitle": "When does your week start?",
+  "onboardingWeekSubtitle": "Your weekly totals run from this day.",
+  "onboardingWeekPreview": "Your week",
+  "onboardingStartTracking": "Start tracking",
+  "onboardingSaveFailed": "Couldn’t save your choices. Please try again.",
+
+  "currencyName": "{code, select, USD{US dollar} EUR{Euro} GBP{British pound} CHF{Swiss franc} BAM{Convertible mark} RSD{Serbian dinar} PLN{Polish złoty} CZK{Czech koruna} HUF{Hungarian forint} RON{Romanian leu} SEK{Swedish krona} NOK{Norwegian krone} DKK{Danish krone} TRY{Turkish lira} CAD{Canadian dollar} AUD{Australian dollar} NZD{New Zealand dollar} MXN{Mexican peso} BRL{Brazilian real} JPY{Japanese yen} CNY{Chinese yuan} KRW{South Korean won} INR{Indian rupee} SGD{Singapore dollar} AED{UAE dirham} ZAR{South African rand} other{{code}}}",
+  "@currencyName": {
+    "description": "Display name of a currency, by ISO 4217 code.",
+    "placeholders": { "code": { "type": "String", "example": "EUR" } }
   }
 }
