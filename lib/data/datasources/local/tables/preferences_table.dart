@@ -1,4 +1,3 @@
-import 'package:cashund/domain/entities/user_preferences.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
 import 'package:drift/drift.dart';
 
@@ -11,8 +10,11 @@ class PreferencesTable extends Table {
   /// Always 1, set by `PreferencesDao`, which keeps this table to one row.
   IntColumn get id => integer()();
   TextColumn get currencyCode => text().withLength(min: 3, max: 3)();
-  TextColumn get buddyName =>
-      text().withLength(min: 1, max: UserPreferences.buddyNameMaxLength)();
+
+  /// The UI limits names to 16 characters; this counts UTF-16 code units
+  /// (an emoji can take two), so it's only a safety limit. Drift needs a
+  /// literal here.
+  TextColumn get buddyName => text().withLength(min: 1, max: 64)();
   TextColumn get weekStart => textEnum<WeekStart>()();
   BoolColumn get onboardingCompleted => boolean()();
 

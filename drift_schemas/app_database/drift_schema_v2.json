@@ -54,7 +54,7 @@
               {
                 "allowed-lengths": {
                   "min": 1,
-                  "max": null
+                  "max": 64
                 }
               }
             ]
