@@ -1,0 +1,113 @@
+{
+  "_meta": {
+    "description": "This file contains a serialized version of schema entities for drift.",
+    "version": "1.3.0"
+  },
+  "options": {
+    "store_date_time_values_as_text": false
+  },
+  "entities": [
+    {
+      "id": 0,
+      "references": [],
+      "type": "table",
+      "data": {
+        "name": "preferences",
+        "was_declared_in_moor": false,
+        "columns": [
+          {
+            "name": "id",
+            "getter_name": "id",
+            "moor_type": "int",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          },
+          {
+            "name": "currency_code",
+            "getter_name": "currencyCode",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "allowed-lengths": {
+                  "min": 3,
+                  "max": 3
+                }
+              }
+            ]
+          },
+          {
+            "name": "buddy_name",
+            "getter_name": "buddyName",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [
+              {
+                "allowed-lengths": {
+                  "min": 1,
+                  "max": 64
+                }
+              }
+            ]
+          },
+          {
+            "name": "week_start",
+            "getter_name": "weekStart",
+            "moor_type": "string",
+            "nullable": false,
+            "customConstraints": null,
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": [],
+            "type_converter": {
+              "dart_expr": "const EnumNameConverter<WeekStart>(WeekStart.values)",
+              "dart_type_name": "WeekStart"
+            }
+          },
+          {
+            "name": "onboarding_completed",
+            "getter_name": "onboardingCompleted",
+            "moor_type": "bool",
+            "nullable": false,
+            "customConstraints": null,
+            "defaultConstraints": "CHECK (\"onboarding_completed\" IN (0, 1))",
+            "dialectAwareDefaultConstraints": {
+              "sqlite": "CHECK (\"onboarding_completed\" IN (0, 1))"
+            },
+            "default_dart": null,
+            "default_client_dart": null,
+            "dsl_features": []
+          }
+        ],
+        "is_virtual": false,
+        "without_rowid": false,
+        "constraints": [
+          "CHECK (id = 1)"
+        ],
+        "explicit_pk": [
+          "id"
+        ]
+      }
+    }
+  ],
+  "fixed_sql": [
+    {
+      "name": "preferences",
+      "sql": [
+        {
+          "dialect": "sqlite",
+          "sql": "CREATE TABLE IF NOT EXISTS \"preferences\" (\"id\" INTEGER NOT NULL, \"currency_code\" TEXT NOT NULL, \"buddy_name\" TEXT NOT NULL, \"week_start\" TEXT NOT NULL, \"onboarding_completed\" INTEGER NOT NULL CHECK (\"onboarding_completed\" IN (0, 1)), PRIMARY KEY (\"id\"), CHECK (id = 1));"
+        }
+      ]
+    }
+  ]
+}

@@ -84,13 +84,16 @@ abstract final class CashundShadow {
   }
 
   /// Sheets, cast upward.
+  ///
+  /// Much softer in dark: over the cobalt band, a strong black shadow reads as
+  /// a dark smudge rather than depth.
   static List<BoxShadow> sheet(Brightness brightness) {
     return brightness == Brightness.dark
         ? const [
             BoxShadow(
-              color: Color(0x8C000000),
-              offset: Offset(0, -8),
-              blurRadius: 30,
+              color: Color(0x33000000),
+              offset: Offset(0, -4),
+              blurRadius: 16,
             ),
           ]
         : const [
