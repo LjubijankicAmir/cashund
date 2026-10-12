@@ -8,6 +8,7 @@
   "back": "Back",
   "continueAction": "Continue",
   "skip": "Skip",
+  "dismiss": "Dismiss",
 
   "onboardingWelcomeTitle": "Meet {buddyName},\nyour money buddy.",
   "@onboardingWelcomeTitle": {
