@@ -12,6 +12,15 @@ abstract class HomeState with _$HomeState {
 
     /// `null` until loaded.
     UserPreferences? preferences,
+
+    /// Whether anything was ever logged; `null` until loaded.
+    bool? hasTransactions,
+
+    /// The selected period's totals; `null` until loaded.
+    PeriodSummary? summary,
+
+    /// The selected period's spending, ready for the chart.
+    @Default(<SpendingSlice>[]) List<SpendingSlice> slices,
   }) = _HomeState;
 
   const HomeState._();
