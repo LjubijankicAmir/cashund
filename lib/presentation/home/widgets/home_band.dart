@@ -7,6 +7,7 @@ import 'package:cashund/core/utils/money_format.dart';
 import 'package:cashund/domain/value_objects/currency.dart';
 import 'package:cashund/domain/value_objects/date_range.dart';
 import 'package:cashund/domain/value_objects/period.dart';
+import 'package:cashund/domain/value_objects/period_summary.dart';
 import 'package:cashund/presentation/common/widgets/segmented_pills.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -18,6 +19,7 @@ class HomeBand extends StatelessWidget {
     required this.period,
     required this.range,
     required this.currency,
+    required this.summary,
     required this.onPeriodSelected,
     required this.onSettingsPressed,
     super.key,
@@ -26,6 +28,9 @@ class HomeBand extends StatelessWidget {
   final Period period;
   final DateRange range;
   final Currency currency;
+
+  /// `null` while loading; shown as nothing logged.
+  final PeriodSummary? summary;
   final ValueChanged<Period> onPeriodSelected;
   final VoidCallback onSettingsPressed;
 
@@ -44,6 +49,8 @@ class HomeBand extends StatelessWidget {
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toString();
     final colors = Theme.of(context).extension<CashundColors>()!;
+    final summary = this.summary ?? const PeriodSummary();
+    final muted = CashundText.body.copyWith(color: colors.onBrandMuted);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -80,18 +87,26 @@ class HomeBand extends StatelessWidget {
             ],
           ),
           const SizedBox(height: CashundSpace.s6),
-          Text(
-            _caption(l10n, locale),
-            style: CashundText.body.copyWith(color: colors.onBrandMuted),
-          ),
+          Text(_caption(l10n, locale), style: muted),
           const SizedBox(height: CashundSpace.s1),
-          Text(
-            formatMoney(0, currency),
-            style: CashundText.displayXl.copyWith(color: colors.onBrand),
+          // Rolls from the previous balance to the new one.
+          TweenAnimationBuilder<double>(
+            tween: Tween(end: summary.balanceMinor.toDouble()),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, _) => Text(
+              formatMoney(value.round(), currency),
+              style: CashundText.displayXl.copyWith(color: colors.onBrand),
+            ),
           ),
           Text(
-            l10n.homeNothingLogged,
-            style: CashundText.body.copyWith(color: colors.onBrandMuted),
+            summary.isEmpty
+                ? l10n.homeNothingLogged
+                : l10n.homeInOut(
+                    formatMoney(summary.incomeMinor, currency, signed: true),
+                    formatMoney(-summary.expenseMinor, currency),
+                  ),
+            style: muted,
           ),
         ],
       ),

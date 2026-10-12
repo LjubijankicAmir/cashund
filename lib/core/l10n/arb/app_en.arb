@@ -127,5 +127,47 @@
   "@categoryName": {
     "description": "Default name of a built-in category, by its key.",
     "placeholders": { "key": { "type": "String", "example": "eating_out" } }
+  },
+
+  "homeInOut": "{income} in · {expense} out",
+  "@homeInOut": {
+    "placeholders": {
+      "income": { "type": "String", "example": "+$2,400.00" },
+      "expense": { "type": "String", "example": "−$412.35" }
+    }
+  },
+  "homeSpendingTitle": "Spending",
+  "homeSpendingPeriod": "{period, select, day{Today} week{This week} month{This month} other{}}",
+  "@homeSpendingPeriod": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "homeSpendingSpent": "spent",
+  "homeSpendingOther": "Other",
+  "homeSpendingChart": "Spending chart",
+
+  "homeBuddyQuiet": "{period, select, day{Nothing logged today yet. I’m all ears.} week{Nothing logged this week yet. I’m all ears.} month{Nothing logged this month yet. I’m all ears.} other{}}",
+  "@homeBuddyQuiet": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "homeBuddyIncome": "{period, select, day{Nice! {amount} came in today.} week{Nice! {amount} came in this week.} month{Nice! {amount} came in this month.} other{}}",
+  "@homeBuddyIncome": {
+    "placeholders": {
+      "period": { "type": "String", "example": "week" },
+      "amount": { "type": "String", "example": "$2,400.00" }
+    }
+  },
+  "homeBuddyOverspent": "{period, select, day{Heads up! You’ve spent {amount} more than came in today.} week{Heads up! You’ve spent {amount} more than came in this week.} month{Heads up! You’ve spent {amount} more than came in this month.} other{}}",
+  "@homeBuddyOverspent": {
+    "placeholders": {
+      "period": { "type": "String", "example": "week" },
+      "amount": { "type": "String", "example": "$50.00" }
+    }
+  },
+  "homeBuddyTopCategory": "{period, select, day{Most of today’s spending went to {category}.} week{Most of this week’s spending went to {category}.} month{Most of this month’s spending went to {category}.} other{}}",
+  "@homeBuddyTopCategory": {
+    "placeholders": {
+      "period": { "type": "String", "example": "week" },
+      "category": { "type": "String", "example": "🍔 Eating Out" }
+    }
   }
 }
