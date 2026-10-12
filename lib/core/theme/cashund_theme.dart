@@ -1,6 +1,7 @@
 import 'package:cashund/core/theme/cashund_colors.dart';
 import 'package:cashund/core/theme/cashund_text.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
+import 'package:cashund/core/theme/category_colors.dart';
 import 'package:flutter/material.dart';
 
 abstract final class CashundTheme {
@@ -15,7 +16,7 @@ abstract final class CashundTheme {
       scaffoldBackgroundColor: scheme.surface,
       fontFamily: 'Figtree',
       textTheme: CashundText.textTheme(scheme.onSurface),
-      extensions: [colors],
+      extensions: [colors, CategoryColors(scheme.brightness)],
       focusColor: scheme.primary,
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(

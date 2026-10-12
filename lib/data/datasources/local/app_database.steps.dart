@@ -76,8 +76,229 @@ i1.GeneratedColumn<int> _column_4(String aliasedName) =>
       type: i1.DriftSqlType.int,
       $customConstraints: 'NOT NULL CHECK (onboarding_completed IN (0, 1))',
     );
+
+final class Schema3 extends i0.VersionedSchema {
+  Schema3({required super.database}) : super(version: 3);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    preferences,
+    categories,
+    transactions,
+    transactionsOccurredOn,
+    transactionsCategoryId,
+  ];
+  late final Shape0 preferences = Shape0(
+    source: i0.VersionedTable(
+      entityName: 'preferences',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'CHECK(id = 1)'],
+      columns: [_column_0, _column_1, _column_2, _column_3, _column_4],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 categories = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'categories',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['UNIQUE(type, predefined_key)'],
+      columns: [
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_12,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 transactions = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'transactions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['CHECK(amount_minor > 0)'],
+      columns: [
+        _column_5,
+        _column_6,
+        _column_13,
+        _column_1,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index transactionsOccurredOn = i1.Index(
+    'transactions_occurred_on',
+    'CREATE INDEX transactions_occurred_on ON transactions (occurred_on)',
+  );
+  final i1.Index transactionsCategoryId = i1.Index(
+    'transactions_category_id',
+    'CREATE INDEX transactions_category_id ON transactions (category_id)',
+  );
+}
+
+class Shape1 extends i0.VersionedTable {
+  Shape1({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get type =>
+      columnsByName['type']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get predefinedKey =>
+      columnsByName['predefined_key']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get customName =>
+      columnsByName['custom_name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get emoji =>
+      columnsByName['emoji']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get color =>
+      columnsByName['color']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get isArchived =>
+      columnsByName['is_archived']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get sortOrder =>
+      columnsByName['sort_order']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_5(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'id',
+      aliasedName,
+      false,
+      hasAutoIncrement: true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT',
+    );
+i1.GeneratedColumn<String> _column_6(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'type',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_7(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'predefined_key',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<String> _column_8(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'custom_name',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<String> _column_9(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'emoji',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<String> _column_10(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'color',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_11(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'is_archived',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT 0 CHECK (is_archived IN (0, 1))',
+      defaultValue: const i1.CustomExpression('0'),
+    );
+i1.GeneratedColumn<int> _column_12(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'sort_order',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+
+class Shape2 extends i0.VersionedTable {
+  Shape2({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get type =>
+      columnsByName['type']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get amountMinor =>
+      columnsByName['amount_minor']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get currencyCode =>
+      columnsByName['currency_code']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get categoryId =>
+      columnsByName['category_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get title =>
+      columnsByName['title']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get occurredOn =>
+      columnsByName['occurred_on']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_13(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'amount_minor',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_14(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'category_id',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'NOT NULL REFERENCES categories(id)ON DELETE RESTRICT',
+    );
+i1.GeneratedColumn<String> _column_15(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'title',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NULL',
+    );
+i1.GeneratedColumn<String> _column_16(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'occurred_on',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_17(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'created_at',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -86,6 +307,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from1To2(migrator, schema);
         return 2;
+      case 2:
+        final schema = Schema3(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from2To3(migrator, schema);
+        return 3;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -94,6 +320,7 @@ i0.MigrationStepWithVersion migrationSteps({
 
 i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
+  required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
 }) => i0.VersionedSchema.stepByStepHelper(
-  step: migrationSteps(from1To2: from1To2),
+  step: migrationSteps(from1To2: from1To2, from2To3: from2To3),
 );

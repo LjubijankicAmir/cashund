@@ -84,5 +84,48 @@
   "homeEmptyTitleMonth": "Your month starts here",
   "homeEmptyBody": "Your spending shows up here as soon as you log something.",
 
-  "activityTitle": "Activity"
+  "activityTitle": "Activity",
+
+  "close": "Close",
+  "optional": "Optional",
+  "today": "Today",
+  "yesterday": "Yesterday",
+  "transactionExpense": "Expense",
+  "transactionIncome": "Income",
+
+  "addTransactionNewExpense": "New expense",
+  "addTransactionNewIncome": "New income",
+  "addTransactionCategory": "Category",
+  "addTransactionChooseCategory": "Choose a category",
+  "addTransactionTitle": "Title",
+  "addTransactionTitleHint": "What was it for?",
+  "addTransactionDate": "Date",
+  "addTransactionToday": "Today, {date}",
+  "@addTransactionToday": {
+    "placeholders": { "date": { "type": "String", "example": "Thu Oct 8" } }
+  },
+  "addTransactionYesterday": "Yesterday, {date}",
+  "@addTransactionYesterday": {
+    "placeholders": { "date": { "type": "String", "example": "Wed Oct 7" } }
+  },
+  "addTransactionSaveExpense": "Save expense",
+  "addTransactionSaveIncome": "Save income",
+  "addTransactionSaveFailed": "Couldn’t save that. Please try again.",
+
+  "categoryPickerTitle": "Choose category",
+  "categoryPickerSearchHint": "Search categories",
+  "categoryPickerRecent": "Recent",
+  "categoryPickerAllExpense": "All expense categories",
+  "categoryPickerAllIncome": "All income categories",
+  "categoryPickerNoResults": "No category matches “{query}”.",
+  "@categoryPickerNoResults": {
+    "placeholders": { "query": { "type": "String", "example": "sushi" } }
+  },
+  "newCategory": "New category",
+
+  "categoryName": "{key, select, groceries{Groceries} eating_out{Eating Out} transport{Transport} housing{Housing} bills{Bills} household{Household} health{Health} personal_care{Personal Care} clothing{Clothing} social_life{Social Life} gifts{Gifts} travel{Travel} pets{Pets} salary{Salary} bonus{Bonus} side_income{Side Income} refunds{Refunds} interest{Interest} other{Other}}",
+  "@categoryName": {
+    "description": "Default name of a built-in category, by its key.",
+    "placeholders": { "key": { "type": "String", "example": "eating_out" } }
+  }
 }

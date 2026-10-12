@@ -1,6 +1,14 @@
 import 'package:cashund/data/datasources/local/app_database.steps.dart';
+import 'package:cashund/data/datasources/local/converters/date_only_converter.dart';
+import 'package:cashund/data/datasources/local/daos/categories_dao.dart';
 import 'package:cashund/data/datasources/local/daos/preferences_dao.dart';
+import 'package:cashund/data/datasources/local/daos/transactions_dao.dart';
+import 'package:cashund/data/datasources/local/seed/predefined_categories.dart';
+import 'package:cashund/data/datasources/local/tables/categories_table.dart';
 import 'package:cashund/data/datasources/local/tables/preferences_table.dart';
+import 'package:cashund/data/datasources/local/tables/transactions_table.dart';
+import 'package:cashund/domain/value_objects/category_color.dart';
+import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_flutter/drift_flutter.dart';
@@ -9,21 +17,34 @@ part 'app_database.g.dart';
 
 /// The app's single SQLite database. Tables are added by the features that
 /// own them.
-@DriftDatabase(tables: [PreferencesTable], daos: [PreferencesDao])
+@DriftDatabase(
+  tables: [PreferencesTable, CategoriesTable, TransactionsTable],
+  daos: [PreferencesDao, CategoriesDao, TransactionsDao],
+)
 class AppDatabase extends _$AppDatabase {
   /// Pass an [executor] in tests, e.g. `NativeDatabase.memory()`.
   AppDatabase([QueryExecutor? executor])
     : super(executor ?? driftDatabase(name: 'cashund'));
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-    onCreate: (migrator) => migrator.createAll(),
+    onCreate: (migrator) async {
+      await migrator.createAll();
+      await seedPredefinedCategories(this);
+    },
     onUpgrade: stepByStep(
       from1To2: (migrator, schema) async {
         await migrator.createTable(schema.preferences);
+      },
+      from2To3: (migrator, schema) async {
+        await migrator.createTable(schema.categories);
+        await migrator.createTable(schema.transactions);
+        await migrator.createIndex(schema.transactionsOccurredOn);
+        await migrator.createIndex(schema.transactionsCategoryId);
+        await seedPredefinedCategories(this);
       },
     ),
     beforeOpen: (details) async {

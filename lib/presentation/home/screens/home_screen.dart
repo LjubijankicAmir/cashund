@@ -3,6 +3,8 @@ import 'package:cashund/core/di/injection.dart';
 import 'package:cashund/core/l10n/l10n.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/domain/value_objects/currency.dart';
+import 'package:cashund/domain/value_objects/transaction_type.dart';
+import 'package:cashund/presentation/add_transaction/add_transaction_sheet.dart';
 import 'package:cashund/presentation/common/widgets/brand_band_layout.dart';
 import 'package:cashund/presentation/common/widgets/buddy_message.dart';
 import 'package:cashund/presentation/home/bloc/home_bloc.dart';
@@ -102,9 +104,11 @@ class _HomeView extends StatelessWidget {
                       child: Center(
                         child: HomeEmptyState(
                           period: state.period,
-                          // TODO(adding): open the add transaction sheet.
-                          onAddExpense: () {},
-                          onAddIncome: () {},
+                          onAddExpense: () => showAddTransactionSheet(context),
+                          onAddIncome: () => showAddTransactionSheet(
+                            context,
+                            type: TransactionType.income,
+                          ),
                         ),
                       ),
                     ),
