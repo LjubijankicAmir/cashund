@@ -8,6 +8,7 @@
   "back": "Back",
   "continueAction": "Continue",
   "skip": "Skip",
+  "dismiss": "Dismiss",
 
   "onboardingWelcomeTitle": "Meet {buddyName},\nyour money buddy.",
   "@onboardingWelcomeTitle": {
@@ -48,5 +49,40 @@
   "@currencyName": {
     "description": "Display name of a currency, by ISO 4217 code.",
     "placeholders": { "code": { "type": "String", "example": "EUR" } }
-  }
+  },
+
+  "navHome": "Home",
+  "navActivity": "Activity",
+  "navAdd": "Add a transaction",
+  "settings": "Settings",
+  "addExpense": "Add expense",
+  "addIncome": "Add income",
+
+  "periodDay": "Day",
+  "periodWeek": "Week",
+  "periodMonth": "Month",
+
+  "homeCaptionDay": "Today · {date}",
+  "@homeCaptionDay": {
+    "placeholders": { "date": { "type": "String", "example": "Mon, Oct 12" } }
+  },
+  "homeCaptionWeek": "This week · {range}",
+  "@homeCaptionWeek": {
+    "placeholders": { "range": { "type": "String", "example": "Oct 5 – 11" } }
+  },
+  "homeCaptionMonth": "This month · {month}",
+  "@homeCaptionMonth": {
+    "placeholders": { "month": { "type": "String", "example": "October" } }
+  },
+  "homeNothingLogged": "Nothing logged yet",
+  "homeBuddyWelcome": "Hi, I’m {buddyName}! Log your first expense or income and I’ll start keeping track.",
+  "@homeBuddyWelcome": {
+    "placeholders": { "buddyName": { "type": "String", "example": "Biscuit" } }
+  },
+  "homeEmptyTitleDay": "Your day starts here",
+  "homeEmptyTitleWeek": "Your week starts here",
+  "homeEmptyTitleMonth": "Your month starts here",
+  "homeEmptyBody": "Your spending shows up here as soon as you log something.",
+
+  "activityTitle": "Activity"
 }

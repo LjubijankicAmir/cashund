@@ -15,7 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({this.onCompleted, super.key});
 
-  /// Called once the choices are saved. Without it, the flow opens Home.
+  /// Called once the choices are saved. Without it, the flow opens the main screen.
   final VoidCallback? onCompleted;
 
   @override
@@ -38,7 +38,7 @@ class OnboardingScreen extends StatelessWidget {
               if (onCompleted case final onCompleted?) {
                 onCompleted();
               } else {
-                unawaited(context.router.replaceAll([const HomeRoute()]));
+                unawaited(context.router.replaceAll([const MainShellRoute()]));
               }
             case OnboardingStatus.failure:
               ScaffoldMessenger.of(context).showSnackBar(
