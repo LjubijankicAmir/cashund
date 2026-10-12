@@ -1,14 +1,83 @@
 import 'package:cashund/data/datasources/local/app_database.dart';
+import 'package:cashund/data/datasources/local/converters/date_only_converter.dart';
+import 'package:cashund/data/datasources/local/tables/categories_table.dart';
 import 'package:cashund/data/datasources/local/tables/transactions_table.dart';
+import 'package:cashund/domain/value_objects/date_range.dart';
+import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:drift/drift.dart';
 
 part 'transactions_dao.g.dart';
 
-@DriftAccessor(tables: [TransactionsTable])
+@DriftAccessor(tables: [TransactionsTable, CategoriesTable])
 class TransactionsDao extends DatabaseAccessor<AppDatabase>
     with _$TransactionsDaoMixin {
   TransactionsDao(super.attachedDatabase);
 
+  static const _dates = DateOnlyConverter();
+
   Future<int> insert(TransactionsTableCompanion row) =>
       into(transactionsTable).insert(row);
+
+  /// Whether anything has been logged at all.
+  Stream<bool> watchHasAny() {
+    return customSelect(
+      'SELECT EXISTS (SELECT 1 FROM transactions) AS has_any',
+      readsFrom: {transactionsTable},
+    ).watchSingle().map((row) => row.read<bool>('has_any'));
+  }
+
+  /// Total and count per type over [range] in [currencyCode]. Types without
+  /// transactions are missing from the map.
+  Stream<Map<TransactionType, ({int totalMinor, int count})>> watchTotalsByType(
+    DateRange range,
+    String currencyCode,
+  ) {
+    return customSelect(
+      'SELECT type, SUM(amount_minor) AS total, COUNT(*) AS count FROM transactions '
+      'WHERE currency_code = ? AND occurred_on >= ? AND occurred_on < ? '
+      'GROUP BY type',
+      variables: _rangeVariables(range, currencyCode),
+      readsFrom: {transactionsTable},
+    ).watch().map(
+      (rows) => {
+        for (final row in rows)
+          TransactionType.values.byName(row.read<String>('type')): (
+            totalMinor: row.read<int>('total'),
+            count: row.read<int>('count'),
+          ),
+      },
+    );
+  }
+
+  /// Expenses over [range] in [currencyCode] per category, largest first.
+  Stream<List<(CategoryRow, int)>> watchExpensesByCategory(
+    DateRange range,
+    String currencyCode,
+  ) {
+    return customSelect(
+      'SELECT categories.*, SUM(transactions.amount_minor) AS total FROM transactions '
+      'JOIN categories ON categories.id = transactions.category_id '
+      "WHERE transactions.type = 'expense' AND transactions.currency_code = ? "
+      'AND transactions.occurred_on >= ? AND transactions.occurred_on < ? '
+      'GROUP BY categories.id ORDER BY total DESC',
+      variables: _rangeVariables(range, currencyCode),
+      readsFrom: {transactionsTable, categoriesTable},
+    ).watch().map(
+      (rows) => [
+        for (final row in rows)
+          (categoriesTable.map(row.data), row.read<int>('total')),
+      ],
+    );
+  }
+
+  /// Dates are stored as yyyy-MM-dd text, which sorts like the dates
+  /// themselves, so ranges are plain text comparisons.
+  List<Variable<Object>> _rangeVariables(
+    DateRange range,
+    String currencyCode,
+  ) => [
+    Variable.withString(currencyCode),
+    Variable.withString(_dates.toSql(range.start)),
+    Variable.withString(_dates.toSql(range.end)),
+  ];
 }
