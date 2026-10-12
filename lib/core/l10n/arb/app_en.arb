@@ -49,5 +49,11 @@
   "@currencyName": {
     "description": "Display name of a currency, by ISO 4217 code.",
     "placeholders": { "code": { "type": "String", "example": "EUR" } }
-  }
+  },
+
+  "navHome": "Home",
+  "navActivity": "Activity",
+  "navAdd": "Add a transaction",
+
+  "activityTitle": "Activity"
 }
