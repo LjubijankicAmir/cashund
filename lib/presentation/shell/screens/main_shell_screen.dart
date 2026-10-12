@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cashund/core/routing/app_router.gr.dart';
+import 'package:cashund/presentation/add_transaction/add_transaction_sheet.dart';
 import 'package:cashund/presentation/shell/widgets/cashund_nav_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -23,8 +24,7 @@ class MainShellScreen extends StatelessWidget {
           bottomNavigationBar: CashundNavBar(
             currentIndex: tabs.activeIndex,
             onTabSelected: tabs.setActiveIndex,
-            // TODO(adding): open the add transaction sheet.
-            onAddPressed: () {},
+            onAddPressed: () => showAddTransactionSheet(context),
           ),
         );
       },
