@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cashund/core/l10n/l10n.dart';
 import 'package:cashund/core/theme/cashund_text.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
@@ -21,7 +22,9 @@ class PushedPageHeader extends StatelessWidget {
       children: [
         IconButton(
           tooltip: context.l10n.back,
-          onPressed: () => Navigator.of(context).maybePop(),
+          // The router's pop, not the Navigator's: on the first page of a
+          // nested flow (like Settings) it closes the whole flow.
+          onPressed: () => context.maybePop(),
           icon: const Icon(LucideIcons.chevronLeft),
         ),
         const SizedBox(height: CashundSpace.s4),
