@@ -30,6 +30,10 @@ Cashund tracks your incomes and expenses without an account, a server or an inte
 - **On-device AI import** that reads receipts and card statements. The model runs on your phone, so your data never leaves it
 - **Light and dark themes**, designed as equals
 
+## Download
+
+Android APKs are attached to each [release](https://github.com/LjubijankicAmir/cashund/releases). Install the latest one on your phone to try the app.
+
 ## Roadmap
 
 | Phase | Scope | Release |
