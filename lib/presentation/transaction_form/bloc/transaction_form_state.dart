@@ -1,10 +1,10 @@
-part of 'add_transaction_bloc.dart';
+part of 'transaction_form_bloc.dart';
 
-enum AddTransactionStatus { editing, saving, saved, failure }
+enum TransactionFormStatus { editing, saving, saved, deleted, failure }
 
 @freezed
-abstract class AddTransactionState with _$AddTransactionState {
-  const factory AddTransactionState({
+abstract class TransactionFormState with _$TransactionFormState {
+  const factory TransactionFormState({
     required DateTime today,
     required DateTime date,
     @Default(TransactionType.expense) TransactionType type,
@@ -18,10 +18,15 @@ abstract class AddTransactionState with _$AddTransactionState {
     @Default('') String title,
     @Default(<Category>[]) List<Category> categories,
     @Default(<Category>[]) List<Category> recentCategories,
-    @Default(AddTransactionStatus.editing) AddTransactionStatus status,
-  }) = _AddTransactionState;
+    @Default(TransactionFormStatus.editing) TransactionFormStatus status,
 
-  const AddTransactionState._();
+    /// The transaction being changed, as it was; `null` when adding.
+    Transaction? original,
+  }) = _TransactionFormState;
+
+  const TransactionFormState._();
+
+  bool get isEditing => original != null;
 
   /// How many recently used categories the picker shows.
   static const recentCount = 3;
@@ -41,5 +46,5 @@ abstract class AddTransactionState with _$AddTransactionState {
   bool get canSave =>
       (amountMinor ?? 0) > 0 &&
       selectedCategory != null &&
-      status != AddTransactionStatus.saving;
+      status != TransactionFormStatus.saving;
 }

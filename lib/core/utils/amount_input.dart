@@ -14,6 +14,15 @@ int? parseAmount(String text, Currency currency) {
   return int.tryParse(digits);
 }
 
+/// [minorUnits] as text for an amount field, e.g. 1840 → "18.40". The
+/// reverse of [parseAmount].
+String formatAmountText(int minorUnits, Currency currency) {
+  final digits = currency.decimalDigits;
+  if (digits == 0) return '$minorUnits';
+  final text = minorUnits.toString().padLeft(digits + 1, '0');
+  return '${text.substring(0, text.length - digits)}.${text.substring(text.length - digits)}';
+}
+
 /// Keeps an amount field to what [parseAmount] understands: digits and one
 /// decimal point (a typed comma becomes one), at most [decimalDigits] after
 /// it, no leading zeros, and no more than [maxWholeDigits] before it.

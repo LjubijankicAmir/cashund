@@ -110,6 +110,13 @@
   },
   "addTransactionSaveExpense": "Save expense",
   "addTransactionSaveIncome": "Save income",
+  "editTransactionExpense": "Edit expense",
+  "editTransactionIncome": "Edit income",
+  "editTransactionSave": "Save changes",
+  "editTransactionDelete": "Delete",
+  "transactionDeletedExpense": "Expense deleted",
+  "transactionDeletedIncome": "Income deleted",
+  "undo": "Undo",
   "addTransactionSaveFailed": "Couldn’t save that. Please try again.",
 
   "categoryPickerTitle": "Choose category",

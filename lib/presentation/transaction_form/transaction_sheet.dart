@@ -1,40 +1,48 @@
 import 'package:cashund/core/di/injection.dart';
 import 'package:cashund/core/l10n/l10n.dart';
+import 'package:cashund/domain/entities/transaction.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
-import 'package:cashund/presentation/add_transaction/bloc/add_transaction_bloc.dart';
-import 'package:cashund/presentation/add_transaction/widgets/category_picker.dart';
-import 'package:cashund/presentation/add_transaction/widgets/transaction_form.dart';
+import 'package:cashund/presentation/transaction_form/bloc/transaction_form_bloc.dart';
+import 'package:cashund/presentation/transaction_form/widgets/category_picker.dart';
+import 'package:cashund/presentation/transaction_form/widgets/transaction_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// Opens the add sheet for [type]. The only way to log a transaction by hand.
-Future<void> showAddTransactionSheet(
+/// Opens the sheet to log a new transaction of [type], or to change or
+/// delete [editing]. The only way to log a transaction by hand.
+///
+/// Returns the transaction if it was deleted, so the caller can offer undo.
+Future<Transaction?> showTransactionSheet(
   BuildContext context, {
   TransactionType type = TransactionType.expense,
+  Transaction? editing,
 }) {
-  return showModalBottomSheet<void>(
+  return showModalBottomSheet<Transaction>(
     context: context,
     isScrollControlled: true,
     useSafeArea: true,
     // Over the whole app, bottom bar included, from whichever tab opens it.
     useRootNavigator: true,
     builder: (_) => BlocProvider(
-      create: (_) =>
-          getIt<AddTransactionBloc>()..add(AddTransactionEvent.started(type)),
-      child: const AddTransactionSheet(),
+      create: (_) => getIt<TransactionFormBloc>()
+        ..add(switch (editing) {
+          final transaction? => TransactionFormEvent.editStarted(transaction),
+          null => TransactionFormEvent.started(type),
+        }),
+      child: const TransactionSheet(),
     ),
   );
 }
 
 /// The form, and the category picker sliding over it within the same sheet.
-class AddTransactionSheet extends StatefulWidget {
-  const AddTransactionSheet({super.key});
+class TransactionSheet extends StatefulWidget {
+  const TransactionSheet({super.key});
 
   @override
-  State<AddTransactionSheet> createState() => _AddTransactionSheetState();
+  State<TransactionSheet> createState() => _TransactionSheetState();
 }
 
-class _AddTransactionSheetState extends State<AddTransactionSheet> {
+class _TransactionSheetState extends State<TransactionSheet> {
   var _choosingCategory = false;
 
   void _showPicker(bool show) {
@@ -46,17 +54,20 @@ class _AddTransactionSheetState extends State<AddTransactionSheet> {
   Widget build(BuildContext context) {
     final keyboard = MediaQuery.viewInsetsOf(context).bottom;
 
-    return BlocListener<AddTransactionBloc, AddTransactionState>(
+    return BlocListener<TransactionFormBloc, TransactionFormState>(
       listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) {
         switch (state.status) {
-          case AddTransactionStatus.saved:
+          case TransactionFormStatus.saved:
             Navigator.of(context).pop();
-          case AddTransactionStatus.failure:
+          case TransactionFormStatus.deleted:
+            // Hands the deleted transaction back, so the caller can offer undo.
+            Navigator.of(context).pop(state.original);
+          case TransactionFormStatus.failure:
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(context.l10n.addTransactionSaveFailed)),
             );
-          case AddTransactionStatus.editing || AddTransactionStatus.saving:
+          case TransactionFormStatus.editing || TransactionFormStatus.saving:
             break;
         }
       },

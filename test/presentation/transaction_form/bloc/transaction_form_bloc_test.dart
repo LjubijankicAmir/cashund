@@ -3,6 +3,7 @@ import 'package:cashund/core/error/failure.dart';
 import 'package:cashund/core/error/result.dart';
 import 'package:cashund/core/utils/clock.dart';
 import 'package:cashund/domain/entities/category.dart';
+import 'package:cashund/domain/entities/transaction.dart';
 import 'package:cashund/domain/entities/user_preferences.dart';
 import 'package:cashund/domain/repositories/category_repository.dart';
 import 'package:cashund/domain/repositories/preferences_repository.dart';
@@ -11,7 +12,7 @@ import 'package:cashund/domain/value_objects/category_color.dart';
 import 'package:cashund/domain/value_objects/currency.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
-import 'package:cashund/presentation/add_transaction/bloc/add_transaction_bloc.dart';
+import 'package:cashund/presentation/transaction_form/bloc/transaction_form_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:mocktail/mocktail.dart';
@@ -91,14 +92,14 @@ void main() {
     );
   });
 
-  AddTransactionBloc build() {
+  TransactionFormBloc build() {
     final clock = _MockClock();
     when(clock.now).thenReturn(today.add(const Duration(hours: 15)));
-    return AddTransactionBloc(categories, transactions, preferences, clock);
+    return TransactionFormBloc(categories, transactions, preferences, clock);
   }
 
-  Future<AddTransactionBloc> opened(TransactionType type) async {
-    final bloc = build()..add(AddTransactionEvent.started(type));
+  Future<TransactionFormBloc> opened(TransactionType type) async {
+    final bloc = build()..add(TransactionFormEvent.started(type));
     await pumpEventQueue();
     return bloc;
   }
@@ -117,7 +118,7 @@ void main() {
     () async {
       final bloc = await opened(TransactionType.expense);
 
-      bloc.add(const AddTransactionEvent.typeChanged(TransactionType.income));
+      bloc.add(const TransactionFormEvent.typeChanged(TransactionType.income));
       await pumpEventQueue();
 
       expect(bloc.state.type, TransactionType.income);
@@ -130,9 +131,9 @@ void main() {
   test('cannot save without an amount above zero', () async {
     final bloc = await opened(TransactionType.expense);
 
-    bloc.add(const AddTransactionEvent.amountChanged('0.'));
+    bloc.add(const TransactionFormEvent.amountChanged('0.'));
     await pumpEventQueue();
-    bloc.add(const AddTransactionEvent.savePressed());
+    bloc.add(const TransactionFormEvent.savePressed());
     await pumpEventQueue();
 
     expect(bloc.state.canSave, isFalse);
@@ -163,14 +164,14 @@ void main() {
     final bloc = await opened(TransactionType.expense);
 
     bloc
-      ..add(const AddTransactionEvent.amountChanged('18.4'))
-      ..add(AddTransactionEvent.categorySelected(transport.id))
-      ..add(const AddTransactionEvent.titleChanged('Bus pass'))
-      ..add(AddTransactionEvent.dateSelected(DateTime(2026, 10, 7, 9)))
-      ..add(const AddTransactionEvent.savePressed());
+      ..add(const TransactionFormEvent.amountChanged('18.4'))
+      ..add(TransactionFormEvent.categorySelected(transport.id))
+      ..add(const TransactionFormEvent.titleChanged('Bus pass'))
+      ..add(TransactionFormEvent.dateSelected(DateTime(2026, 10, 7, 9)))
+      ..add(const TransactionFormEvent.savePressed());
     await pumpEventQueue();
 
-    expect(bloc.state.status, AddTransactionStatus.saved);
+    expect(bloc.state.status, TransactionFormStatus.saved);
     verify(
       () => transactions.add(
         type: TransactionType.expense,
@@ -184,7 +185,7 @@ void main() {
     await bloc.close();
   });
 
-  blocTest<AddTransactionBloc, AddTransactionState>(
+  blocTest<TransactionFormBloc, TransactionFormState>(
     'reports a failed save',
     setUp: () => when(
       () => transactions.add(
@@ -198,12 +199,99 @@ void main() {
     ).thenAnswer((_) async => left(const Failure.database('disk full'))),
     build: build,
     act: (bloc) async {
-      bloc.add(const AddTransactionEvent.started(TransactionType.expense));
+      bloc.add(const TransactionFormEvent.started(TransactionType.expense));
       await pumpEventQueue();
       bloc
-        ..add(const AddTransactionEvent.amountChanged('5'))
-        ..add(const AddTransactionEvent.savePressed());
+        ..add(const TransactionFormEvent.amountChanged('5'))
+        ..add(const TransactionFormEvent.savePressed());
     },
-    verify: (bloc) => expect(bloc.state.status, AddTransactionStatus.failure),
+    verify: (bloc) => expect(bloc.state.status, TransactionFormStatus.failure),
   );
+
+  group('editing', () {
+    final lunch = Transaction(
+      id: 7,
+      type: TransactionType.expense,
+      amountMinor: 1840,
+      currencyCode: 'USD',
+      categoryId: transport.id,
+      title: 'Bus pass',
+      occurredOn: DateTime(2026, 10, 6),
+      createdAt: DateTime(2026, 10, 6, 9),
+    );
+
+    Future<TransactionFormBloc> editing() async {
+      final bloc = build()..add(TransactionFormEvent.editStarted(lunch));
+      await pumpEventQueue();
+      return bloc;
+    }
+
+    test('fills the form from the transaction, in its own currency', () async {
+      final bloc = await editing();
+
+      expect(bloc.state.isEditing, isTrue);
+      expect(bloc.state.amountText, '18.40');
+      expect(bloc.state.currency, currencyByCode('USD'));
+      expect(bloc.state.selectedCategory, transport);
+      expect(
+        (bloc.state.title, bloc.state.date),
+        ('Bus pass', DateTime(2026, 10, 6)),
+      );
+      await bloc.close();
+    });
+
+    test('saving updates the transaction instead of adding one', () async {
+      when(
+        () => transactions.update(
+          id: any(named: 'id'),
+          type: any(named: 'type'),
+          amountMinor: any(named: 'amountMinor'),
+          categoryId: any(named: 'categoryId'),
+          occurredOn: any(named: 'occurredOn'),
+          title: any(named: 'title'),
+        ),
+      ).thenAnswer((_) async => right(unit));
+      final bloc = await editing();
+
+      bloc
+        ..add(const TransactionFormEvent.amountChanged('20'))
+        ..add(const TransactionFormEvent.savePressed());
+      await pumpEventQueue();
+
+      expect(bloc.state.status, TransactionFormStatus.saved);
+      verify(
+        () => transactions.update(
+          id: 7,
+          type: TransactionType.expense,
+          amountMinor: 2000,
+          categoryId: transport.id,
+          occurredOn: DateTime(2026, 10, 6),
+          title: 'Bus pass',
+        ),
+      ).called(1);
+      await bloc.close();
+    });
+
+    test('delete removes it and reports it', () async {
+      when(() => transactions.delete(7)).thenAnswer((_) async => right(unit));
+      final bloc = await editing();
+
+      bloc.add(const TransactionFormEvent.deletePressed());
+      await pumpEventQueue();
+
+      expect(bloc.state.status, TransactionFormStatus.deleted);
+      expect(bloc.state.original, lunch);
+      await bloc.close();
+    });
+
+    test('there is nothing to delete while adding', () async {
+      final bloc = await opened(TransactionType.expense);
+
+      bloc.add(const TransactionFormEvent.deletePressed());
+      await pumpEventQueue();
+
+      verifyNever(() => transactions.delete(any()));
+      await bloc.close();
+    });
+  });
 }

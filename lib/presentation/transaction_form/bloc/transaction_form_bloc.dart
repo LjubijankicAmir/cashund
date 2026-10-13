@@ -2,6 +2,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:cashund/core/utils/amount_input.dart';
 import 'package:cashund/core/utils/clock.dart';
 import 'package:cashund/domain/entities/category.dart';
+import 'package:cashund/domain/entities/transaction.dart';
 import 'package:cashund/domain/repositories/category_repository.dart';
 import 'package:cashund/domain/repositories/preferences_repository.dart';
 import 'package:cashund/domain/repositories/transaction_repository.dart';
@@ -11,20 +12,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
-part 'add_transaction_bloc.freezed.dart';
-part 'add_transaction_event.dart';
-part 'add_transaction_state.dart';
+part 'transaction_form_bloc.freezed.dart';
+part 'transaction_form_event.dart';
+part 'transaction_form_state.dart';
 
 @injectable
-class AddTransactionBloc
-    extends Bloc<AddTransactionEvent, AddTransactionState> {
-  AddTransactionBloc(
+class TransactionFormBloc
+    extends Bloc<TransactionFormEvent, TransactionFormState> {
+  TransactionFormBloc(
     this._categories,
     this._transactions,
     this._preferences,
     Clock clock,
   ) : super(_initialState(clock.now())) {
     on<_Started>(_onStarted);
+    on<_EditStarted>(_onEditStarted);
+    on<_DeletePressed>(_onDeletePressed);
     on<_TypeChanged>(_onTypeChanged);
     on<_AmountChanged>(
       (event, emit) => emit(state.copyWith(amountText: event.text)),
@@ -48,9 +51,9 @@ class AddTransactionBloc
   final TransactionRepository _transactions;
   final PreferencesRepository _preferences;
 
-  static AddTransactionState _initialState(DateTime now) {
+  static TransactionFormState _initialState(DateTime now) {
     final today = _dateOnly(now);
-    return AddTransactionState(today: today, date: today);
+    return TransactionFormState(today: today, date: today);
   }
 
   static DateTime _dateOnly(DateTime moment) =>
@@ -58,10 +61,10 @@ class AddTransactionBloc
 
   Future<void> _onStarted(
     _Started event,
-    Emitter<AddTransactionState> emit,
+    Emitter<TransactionFormState> emit,
   ) async {
     emit(state.copyWith(type: event.type));
-    add(AddTransactionEvent.categoriesWatched(event.type));
+    add(TransactionFormEvent.categoriesWatched(event.type));
 
     final preferences = (await _preferences.get()).getRight().toNullable();
     emit(
@@ -73,7 +76,7 @@ class AddTransactionBloc
     );
   }
 
-  void _onTypeChanged(_TypeChanged event, Emitter<AddTransactionState> emit) {
+  void _onTypeChanged(_TypeChanged event, Emitter<TransactionFormState> emit) {
     if (event.type == state.type) return;
     emit(
       state.copyWith(
@@ -83,12 +86,12 @@ class AddTransactionBloc
         recentCategories: const [],
       ),
     );
-    add(AddTransactionEvent.categoriesWatched(event.type));
+    add(TransactionFormEvent.categoriesWatched(event.type));
   }
 
   Future<void> _onCategoriesWatched(
     _CategoriesWatched event,
-    Emitter<AddTransactionState> emit,
+    Emitter<TransactionFormState> emit,
   ) async {
     await Future.wait([
       emit.forEach(
@@ -100,7 +103,7 @@ class AddTransactionBloc
       emit.forEach(
         _categories.watchRecent(
           event.type,
-          limit: AddTransactionState.recentCount,
+          limit: TransactionFormState.recentCount,
         ),
         onData: (result) {
           final recent =
@@ -119,7 +122,7 @@ class AddTransactionBloc
 
   Future<void> _onSavePressed(
     _SavePressed event,
-    Emitter<AddTransactionState> emit,
+    Emitter<TransactionFormState> emit,
   ) async {
     final (amountMinor, category, currency) = (
       state.amountMinor,
@@ -133,20 +136,74 @@ class AddTransactionBloc
       return;
     }
 
-    emit(state.copyWith(status: AddTransactionStatus.saving));
-    final result = await _transactions.add(
-      type: state.type,
-      amountMinor: amountMinor,
-      currencyCode: currency.code,
-      categoryId: category.id,
-      occurredOn: state.date,
-      title: state.title,
-    );
+    emit(state.copyWith(status: TransactionFormStatus.saving));
+    final result = switch (state.original) {
+      final original? => await _transactions.update(
+        id: original.id,
+        type: state.type,
+        amountMinor: amountMinor,
+        categoryId: category.id,
+        occurredOn: state.date,
+        title: state.title,
+      ),
+      null => await _transactions.add(
+        type: state.type,
+        amountMinor: amountMinor,
+        currencyCode: currency.code,
+        categoryId: category.id,
+        occurredOn: state.date,
+        title: state.title,
+      ),
+    };
     emit(
       state.copyWith(
         status: result.isRight()
-            ? AddTransactionStatus.saved
-            : AddTransactionStatus.failure,
+            ? TransactionFormStatus.saved
+            : TransactionFormStatus.failure,
+      ),
+    );
+  }
+
+  /// Fills the form with [_EditStarted.transaction], in its own currency.
+  void _onEditStarted(_EditStarted event, Emitter<TransactionFormState> emit) {
+    final transaction = event.transaction;
+    final currency =
+        currencyByCode(transaction.currencyCode) ??
+        Currency(
+          code: transaction.currencyCode,
+          symbol: transaction.currencyCode,
+          decimalDigits: 2,
+        );
+    emit(
+      state.copyWith(
+        original: transaction,
+        type: transaction.type,
+        currency: currency,
+        amountText: formatAmountText(transaction.amountMinor, currency),
+        categoryId: transaction.categoryId,
+        title: transaction.title ?? '',
+        date: transaction.occurredOn,
+      ),
+    );
+    add(TransactionFormEvent.categoriesWatched(transaction.type));
+  }
+
+  Future<void> _onDeletePressed(
+    _DeletePressed event,
+    Emitter<TransactionFormState> emit,
+  ) async {
+    final original = state.original;
+    if (original == null || state.status == TransactionFormStatus.saving) {
+      return;
+    }
+
+    emit(state.copyWith(status: TransactionFormStatus.saving));
+    final result = await _transactions.delete(original.id);
+    emit(
+      state.copyWith(
+        status: result.isRight()
+            ? TransactionFormStatus.deleted
+            : TransactionFormStatus.failure,
       ),
     );
   }

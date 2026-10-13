@@ -2,8 +2,6 @@ import 'package:cashund/core/l10n/l10n.dart';
 import 'package:cashund/core/theme/cashund_text.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
-import 'package:cashund/presentation/add_transaction/bloc/add_transaction_bloc.dart';
-import 'package:cashund/presentation/add_transaction/widgets/amount_input.dart';
 import 'package:cashund/presentation/common/extensions/category_display.dart';
 import 'package:cashund/presentation/common/widgets/category_mark.dart';
 import 'package:cashund/presentation/common/widgets/form_field_row.dart';
@@ -11,6 +9,8 @@ import 'package:cashund/presentation/common/widgets/picker_field.dart';
 import 'package:cashund/presentation/common/widgets/primary_button.dart';
 import 'package:cashund/presentation/common/widgets/quick_chip.dart';
 import 'package:cashund/presentation/common/widgets/segmented_pills.dart';
+import 'package:cashund/presentation/transaction_form/bloc/transaction_form_bloc.dart';
+import 'package:cashund/presentation/transaction_form/widgets/amount_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -24,22 +24,22 @@ class TransactionForm extends StatelessWidget {
 
   Future<void> _pickDate(
     BuildContext context,
-    AddTransactionState state,
+    TransactionFormState state,
   ) async {
-    final bloc = context.read<AddTransactionBloc>();
+    final bloc = context.read<TransactionFormBloc>();
     final picked = await showDatePicker(
       context: context,
       initialDate: state.date,
       firstDate: DateTime(2000),
       lastDate: state.today,
     );
-    if (picked != null) bloc.add(AddTransactionEvent.dateSelected(picked));
+    if (picked != null) bloc.add(TransactionFormEvent.dateSelected(picked));
   }
 
   String _dateText(
     AppLocalizations l10n,
     String locale,
-    AddTransactionState state,
+    TransactionFormState state,
   ) {
     final yesterday = DateTime(
       state.today.year,
@@ -57,8 +57,8 @@ class TransactionForm extends StatelessWidget {
     final l10n = context.l10n;
     final locale = Localizations.localeOf(context).toString();
     final scheme = Theme.of(context).colorScheme;
-    final bloc = context.read<AddTransactionBloc>();
-    final state = context.watch<AddTransactionBloc>().state;
+    final bloc = context.read<TransactionFormBloc>();
+    final state = context.watch<TransactionFormBloc>().state;
     final isExpense = state.type == TransactionType.expense;
     final category = state.selectedCategory;
     final yesterday = DateTime(
@@ -81,9 +81,12 @@ class TransactionForm extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  isExpense
-                      ? l10n.addTransactionNewExpense
-                      : l10n.addTransactionNewIncome,
+                  switch ((state.isEditing, isExpense)) {
+                    (false, true) => l10n.addTransactionNewExpense,
+                    (false, false) => l10n.addTransactionNewIncome,
+                    (true, true) => l10n.editTransactionExpense,
+                    (true, false) => l10n.editTransactionIncome,
+                  },
                   style: CashundText.pageTitle.copyWith(
                     color: scheme.onSurface,
                   ),
@@ -114,7 +117,7 @@ class TransactionForm extends StatelessWidget {
                 ],
                 selected: state.type,
                 onChanged: (type) =>
-                    bloc.add(AddTransactionEvent.typeChanged(type)),
+                    bloc.add(TransactionFormEvent.typeChanged(type)),
               ),
               const SizedBox(height: CashundSpace.s8),
               if (state.currency case final currency?)
@@ -122,7 +125,7 @@ class TransactionForm extends StatelessWidget {
                   currency: currency,
                   initialText: state.amountText,
                   onChanged: (text) =>
-                      bloc.add(AddTransactionEvent.amountChanged(text)),
+                      bloc.add(TransactionFormEvent.amountChanged(text)),
                 ),
               const SizedBox(height: CashundSpace.s8),
               FormFieldRow(
@@ -147,7 +150,7 @@ class TransactionForm extends StatelessWidget {
                   textCapitalization: TextCapitalization.sentences,
                   maxLength: 200,
                   onChanged: (title) =>
-                      bloc.add(AddTransactionEvent.titleChanged(title)),
+                      bloc.add(TransactionFormEvent.titleChanged(title)),
                   decoration: InputDecoration(
                     hintText: l10n.addTransactionTitleHint,
                     counterText: '',
@@ -174,14 +177,15 @@ class TransactionForm extends StatelessWidget {
                   QuickChip(
                     label: l10n.today,
                     selected: state.date == state.today,
-                    onTap: () =>
-                        bloc.add(AddTransactionEvent.dateSelected(state.today)),
+                    onTap: () => bloc.add(
+                      TransactionFormEvent.dateSelected(state.today),
+                    ),
                   ),
                   QuickChip(
                     label: l10n.yesterday,
                     selected: state.date == yesterday,
                     onTap: () =>
-                        bloc.add(AddTransactionEvent.dateSelected(yesterday)),
+                        bloc.add(TransactionFormEvent.dateSelected(yesterday)),
                   ),
                 ],
               ),
@@ -198,13 +202,34 @@ class TransactionForm extends StatelessWidget {
               CashundSpace.s6,
               0,
             ),
-            child: PrimaryButton(
-              label: isExpense
-                  ? l10n.addTransactionSaveExpense
-                  : l10n.addTransactionSaveIncome,
-              onPressed: state.canSave
-                  ? () => bloc.add(const AddTransactionEvent.savePressed())
-                  : null,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: CashundSpace.s2,
+              children: [
+                PrimaryButton(
+                  label: state.isEditing
+                      ? l10n.editTransactionSave
+                      : isExpense
+                      ? l10n.addTransactionSaveExpense
+                      : l10n.addTransactionSaveIncome,
+                  onPressed: state.canSave
+                      ? () => bloc.add(const TransactionFormEvent.savePressed())
+                      : null,
+                ),
+                if (state.isEditing)
+                  OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: scheme.error,
+                      side: BorderSide(color: scheme.error, width: 1.5),
+                    ),
+                    onPressed: state.status == TransactionFormStatus.saving
+                        ? null
+                        : () => bloc.add(
+                            const TransactionFormEvent.deletePressed(),
+                          ),
+                    child: Text(l10n.editTransactionDelete),
+                  ),
+              ],
             ),
           ),
         ),
