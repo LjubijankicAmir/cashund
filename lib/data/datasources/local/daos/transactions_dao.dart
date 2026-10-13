@@ -27,6 +27,14 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     ).watchSingle().map((row) => row.read<bool>('has_any'));
   }
 
+  Stream<int> watchCountInCurrency(String currencyCode) {
+    final count = transactionsTable.id.count();
+    final query = selectOnly(transactionsTable)
+      ..addColumns([count])
+      ..where(transactionsTable.currencyCode.equals(currencyCode));
+    return query.watchSingle().map((row) => row.read(count) ?? 0);
+  }
+
   /// Total and count per type over [range] in [currencyCode]. Types without
   /// transactions are missing from the map.
   Stream<Map<TransactionType, ({int totalMinor, int count})>> watchTotalsByType(

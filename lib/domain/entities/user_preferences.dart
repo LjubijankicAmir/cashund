@@ -1,3 +1,4 @@
+import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -12,6 +13,7 @@ abstract class UserPreferences with _$UserPreferences {
     required String buddyName,
     required WeekStart weekStart,
     required bool onboardingCompleted,
+    @Default(ThemePreference.system) ThemePreference themePreference,
   }) = _UserPreferences;
 
   static const defaultBuddyName = 'Biscuit';

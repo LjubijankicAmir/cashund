@@ -3,6 +3,7 @@ import 'package:cashund/data/datasources/local/app_database.dart';
 import 'package:cashund/data/datasources/local/daos/preferences_dao.dart';
 import 'package:cashund/data/repositories/preferences_repository_impl.dart';
 import 'package:cashund/domain/entities/user_preferences.dart';
+import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -40,6 +41,13 @@ void main() {
         await repository.get(),
         right<Failure, UserPreferences?>(preferences),
       );
+    });
+
+    test('save stores the theme preference', () async {
+      final dark = preferences.copyWith(themePreference: ThemePreference.dark);
+      await repository.save(dark);
+
+      expect(await repository.get(), right<Failure, UserPreferences?>(dark));
     });
 
     test('watch emits the current value and every change', () async {
