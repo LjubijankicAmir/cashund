@@ -35,6 +35,9 @@ abstract interface class TransactionRepository {
   /// Whether anything has been logged at all, in any currency.
   StreamResult<bool> watchHasAny();
 
+  /// How many transactions are in [currencyCode].
+  StreamResult<int> watchCountInCurrency(String currencyCode);
+
   /// Transactions matching [filter] with their categories, newest first.
   StreamResult<List<TransactionWithCategory>> watchFiltered(
     TransactionFilter filter,

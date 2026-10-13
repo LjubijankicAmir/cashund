@@ -5,6 +5,7 @@ import 'package:cashund/data/repositories/category_repository_impl.dart';
 import 'package:cashund/data/repositories/transaction_repository_impl.dart';
 import 'package:cashund/domain/entities/category.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
+import 'package:drift/drift.dart' hide isNull;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -51,6 +52,19 @@ void main() {
       'transport',
     ]);
     expect(expenses.every((c) => c.customName == null), isTrue);
+  });
+
+  test('counts active categories per type, without archived ones', () async {
+    Future<({int expense, int income})> counts() async =>
+        (await categories.watchActiveCounts().first).getRight().toNullable()!;
+
+    expect(await counts(), (expense: 14, income: 7));
+
+    await (database.update(database.categoriesTable)
+          ..where((c) => c.predefinedKey.equals('pets')))
+        .write(const CategoriesTableCompanion(isArchived: Value(true)));
+
+    expect(await counts(), (expense: 13, income: 7));
   });
 
   test('seeding again adds nothing twice', () async {

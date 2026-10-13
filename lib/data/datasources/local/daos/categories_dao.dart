@@ -21,6 +21,22 @@ class CategoriesDao extends DatabaseAccessor<AppDatabase>
     return query.watch();
   }
 
+  /// Active categories per type. Types without any are missing from the map.
+  Stream<Map<TransactionType, int>> watchActiveCounts() {
+    final count = categoriesTable.id.count();
+    final query = selectOnly(categoriesTable)
+      ..addColumns([categoriesTable.type, count])
+      ..where(categoriesTable.isArchived.not())
+      ..groupBy([categoriesTable.type]);
+    return query.watch().map(
+      (rows) => {
+        for (final row in rows)
+          TransactionType.values.byName(row.read(categoriesTable.type)!): row
+              .read(count)!,
+      },
+    );
+  }
+
   /// Categories of [type] by their latest transaction, newest first. Ids only
   /// grow, so the highest id is the most recently logged.
   Stream<List<CategoryRow>> watchRecent(TransactionType type, int limit) {

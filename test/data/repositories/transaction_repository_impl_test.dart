@@ -47,6 +47,22 @@ void main() {
     },
   );
 
+  test('counts transactions in one currency only', () async {
+    Future<void> add(String currencyCode) => repository.add(
+      type: TransactionType.expense,
+      amountMinor: 100,
+      currencyCode: currencyCode,
+      categoryId: groceriesId,
+      occurredOn: DateTime(2026, 10, 8),
+    );
+    await add('EUR');
+    await add('EUR');
+    await add('USD');
+
+    final count = await repository.watchCountInCurrency('EUR').first;
+    expect(count.getRight().toNullable(), 2);
+  });
+
   test('stores a blank title as no title', () async {
     await repository.add(
       type: TransactionType.expense,

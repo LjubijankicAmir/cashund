@@ -23,6 +23,18 @@ class CategoryRepositoryImpl implements CategoryRepository {
   }
 
   @override
+  StreamResult<({int expense, int income})> watchActiveCounts() {
+    return guardStream(
+      _dao.watchActiveCounts().map(
+        (counts) => (
+          expense: counts[TransactionType.expense] ?? 0,
+          income: counts[TransactionType.income] ?? 0,
+        ),
+      ),
+    );
+  }
+
+  @override
   StreamResult<List<Category>> watchRecent(
     TransactionType type, {
     required int limit,

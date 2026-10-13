@@ -99,6 +99,10 @@ class TransactionRepositoryImpl implements TransactionRepository {
   StreamResult<bool> watchHasAny() => guardStream(_dao.watchHasAny());
 
   @override
+  StreamResult<int> watchCountInCurrency(String currencyCode) =>
+      guardStream(_dao.watchCountInCurrency(currencyCode));
+
+  @override
   StreamResult<List<TransactionWithCategory>> watchFiltered(
     TransactionFilter filter,
   ) {
