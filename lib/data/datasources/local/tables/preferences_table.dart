@@ -1,3 +1,4 @@
+import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
 import 'package:drift/drift.dart';
 
@@ -17,6 +18,11 @@ class PreferencesTable extends Table {
   TextColumn get buddyName => text().withLength(min: 1, max: 64)();
   TextColumn get weekStart => textEnum<WeekStart>()();
   BoolColumn get onboardingCompleted => boolean()();
+
+  /// Added in schema v4; existing rows start out following the system.
+  TextColumn get themePreference => textEnum<ThemePreference>().withDefault(
+    Constant(ThemePreference.system.name),
+  )();
 
   @override
   Set<Column> get primaryKey => {id};

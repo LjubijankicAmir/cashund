@@ -1,5 +1,6 @@
 import 'package:cashund/data/datasources/local/app_database.dart';
 import 'package:cashund/domain/entities/user_preferences.dart';
+import 'package:drift/drift.dart';
 
 extension PreferencesRowMapper on PreferencesRow {
   UserPreferences toEntity() {
@@ -8,6 +9,7 @@ extension PreferencesRowMapper on PreferencesRow {
       buddyName: buddyName,
       weekStart: weekStart,
       onboardingCompleted: onboardingCompleted,
+      themePreference: themePreference,
     );
   }
 }
@@ -19,6 +21,7 @@ extension UserPreferencesMapper on UserPreferences {
       buddyName: buddyName,
       weekStart: weekStart,
       onboardingCompleted: onboardingCompleted,
+      themePreference: Value(themePreference),
     );
   }
 }
