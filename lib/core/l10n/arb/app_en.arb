@@ -248,5 +248,75 @@
   "filtersShowResults": "{count, plural, =0{No results} =1{Show 1 result} other{Show {count} results}}",
   "@filtersShowResults": {
     "placeholders": { "count": { "type": "int" } }
-  }
+  },
+  "settingsPreferences": "Preferences",
+  "settingsCurrency": "Currency",
+  "settingsCurrencyValue": "{code} · {symbol}",
+  "@settingsCurrencyValue": {
+    "placeholders": {
+      "code": { "type": "String", "example": "USD" },
+      "symbol": { "type": "String", "example": "$" }
+    }
+  },
+  "settingsWeekStart": "First day of the week",
+  "settingsTheme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "settingsBuddy": "Buddy",
+  "settingsBuddyName": "Name",
+  "settingsBuddySubtitle": "Your money buddy",
+  "settingsCategories": "Categories",
+  "settingsCategoryCounts": "{expense} expense · {income} income",
+  "@settingsCategoryCounts": {
+    "placeholders": { "expense": { "type": "int" }, "income": { "type": "int" } }
+  },
+  "settingsAbout": "About",
+  "settingsVersion": "Version",
+  "settingsVersionValue": "{version} ({build})",
+  "@settingsVersionValue": {
+    "placeholders": {
+      "version": { "type": "String", "example": "1.0.0" },
+      "build": { "type": "String", "example": "42" }
+    }
+  },
+  "settingsLicenses": "Open-source licenses",
+  "settingsFooter": "Everything stays on this phone.",
+  "settingsSaveFailed": "Couldn’t save that change. Please try again.",
+
+  "settingsCurrencySubtitle": "Used for new transactions and all totals.",
+  "currencySwitchTitle": "Switch to {name} ({code})?",
+  "@currencySwitchTitle": {
+    "placeholders": {
+      "name": { "type": "String", "example": "Euro" },
+      "code": { "type": "String", "example": "EUR" }
+    }
+  },
+  "currencySwitchBody": "New transactions will be in {code} from now on.",
+  "@currencySwitchBody": {
+    "placeholders": { "code": { "type": "String", "example": "EUR" } }
+  },
+  "currencySwitchPastNote": "{count, plural, =1{Your 1 past transaction stays in {code}.} other{Your {count} past transactions stay in {code}.}} Nothing is converted.",
+  "@currencySwitchPastNote": {
+    "description": "The currency code is shown in bold.",
+    "placeholders": {
+      "count": { "type": "int" },
+      "code": { "type": "String", "example": "USD" }
+    }
+  },
+  "currencySwitchTotalsNote": "Totals and charts only count transactions in the selected currency.",
+  "currencySwitchConfirm": "Switch to {code}",
+  "@currencySwitchConfirm": {
+    "placeholders": { "code": { "type": "String", "example": "EUR" } }
+  },
+  "currencySwitchCancel": "Keep {code}",
+  "@currencySwitchCancel": {
+    "placeholders": { "code": { "type": "String", "example": "USD" } }
+  },
+
+  "settingsWeekStartSubtitle": "Your weekly totals run from this day.",
+
+  "settingsBuddyNameTitle": "Buddy name",
+  "settingsBuddyNameHelper": "Shows up wherever your buddy talks to you.",
+  "settingsSaveName": "Save name"
 }

@@ -21,6 +21,17 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: ActivityRoute.page),
       ],
     ),
+    // Pushed over the tabs, so there's no bottom bar. Slides in from the
+    // side on both platforms, with the edge swipe to go back.
+    CupertinoRoute<void>(
+      page: SettingsRoute.page,
+      children: [
+        AutoRoute(page: SettingsHomeRoute.page, initial: true),
+        CupertinoRoute<void>(page: SettingsCurrencyRoute.page),
+        CupertinoRoute<void>(page: SettingsWeekStartRoute.page),
+        CupertinoRoute<void>(page: SettingsBuddyNameRoute.page),
+      ],
+    ),
     AutoRoute(
       page: OnboardingRoute.page,
       children: [

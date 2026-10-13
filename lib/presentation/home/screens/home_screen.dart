@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cashund/core/di/injection.dart';
 import 'package:cashund/core/l10n/l10n.dart';
+import 'package:cashund/core/routing/app_router.gr.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/domain/value_objects/currency.dart';
 import 'package:cashund/domain/value_objects/period_summary.dart';
@@ -65,8 +66,9 @@ class _HomeView extends StatelessWidget {
                 onPeriodSelected: (period) => context.read<HomeBloc>().add(
                   HomeEvent.periodSelected(period),
                 ),
-                // TODO(settings): open Settings.
-                onSettingsPressed: () {},
+                // On the root router, so Settings covers the bottom bar.
+                onSettingsPressed: () =>
+                    context.router.root.push(const SettingsRoute()),
               ),
         sheet:
             preferences == null ||
