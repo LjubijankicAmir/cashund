@@ -23,9 +23,9 @@
 
   "onboardingCurrencyTitle": "Which currency do you use?",
   "onboardingCurrencySubtitle": "Every amount in the app uses it. You can change it later in Settings.",
-  "onboardingCurrencySearchHint": "Search currencies",
-  "onboardingCurrencyNoResults": "No currency matches “{query}”.",
-  "@onboardingCurrencyNoResults": {
+  "currencySearchHint": "Search currencies",
+  "currencyNoResults": "No currency matches “{query}”.",
+  "@currencyNoResults": {
     "placeholders": { "query": { "type": "String", "example": "peso" } }
   },
   "onboardingCurrencyPreview": "Preview:",
@@ -35,13 +35,13 @@
 
   "onboardingBuddyTitle": "Name your buddy",
   "onboardingBuddySubtitle": "This little dachshund keeps an eye on your money and chats with you now and then. What should we call them?",
-  "onboardingBuddyNameLabel": "Buddy’s name",
+  "buddyNameLabel": "Buddy’s name",
   "onboardingBuddyNameHelper": "You can rename them anytime in Settings.",
-  "onboardingBuddyNameIdeas": "Ideas",
+  "buddyNameIdeas": "Ideas",
 
   "onboardingWeekTitle": "When does your week start?",
   "onboardingWeekSubtitle": "Your weekly totals run from this day.",
-  "onboardingWeekPreview": "Your week",
+  "weekPreviewTitle": "Your week",
   "onboardingStartTracking": "Start tracking",
   "onboardingSaveFailed": "Couldn’t save your choices. Please try again.",
 
