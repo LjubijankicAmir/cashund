@@ -176,5 +176,77 @@
       "period": { "type": "String", "example": "week" },
       "category": { "type": "String", "example": "🍔 Eating Out" }
     }
+  },
+
+  "activitySearchHint": "Search notes or categories",
+  "activityFilters": "Filters",
+  "activityExpenses": "Expenses",
+  "activityIncomes": "Incomes",
+  "activityRemoveFilter": "Remove filter",
+  "activityCategoriesChip": "{count, plural, =1{1 category} other{{count} categories}}",
+  "@activityCategoriesChip": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "activitySummary": "{count, plural, =1{1 transaction · {income} · {expense}} other{{count} transactions · {income} · {expense}}}",
+  "@activitySummary": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "income": { "type": "String", "example": "+$2,400.00" },
+      "expense": { "type": "String", "example": "−$1,128.40" }
+    }
+  },
+  "activityDayToday": "Today · {date}",
+  "@activityDayToday": {
+    "placeholders": { "date": { "type": "String", "example": "Thu, Oct 8" } }
+  },
+  "activityDayYesterday": "Yesterday · {date}",
+  "@activityDayYesterday": {
+    "placeholders": { "date": { "type": "String", "example": "Wed, Oct 7" } }
+  },
+  "activityNoMatchesSearch": "No matches for “{query}”",
+  "@activityNoMatchesSearch": {
+    "placeholders": { "query": { "type": "String", "example": "sushi" } }
+  },
+  "activityNoMatchesFilters": "Nothing matches these filters",
+  "activityNoMatchesBody": "{buddyName} sniffed through every note and category. Try another word or widen the dates.",
+  "@activityNoMatchesBody": {
+    "placeholders": { "buddyName": { "type": "String", "example": "Biscuit" } }
+  },
+  "activityNoMatchesBodyIn": "{buddyName} sniffed through every note and category in {range}. Try another word or widen the dates.",
+  "@activityNoMatchesBodyIn": {
+    "placeholders": {
+      "buddyName": { "type": "String", "example": "Biscuit" },
+      "range": { "type": "String", "example": "October" }
+    }
+  },
+  "activityClearSearch": "Clear search",
+  "activityAllDates": "All dates",
+  "activityEmptyTitle": "Nothing logged yet",
+  "activityEmptyBody": "Everything you log shows up here, newest first.",
+
+  "filtersType": "Type",
+  "filtersAll": "All",
+  "filtersCategories": "Categories",
+  "filtersCategoriesSelected": "Categories · {count} selected",
+  "@filtersCategoriesSelected": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "filtersClear": "Clear",
+  "filtersMore": "+{count} more",
+  "@filtersMore": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "filtersLess": "Show less",
+  "filtersDate": "Date",
+  "filtersThisWeek": "This week",
+  "filtersThisMonth": "This month",
+  "filtersLastMonth": "Last month",
+  "filtersCustom": "Custom",
+  "filtersFrom": "From",
+  "filtersTo": "To",
+  "filtersReset": "Reset",
+  "filtersShowResults": "{count, plural, =0{No results} =1{Show 1 result} other{Show {count} results}}",
+  "@filtersShowResults": {
+    "placeholders": { "count": { "type": "int" } }
   }
 }
