@@ -11,6 +11,7 @@ import 'package:cashund/presentation/common/widgets/settings_group.dart';
 import 'package:cashund/presentation/common/widgets/week_start_options.dart';
 import 'package:cashund/presentation/settings/bloc/settings_bloc.dart';
 import 'package:cashund/presentation/settings/screens/settings_screen.dart';
+import 'package:cashund/presentation/settings/widgets/about_group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -112,6 +113,8 @@ class SettingsHomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: CashundSpace.s6),
+              const AboutGroup(),
               const SizedBox(height: CashundSpace.s8),
               Text(
                 l10n.settingsFooter,
