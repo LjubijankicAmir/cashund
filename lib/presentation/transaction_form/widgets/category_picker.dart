@@ -3,9 +3,9 @@ import 'package:cashund/core/theme/cashund_text.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/domain/entities/category.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
-import 'package:cashund/presentation/add_transaction/bloc/add_transaction_bloc.dart';
 import 'package:cashund/presentation/common/extensions/category_display.dart';
 import 'package:cashund/presentation/common/widgets/category_mark.dart';
+import 'package:cashund/presentation/transaction_form/bloc/transaction_form_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -25,8 +25,8 @@ class _CategoryPickerState extends State<CategoryPicker> {
   String _query = '';
 
   void _pick(Category category) {
-    context.read<AddTransactionBloc>().add(
-      AddTransactionEvent.categorySelected(category.id),
+    context.read<TransactionFormBloc>().add(
+      TransactionFormEvent.categorySelected(category.id),
     );
     widget.onBack();
   }
@@ -35,7 +35,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final scheme = Theme.of(context).colorScheme;
-    final state = context.watch<AddTransactionBloc>().state;
+    final state = context.watch<TransactionFormBloc>().state;
     final query = _query.trim().toLowerCase();
     final matching = [
       for (final category in state.categories)

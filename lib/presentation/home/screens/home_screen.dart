@@ -5,7 +5,6 @@ import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/domain/value_objects/currency.dart';
 import 'package:cashund/domain/value_objects/period_summary.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
-import 'package:cashund/presentation/add_transaction/add_transaction_sheet.dart';
 import 'package:cashund/presentation/common/widgets/brand_band_layout.dart';
 import 'package:cashund/presentation/common/widgets/buddy.dart';
 import 'package:cashund/presentation/common/widgets/buddy_message.dart';
@@ -14,6 +13,7 @@ import 'package:cashund/presentation/home/widgets/home_band.dart';
 import 'package:cashund/presentation/home/widgets/home_buddy_message.dart';
 import 'package:cashund/presentation/home/widgets/home_empty_state.dart';
 import 'package:cashund/presentation/home/widgets/spending_card.dart';
+import 'package:cashund/presentation/transaction_form/transaction_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -191,9 +191,9 @@ class _Content extends StatelessWidget {
         ),
         child: HomeEmptyState(
           period: state.period,
-          onAddExpense: () => showAddTransactionSheet(context),
+          onAddExpense: () => showTransactionSheet(context),
           onAddIncome: () =>
-              showAddTransactionSheet(context, type: TransactionType.income),
+              showTransactionSheet(context, type: TransactionType.income),
         ),
       );
     }

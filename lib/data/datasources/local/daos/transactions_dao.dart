@@ -3,6 +3,7 @@ import 'package:cashund/data/datasources/local/converters/date_only_converter.da
 import 'package:cashund/data/datasources/local/tables/categories_table.dart';
 import 'package:cashund/data/datasources/local/tables/transactions_table.dart';
 import 'package:cashund/domain/value_objects/date_range.dart';
+import 'package:cashund/domain/value_objects/transaction_filter.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:drift/drift.dart';
 
@@ -80,4 +81,55 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     Variable.withString(_dates.toSql(range.start)),
     Variable.withString(_dates.toSql(range.end)),
   ];
+
+  /// Transactions matching [filter] with their categories, newest first:
+  /// by day, then by when they were logged.
+  Stream<List<(TransactionRow, CategoryRow)>> watchFiltered(
+    TransactionFilter filter,
+  ) {
+    final query = select(transactionsTable).join([
+      innerJoin(
+        categoriesTable,
+        categoriesTable.id.equalsExp(transactionsTable.categoryId),
+      ),
+    ]);
+
+    if (filter.type case final type?) {
+      query.where(transactionsTable.type.equalsValue(type));
+    }
+    if (filter.categoryIds.isNotEmpty) {
+      query.where(transactionsTable.categoryId.isIn(filter.categoryIds));
+    }
+    if (filter.range case final range?) {
+      query.where(
+        transactionsTable.occurredOn.isBiggerOrEqual(
+              Variable(_dates.toSql(range.start)),
+            ) &
+            transactionsTable.occurredOn.isSmallerThan(
+              Variable(_dates.toSql(range.end)),
+            ),
+      );
+    }
+    query.orderBy([
+      OrderingTerm.desc(transactionsTable.occurredOn),
+      OrderingTerm.desc(transactionsTable.id),
+    ]);
+
+    return query.watch().map(
+      (rows) => [
+        for (final row in rows)
+          (row.readTable(transactionsTable), row.readTable(categoriesTable)),
+      ],
+    );
+  }
+
+  /// Updates the given columns of transaction [id].
+  Future<void> updateById(int id, TransactionsTableCompanion changes) {
+    return (update(
+      transactionsTable,
+    )..where((row) => row.id.equals(id))).write(changes);
+  }
+
+  Future<void> deleteById(int id) =>
+      (delete(transactionsTable)..where((row) => row.id.equals(id))).go();
 }

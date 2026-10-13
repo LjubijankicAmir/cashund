@@ -72,4 +72,18 @@ void main() {
       () => expect(type('123456789', '1234567890'), '123456789'),
     );
   });
+
+  group('formatAmountText', () {
+    test('writes minor units back as typed text', () {
+      expect(formatAmountText(1840, eur), '18.40');
+      expect(formatAmountText(7, eur), '0.07');
+      expect(formatAmountText(62, jpy), '62');
+    });
+
+    test('reads back to the same amount', () {
+      for (final amount in [1, 50, 1840, 123456789]) {
+        expect(parseAmount(formatAmountText(amount, eur), eur), amount);
+      }
+    });
+  });
 }

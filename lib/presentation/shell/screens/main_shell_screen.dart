@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cashund/core/routing/app_router.gr.dart';
-import 'package:cashund/presentation/add_transaction/add_transaction_sheet.dart';
 import 'package:cashund/presentation/shell/widgets/cashund_nav_bar.dart';
+import 'package:cashund/presentation/transaction_form/transaction_sheet.dart';
 import 'package:flutter/material.dart';
 
 /// The app after onboarding: the Home and Activity tabs under the bottom bar.
@@ -24,7 +24,7 @@ class MainShellScreen extends StatelessWidget {
           bottomNavigationBar: CashundNavBar(
             currentIndex: tabs.activeIndex,
             onTabSelected: tabs.setActiveIndex,
-            onAddPressed: () => showAddTransactionSheet(context),
+            onAddPressed: () => showTransactionSheet(context),
           ),
         );
       },
