@@ -21,6 +21,55 @@ class CategoriesDao extends DatabaseAccessor<AppDatabase>
     return query.watch();
   }
 
+  Stream<List<CategoryRow>> watchByType(TransactionType type) {
+    final query = select(categoriesTable)
+      ..where((category) => category.type.equalsValue(type))
+      ..orderBy([(category) => OrderingTerm(expression: category.sortOrder)]);
+    return query.watch();
+  }
+
+  Future<CategoryRow?> findById(int id) {
+    return (select(
+      categoriesTable,
+    )..where((category) => category.id.equals(id))).getSingleOrNull();
+  }
+
+  /// Inserts [row] after the existing categories of its type.
+  Future<CategoryRow> insertLast(CategoriesTableCompanion row) {
+    return transaction(() async {
+      final maxOrder = categoriesTable.sortOrder.max();
+      final last =
+          await (selectOnly(categoriesTable)
+                ..addColumns([maxOrder])
+                ..where(categoriesTable.type.equalsValue(row.type.value)))
+              .map((result) => result.read(maxOrder))
+              .getSingle();
+      return await into(categoriesTable)
+          .insertReturning(row.copyWith(sortOrder: Value((last ?? -1) + 1)));
+    });
+  }
+
+  /// Writes the fields present in [changes] to the category with [id].
+  Future<void> updateById(int id, CategoriesTableCompanion changes) {
+    return (update(
+      categoriesTable,
+    )..where((category) => category.id.equals(id))).write(changes);
+  }
+
+  /// Gives each of [orderedIds] its position as the sort order, at once.
+  Future<void> reorder(TransactionType type, List<int> orderedIds) {
+    return batch((batch) {
+      for (final (index, id) in orderedIds.indexed) {
+        batch.update(
+          categoriesTable,
+          CategoriesTableCompanion(sortOrder: Value(index)),
+          where: (category) =>
+              category.id.equals(id) & category.type.equalsValue(type),
+        );
+      }
+    });
+  }
+
   /// Active categories per type. Types without any are missing from the map.
   Stream<Map<TransactionType, int>> watchActiveCounts() {
     final count = categoriesTable.id.count();
