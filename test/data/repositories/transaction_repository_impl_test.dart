@@ -61,6 +61,7 @@ void main() {
 
     final count = await repository.watchCountInCurrency('EUR').first;
     expect(count.getRight().toNullable(), 2);
+    expect((await repository.count()).getRight().toNullable(), 3);
   });
 
   test('stores a blank title as no title', () async {

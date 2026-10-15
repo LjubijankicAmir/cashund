@@ -1,3 +1,5 @@
+import 'package:cashund/domain/entities/user_preferences.dart';
+import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
 import 'package:drift/drift.dart';
@@ -22,6 +24,14 @@ class PreferencesTable extends Table {
   /// Added in schema v4; existing rows start out following the system.
   TextColumn get themePreference => textEnum<ThemePreference>().withDefault(
     Constant(ThemePreference.system.name),
+  )();
+
+  /// Added in schema v5, like [reactionInterval].
+  TextColumn get reactionFrequency => textEnum<ReactionFrequency>().withDefault(
+    Constant(ReactionFrequency.always.name),
+  )();
+  IntColumn get reactionInterval => integer().withDefault(
+    const Constant(UserPreferences.defaultReactionInterval),
   )();
 
   @override

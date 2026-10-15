@@ -3,6 +3,7 @@ import 'package:cashund/data/datasources/local/app_database.dart';
 import 'package:cashund/data/datasources/local/daos/preferences_dao.dart';
 import 'package:cashund/data/repositories/preferences_repository_impl.dart';
 import 'package:cashund/domain/entities/user_preferences.dart';
+import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
 import 'package:drift/native.dart';
@@ -43,11 +44,15 @@ void main() {
       );
     });
 
-    test('save stores the theme preference', () async {
-      final dark = preferences.copyWith(themePreference: ThemePreference.dark);
-      await repository.save(dark);
+    test('save stores the theme and reaction preferences', () async {
+      final changed = preferences.copyWith(
+        themePreference: ThemePreference.dark,
+        reactionFrequency: ReactionFrequency.sometimes,
+        reactionInterval: 5,
+      );
+      await repository.save(changed);
 
-      expect(await repository.get(), right<Failure, UserPreferences?>(dark));
+      expect(await repository.get(), right<Failure, UserPreferences?>(changed));
     });
 
     test('watch emits the current value and every change', () async {

@@ -27,6 +27,12 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     ).watchSingle().map((row) => row.read<bool>('has_any'));
   }
 
+  Future<int> countAll() {
+    final count = transactionsTable.id.count();
+    final query = selectOnly(transactionsTable)..addColumns([count]);
+    return query.map((row) => row.read(count) ?? 0).getSingle();
+  }
+
   Stream<int> watchCountInCurrency(String currencyCode) {
     final count = transactionsTable.id.count();
     final query = selectOnly(transactionsTable)

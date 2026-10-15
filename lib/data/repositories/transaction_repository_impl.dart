@@ -99,6 +99,9 @@ class TransactionRepositoryImpl implements TransactionRepository {
   StreamResult<bool> watchHasAny() => guardStream(_dao.watchHasAny());
 
   @override
+  FutureResult<int> count() => guardFuture(_dao.countAll);
+
+  @override
   StreamResult<int> watchCountInCurrency(String currencyCode) =>
       guardStream(_dao.watchCountInCurrency(currencyCode));
 
