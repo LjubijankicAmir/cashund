@@ -16,8 +16,8 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
 
   static const _dates = DateOnlyConverter();
 
-  Future<int> insert(TransactionsTableCompanion row) =>
-      into(transactionsTable).insert(row);
+  Future<TransactionRow> insert(TransactionsTableCompanion row) =>
+      into(transactionsTable).insertReturning(row);
 
   /// Whether anything has been logged at all.
   Stream<bool> watchHasAny() {
@@ -25,6 +25,12 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
       'SELECT EXISTS (SELECT 1 FROM transactions) AS has_any',
       readsFrom: {transactionsTable},
     ).watchSingle().map((row) => row.read<bool>('has_any'));
+  }
+
+  Future<int> countAll() {
+    final count = transactionsTable.id.count();
+    final query = selectOnly(transactionsTable)..addColumns([count]);
+    return query.map((row) => row.read(count) ?? 0).getSingle();
   }
 
   Stream<int> watchCountInCurrency(String currencyCode) {

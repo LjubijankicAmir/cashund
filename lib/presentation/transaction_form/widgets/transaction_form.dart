@@ -189,25 +189,42 @@ class TransactionForm extends StatelessWidget {
                   onTap: () => _pickDate(context, state),
                 ),
               ),
-              const SizedBox(height: CashundSpace.s3),
-              Wrap(
-                spacing: CashundSpace.s2,
-                children: [
-                  QuickChip(
-                    label: l10n.today,
-                    selected: state.date == state.today,
-                    onTap: () => bloc.add(
-                      TransactionFormEvent.dateSelected(state.today),
+              // When editing, the date is set, so no quick chips; instead,
+              // when the transaction was first logged.
+              if (state.original case final original?) ...[
+                const SizedBox(height: CashundSpace.s5),
+                Text(
+                  l10n.editTransactionAdded(
+                    DateFormat.MMMEd(locale).format(original.createdAt),
+                    DateFormat.jm(locale).format(original.createdAt),
+                  ),
+                  textAlign: TextAlign.center,
+                  style: CashundText.bodySm.copyWith(
+                    color: scheme.onSurfaceVariant,
+                  ),
+                ),
+              ] else ...[
+                const SizedBox(height: CashundSpace.s3),
+                Wrap(
+                  spacing: CashundSpace.s2,
+                  children: [
+                    QuickChip(
+                      label: l10n.today,
+                      selected: state.date == state.today,
+                      onTap: () => bloc.add(
+                        TransactionFormEvent.dateSelected(state.today),
+                      ),
                     ),
-                  ),
-                  QuickChip(
-                    label: l10n.yesterday,
-                    selected: state.date == yesterday,
-                    onTap: () =>
-                        bloc.add(TransactionFormEvent.dateSelected(yesterday)),
-                  ),
-                ],
-              ),
+                    QuickChip(
+                      label: l10n.yesterday,
+                      selected: state.date == yesterday,
+                      onTap: () => bloc.add(
+                        TransactionFormEvent.dateSelected(yesterday),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
@@ -221,22 +238,11 @@ class TransactionForm extends StatelessWidget {
               CashundSpace.s6,
               0,
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: CashundSpace.s2,
+            child: Row(
+              spacing: CashundSpace.s3,
               children: [
-                PrimaryButton(
-                  label: state.isEditing
-                      ? l10n.editTransactionSave
-                      : isExpense
-                      ? l10n.addTransactionSaveExpense
-                      : l10n.addTransactionSaveIncome,
-                  onPressed: state.canSave
-                      ? () => bloc.add(const TransactionFormEvent.savePressed())
-                      : null,
-                ),
                 if (state.isEditing)
-                  OutlinedButton(
+                  OutlinedButton.icon(
                     style: OutlinedButton.styleFrom(
                       foregroundColor: scheme.error,
                       side: BorderSide(color: scheme.error, width: 1.5),
@@ -246,8 +252,22 @@ class TransactionForm extends StatelessWidget {
                         : () => bloc.add(
                             const TransactionFormEvent.deletePressed(),
                           ),
-                    child: Text(l10n.editTransactionDelete),
+                    icon: const Icon(LucideIcons.trash2, size: 20),
+                    label: Text(l10n.editTransactionDelete),
                   ),
+                Expanded(
+                  child: PrimaryButton(
+                    label: state.isEditing
+                        ? l10n.editTransactionSave
+                        : isExpense
+                        ? l10n.addTransactionSaveExpense
+                        : l10n.addTransactionSaveIncome,
+                    onPressed: state.canSave
+                        ? () =>
+                              bloc.add(const TransactionFormEvent.savePressed())
+                        : null,
+                  ),
+                ),
               ],
             ),
           ),

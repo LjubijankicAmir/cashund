@@ -39,7 +39,7 @@ void main() {
       );
 
       final row = await database.select(database.transactionsTable).getSingle();
-      expect(result.isRight(), isTrue);
+      expect(result.getRight().toNullable()?.id, row.id);
       expect(row.amountMinor, 1840);
       expect(row.title, 'Lunch with Sara');
       expect(row.occurredOn, DateTime(2026, 10, 7));
@@ -61,6 +61,7 @@ void main() {
 
     final count = await repository.watchCountInCurrency('EUR').first;
     expect(count.getRight().toNullable(), 2);
+    expect((await repository.count()).getRight().toNullable(), 3);
   });
 
   test('stores a blank title as no title', () async {

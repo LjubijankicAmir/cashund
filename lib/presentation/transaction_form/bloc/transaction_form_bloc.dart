@@ -1,4 +1,5 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:cashund/core/error/result.dart';
 import 'package:cashund/core/utils/amount_input.dart';
 import 'package:cashund/core/utils/clock.dart';
 import 'package:cashund/domain/entities/category.dart';
@@ -137,35 +138,47 @@ class TransactionFormBloc
     }
 
     emit(state.copyWith(status: TransactionFormStatus.saving));
-    final result = switch (state.original) {
-      final original? => await _transactions.update(
+    final Result<Transaction> result;
+    if (state.original case final original?) {
+      final changed = original.copyWith(
+        type: state.type,
+        amountMinor: amountMinor,
+        categoryId: category.id,
+        occurredOn: state.date,
+        title: state.title.trim().isEmpty ? null : state.title.trim(),
+      );
+      result = (await _transactions.update(
         id: original.id,
         type: state.type,
         amountMinor: amountMinor,
         categoryId: category.id,
         occurredOn: state.date,
         title: state.title,
-      ),
-      null => await _transactions.add(
+      )).map((_) => changed);
+    } else {
+      result = await _transactions.add(
         type: state.type,
         amountMinor: amountMinor,
         currencyCode: currency.code,
         categoryId: category.id,
         occurredOn: state.date,
         title: state.title,
-      ),
-    };
+      );
+    }
     emit(
-      state.copyWith(
-        status: result.isRight()
-            ? TransactionFormStatus.saved
-            : TransactionFormStatus.failure,
+      result.match(
+        (_) => state.copyWith(status: TransactionFormStatus.failure),
+        (saved) =>
+            state.copyWith(status: TransactionFormStatus.saved, saved: saved),
       ),
     );
   }
 
   /// Fills the form with [_EditStarted.transaction], in its own currency.
-  void _onEditStarted(_EditStarted event, Emitter<TransactionFormState> emit) {
+  Future<void> _onEditStarted(
+    _EditStarted event,
+    Emitter<TransactionFormState> emit,
+  ) async {
     final transaction = event.transaction;
     final currency =
         currencyByCode(transaction.currencyCode) ??
@@ -186,6 +199,16 @@ class TransactionFormBloc
       ),
     );
     add(TransactionFormEvent.categoriesWatched(transaction.type));
+
+    // Its category may be archived since, and so missing from the lists.
+    final all = (await _categories.watchByType(transaction.type).first)
+        .getRight()
+        .toNullable();
+    for (final category in all ?? const <Category>[]) {
+      if (category.id == transaction.categoryId && category.isArchived) {
+        emit(state.copyWith(archivedCategory: category));
+      }
+    }
   }
 
   Future<void> _onDeletePressed(

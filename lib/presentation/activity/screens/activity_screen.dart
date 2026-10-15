@@ -7,7 +7,6 @@ import 'package:cashund/core/theme/cashund_text.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/core/utils/date_format.dart';
 import 'package:cashund/core/utils/money_format.dart';
-import 'package:cashund/domain/entities/transaction.dart';
 import 'package:cashund/domain/entities/transaction_with_category.dart';
 import 'package:cashund/domain/value_objects/currency.dart';
 import 'package:cashund/domain/value_objects/date_range.dart';
@@ -21,7 +20,7 @@ import 'package:cashund/presentation/common/extensions/category_display.dart';
 import 'package:cashund/presentation/common/widgets/buddy.dart';
 import 'package:cashund/presentation/common/widgets/day_header.dart';
 import 'package:cashund/presentation/common/widgets/transaction_row.dart';
-import 'package:cashund/presentation/transaction_form/transaction_sheet.dart';
+import 'package:cashund/presentation/reaction/transaction_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
@@ -75,40 +74,25 @@ class _ActivityViewState extends State<_ActivityView> {
   }
 
   /// Opens [entry] to change it; after a delete, offers to undo it.
-  Future<void> _edit(TransactionWithCategory entry) async {
-    final deleted = await showTransactionSheet(
+  Future<void> _edit(TransactionWithCategory entry) {
+    final bloc = context.read<ActivityBloc>();
+    return editTransaction(
       context,
-      editing: entry.transaction,
+      entry.transaction,
+      onUndo: (deleted) => bloc.add(ActivityEvent.deletionUndone(deleted)),
     );
-    if (deleted != null && mounted) _offerUndo(deleted);
   }
 
   void _swipeAway(TransactionWithCategory entry) {
     unawaited(HapticFeedback.mediumImpact());
-    context.read<ActivityBloc>().add(
-      ActivityEvent.swipedAway(entry.transaction),
+    final bloc = context.read<ActivityBloc>()
+      ..add(ActivityEvent.swipedAway(entry.transaction));
+    offerUndo(
+      context,
+      entry.transaction,
+      category: entry.category,
+      onUndo: (deleted) => bloc.add(ActivityEvent.deletionUndone(deleted)),
     );
-    _offerUndo(entry.transaction);
-  }
-
-  void _offerUndo(Transaction deleted) {
-    final l10n = context.l10n;
-    final bloc = context.read<ActivityBloc>();
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(
-            deleted.type == TransactionType.expense
-                ? l10n.transactionDeletedExpense
-                : l10n.transactionDeletedIncome,
-          ),
-          action: SnackBarAction(
-            label: l10n.undo,
-            onPressed: () => bloc.add(ActivityEvent.deletionUndone(deleted)),
-          ),
-        ),
-      );
   }
 
   /// "October" for a whole month (with the year if it isn't this one),
@@ -397,7 +381,7 @@ class _Empty extends StatelessWidget {
               message: l10n.activityEmptyBody,
               actions: [
                 FilledButton.tonal(
-                  onPressed: () => showTransactionSheet(context),
+                  onPressed: () => logTransaction(context),
                   child: Text(l10n.addExpense),
                 ),
               ],

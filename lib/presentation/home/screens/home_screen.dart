@@ -14,7 +14,10 @@ import 'package:cashund/presentation/home/widgets/home_band.dart';
 import 'package:cashund/presentation/home/widgets/home_buddy_message.dart';
 import 'package:cashund/presentation/home/widgets/home_empty_state.dart';
 import 'package:cashund/presentation/home/widgets/spending_card.dart';
-import 'package:cashund/presentation/transaction_form/transaction_sheet.dart';
+import 'package:cashund/presentation/reaction/bloc/reaction_cubit.dart';
+import 'package:cashund/presentation/reaction/transaction_actions.dart';
+import 'package:cashund/presentation/reaction/widgets/reaction_card.dart';
+import 'package:cashund/presentation/reaction/widgets/reaction_timer_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +43,7 @@ class _HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = context.watch<HomeBloc>().state;
+    final reaction = context.watch<ReactionCubit>().state;
     final (preferences, range, summary) = (
       state.preferences,
       state.range,
@@ -53,9 +57,11 @@ class _HomeView extends StatelessWidget {
       value: SystemUiOverlayStyle.light,
       child: BrandBandLayout(
         buddyWidth: _buddyWidth,
-        buddy: (summary?.balanceMinor ?? 0) > 0
-            ? BuddyExpression.happy
-            : BuddyExpression.listening,
+        buddy:
+            reaction?.line.expression ??
+            ((summary?.balanceMinor ?? 0) > 0
+                ? BuddyExpression.happy
+                : BuddyExpression.listening),
         band: preferences == null || range == null
             ? const SizedBox.shrink()
             : HomeBand(
@@ -81,12 +87,20 @@ class _HomeView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _AnimatedSlot(
-                      child: state.buddyMessageDismissed
-                          ? const SizedBox(
-                              key: ValueKey('no-message'),
-                              width: double.infinity,
-                            )
-                          : _Message(state: state, currency: currency),
+                      child: switch ((reaction, state.buddyMessageDismissed)) {
+                        (final reaction?, _) => _ReactionMessage(
+                          key: ValueKey(('reaction', reaction.id)),
+                          reaction: reaction,
+                        ),
+                        (null, true) => const SizedBox(
+                          key: ValueKey('no-message'),
+                          width: double.infinity,
+                        ),
+                        (null, false) => _Message(
+                          state: state,
+                          currency: currency,
+                        ),
+                      },
                     ),
                     _AnimatedSlot(
                       child: _Content(
@@ -169,6 +183,34 @@ class _Message extends StatelessWidget {
   }
 }
 
+/// The buddy reacting to something just logged, in place of the message.
+class _ReactionMessage extends StatelessWidget {
+  const _ReactionMessage({required this.reaction, super.key});
+
+  final Reaction reaction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        CashundSpace.s6,
+        CashundSpace.s5,
+        CashundSpace.s6,
+        0,
+      ),
+      child: BuddyMessage(
+        buddyName: reaction.buddyName,
+        header: ReactionMeta(reaction: reaction),
+        message: reaction.line.text(context.l10n),
+        footer: ReactionTimerBar(
+          duration: context.read<ReactionCubit>().visibleFor,
+        ),
+        onDismiss: context.read<ReactionCubit>().dismiss,
+      ),
+    );
+  }
+}
+
 class _Content extends StatelessWidget {
   const _Content({
     required this.state,
@@ -193,9 +235,9 @@ class _Content extends StatelessWidget {
         ),
         child: HomeEmptyState(
           period: state.period,
-          onAddExpense: () => showTransactionSheet(context),
+          onAddExpense: () => logTransaction(context),
           onAddIncome: () =>
-              showTransactionSheet(context, type: TransactionType.income),
+              logTransaction(context, type: TransactionType.income),
         ),
       );
     }

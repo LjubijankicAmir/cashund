@@ -1,3 +1,4 @@
+import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -14,8 +15,17 @@ abstract class UserPreferences with _$UserPreferences {
     required WeekStart weekStart,
     required bool onboardingCompleted,
     @Default(ThemePreference.system) ThemePreference themePreference,
+    @Default(ReactionFrequency.always) ReactionFrequency reactionFrequency,
+
+    /// With [ReactionFrequency.sometimes], the buddy reacts to every n-th
+    /// transaction.
+    @Default(UserPreferences.defaultReactionInterval) int reactionInterval,
   }) = _UserPreferences;
 
   static const defaultBuddyName = 'Biscuit';
   static const buddyNameMaxLength = 16;
+
+  static const defaultReactionInterval = 3;
+  static const minReactionInterval = 2;
+  static const maxReactionInterval = 10;
 }

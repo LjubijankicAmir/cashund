@@ -33,6 +33,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: SettingsCurrencyRoute.page),
         AutoRoute(page: SettingsWeekStartRoute.page),
         AutoRoute(page: SettingsBuddyNameRoute.page),
+        AutoRoute(page: SettingsReactionsRoute.page),
         AutoRoute(page: CategoriesRoute.page),
       ],
     ),

@@ -18,6 +18,14 @@ sealed class SettingsEvent with _$SettingsEvent {
       _WeekStartChosen;
   const factory SettingsEvent.themeChosen(ThemePreference theme) = _ThemeChosen;
 
+  const factory SettingsEvent.reactionFrequencyChosen(
+    ReactionFrequency frequency,
+  ) = _ReactionFrequencyChosen;
+
+  /// Kept between the allowed minimum and maximum.
+  const factory SettingsEvent.reactionIntervalChanged(int interval) =
+      _ReactionIntervalChanged;
+
   /// A blank name falls back to the default one.
   const factory SettingsEvent.buddyNameSaved(String buddyName) =
       _BuddyNameSaved;

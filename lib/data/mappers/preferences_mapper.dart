@@ -10,6 +10,8 @@ extension PreferencesRowMapper on PreferencesRow {
       weekStart: weekStart,
       onboardingCompleted: onboardingCompleted,
       themePreference: themePreference,
+      reactionFrequency: reactionFrequency,
+      reactionInterval: reactionInterval,
     );
   }
 }
@@ -22,6 +24,8 @@ extension UserPreferencesMapper on UserPreferences {
       weekStart: weekStart,
       onboardingCompleted: onboardingCompleted,
       themePreference: Value(themePreference),
+      reactionFrequency: Value(reactionFrequency),
+      reactionInterval: Value(reactionInterval),
     );
   }
 }

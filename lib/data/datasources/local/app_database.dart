@@ -7,7 +7,9 @@ import 'package:cashund/data/datasources/local/seed/predefined_categories.dart';
 import 'package:cashund/data/datasources/local/tables/categories_table.dart';
 import 'package:cashund/data/datasources/local/tables/preferences_table.dart';
 import 'package:cashund/data/datasources/local/tables/transactions_table.dart';
+import 'package:cashund/domain/entities/user_preferences.dart';
 import 'package:cashund/domain/value_objects/category_color.dart';
+import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
@@ -28,7 +30,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'cashund'));
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -51,6 +53,16 @@ class AppDatabase extends _$AppDatabase {
         await migrator.addColumn(
           schema.preferences,
           schema.preferences.themePreference,
+        );
+      },
+      from4To5: (migrator, schema) async {
+        await migrator.addColumn(
+          schema.preferences,
+          schema.preferences.reactionFrequency,
+        );
+        await migrator.addColumn(
+          schema.preferences,
+          schema.preferences.reactionInterval,
         );
       },
     ),

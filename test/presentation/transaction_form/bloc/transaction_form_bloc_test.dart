@@ -65,6 +65,11 @@ void main() {
         ),
       ),
     );
+    when(() => categories.watchByType(any())).thenAnswer(
+      (_) => Stream<Result<List<Category>>>.value(
+        right([groceries, eatingOut, transport]),
+      ),
+    );
     when(() => categories.watchActive(TransactionType.expense)).thenAnswer(
       (_) => Stream<Result<List<Category>>>.value(
         right([groceries, eatingOut, transport]),
@@ -164,6 +169,16 @@ void main() {
   });
 
   test('saves the parsed amount with the chosen details', () async {
+    final logged = Transaction(
+      id: 7,
+      type: TransactionType.expense,
+      amountMinor: 1840,
+      currencyCode: 'EUR',
+      categoryId: transport.id,
+      occurredOn: DateTime(2026, 10, 7),
+      createdAt: today,
+      title: 'Bus pass',
+    );
     when(
       () => transactions.add(
         type: any(named: 'type'),
@@ -173,7 +188,7 @@ void main() {
         occurredOn: any(named: 'occurredOn'),
         title: any(named: 'title'),
       ),
-    ).thenAnswer((_) async => right(unit));
+    ).thenAnswer((invocation) async => right(logged));
     final bloc = await opened(TransactionType.expense);
 
     bloc
@@ -185,6 +200,7 @@ void main() {
     await pumpEventQueue();
 
     expect(bloc.state.status, TransactionFormStatus.saved);
+    expect(bloc.state.saved, logged);
     verify(
       () => transactions.add(
         type: TransactionType.expense,
@@ -253,6 +269,26 @@ void main() {
       await bloc.close();
     });
 
+    test('keeps its category when that category is archived', () async {
+      final oldTrips = _category(
+        9,
+        TransactionType.expense,
+      ).copyWith(isArchived: true);
+      when(() => categories.watchByType(TransactionType.expense)).thenAnswer(
+        (_) => Stream<Result<List<Category>>>.value(
+          right([groceries, eatingOut, transport, oldTrips]),
+        ),
+      );
+      final bloc = build()
+        ..add(TransactionFormEvent.editStarted(lunch.copyWith(categoryId: 9)));
+      await pumpEventQueue();
+
+      expect(bloc.state.selectedCategory, oldTrips);
+      expect(bloc.state.canSave, isTrue);
+      expect(bloc.state.categories, isNot(contains(oldTrips)));
+      await bloc.close();
+    });
+
     test('saving updates the transaction instead of adding one', () async {
       when(
         () => transactions.update(
@@ -272,6 +308,7 @@ void main() {
       await pumpEventQueue();
 
       expect(bloc.state.status, TransactionFormStatus.saved);
+      expect(bloc.state.saved, lunch.copyWith(amountMinor: 2000));
       verify(
         () => transactions.update(
           id: 7,

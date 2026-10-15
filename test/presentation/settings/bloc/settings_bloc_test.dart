@@ -7,6 +7,7 @@ import 'package:cashund/domain/entities/user_preferences.dart';
 import 'package:cashund/domain/repositories/category_repository.dart';
 import 'package:cashund/domain/repositories/preferences_repository.dart';
 import 'package:cashund/domain/repositories/transaction_repository.dart';
+import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
 import 'package:cashund/presentation/settings/bloc/settings_bloc.dart';
@@ -170,6 +171,25 @@ void main() {
     bloc.add(const SettingsEvent.themeChosen(ThemePreference.dark));
     await pumpEventQueue();
     expect(saved().themePreference, ThemePreference.dark);
+    await bloc.close();
+  });
+
+  test('saves how often the buddy reacts, within limits', () async {
+    final bloc = await started();
+
+    bloc.add(
+      const SettingsEvent.reactionFrequencyChosen(ReactionFrequency.sometimes),
+    );
+    await pumpEventQueue();
+    expect(saved().reactionFrequency, ReactionFrequency.sometimes);
+
+    bloc.add(const SettingsEvent.reactionIntervalChanged(5));
+    await pumpEventQueue();
+    expect(saved().reactionInterval, 5);
+
+    bloc.add(const SettingsEvent.reactionIntervalChanged(99));
+    await pumpEventQueue();
+    expect(saved().reactionInterval, UserPreferences.maxReactionInterval);
     await bloc.close();
   });
 
