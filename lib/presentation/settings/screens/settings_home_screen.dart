@@ -3,6 +3,7 @@ import 'package:cashund/core/l10n/l10n.dart';
 import 'package:cashund/core/routing/app_router.gr.dart';
 import 'package:cashund/core/theme/cashund_text.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
+import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/presentation/common/widgets/buddy_avatar.dart';
 import 'package:cashund/presentation/common/widgets/pushed_page_header.dart';
@@ -94,6 +95,20 @@ class SettingsHomeScreen extends StatelessWidget {
                     value: preferences.buddyName,
                     onTap: () =>
                         context.router.push(const SettingsBuddyNameRoute()),
+                  ),
+                  SettingsRow(
+                    leading: const Icon(LucideIcons.messageCircle),
+                    title: l10n.settingsReactions,
+                    subtitle: l10n.settingsReactionsSubtitle,
+                    value: switch (preferences.reactionFrequency) {
+                      ReactionFrequency.always => l10n.settingsReactionsAlways,
+                      ReactionFrequency.sometimes => l10n.reactionEvery(
+                        preferences.reactionInterval,
+                      ),
+                      ReactionFrequency.never => l10n.settingsReactionsOff,
+                    },
+                    onTap: () =>
+                        context.router.push(const SettingsReactionsRoute()),
                   ),
                 ],
               ),

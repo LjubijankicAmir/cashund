@@ -3,6 +3,7 @@ import 'package:cashund/domain/entities/user_preferences.dart';
 import 'package:cashund/domain/repositories/category_repository.dart';
 import 'package:cashund/domain/repositories/preferences_repository.dart';
 import 'package:cashund/domain/repositories/transaction_repository.dart';
+import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,6 +75,24 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       (event, emit) => _save(
         emit,
         (preferences) => preferences.copyWith(themePreference: event.theme),
+      ),
+    );
+    on<_ReactionFrequencyChosen>(
+      (event, emit) => _save(
+        emit,
+        (preferences) =>
+            preferences.copyWith(reactionFrequency: event.frequency),
+      ),
+    );
+    on<_ReactionIntervalChanged>(
+      (event, emit) => _save(
+        emit,
+        (preferences) => preferences.copyWith(
+          reactionInterval: event.interval.clamp(
+            UserPreferences.minReactionInterval,
+            UserPreferences.maxReactionInterval,
+          ),
+        ),
       ),
     );
     on<_BuddyNameSaved>((event, emit) {
