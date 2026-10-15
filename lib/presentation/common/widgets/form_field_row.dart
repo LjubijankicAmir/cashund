@@ -3,19 +3,21 @@ import 'package:cashund/core/theme/cashund_text.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:flutter/material.dart';
 
-/// A labelled form field: the label above, "Optional" on the right when the
-/// field can stay empty.
+/// A labelled form field: the label above, and on the right "Optional" when
+/// the field can stay empty, or a [trailing] note such as the picked value.
 class FormFieldRow extends StatelessWidget {
   const FormFieldRow({
     required this.label,
     required this.child,
     this.optional = false,
+    this.trailing,
     super.key,
   });
 
   final String label;
   final Widget child;
   final bool optional;
+  final String? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +32,8 @@ class FormFieldRow extends StatelessWidget {
         Row(
           children: [
             Expanded(child: Text(label, style: style)),
-            if (optional)
-              Text(
-                context.l10n.optional,
-                style: style.copyWith(fontWeight: FontWeight.w400),
-              ),
+            if (optional ? context.l10n.optional : trailing case final note?)
+              Text(note, style: style.copyWith(fontWeight: FontWeight.w400)),
           ],
         ),
         child,
