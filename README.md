@@ -18,17 +18,22 @@
 
 Cashund tracks your incomes and expenses without an account, a server or an internet connection. Everything lives in a database on your phone. Biscuit, a dachshund buddy, keeps an eye on your spending: he gives you a heads-up when you're close to a limit you've set and cheers when you've spent less than planned.
 
-> **Status:** early development. The project foundation is in place; features land phase by phase (see [Roadmap](#roadmap)).
+> **Status:** Phase 1 is out as `v0.1.0`: tracking, categories, the dashboard, search and the buddy's reactions. Insights and spending limits come next (see [Roadmap](#roadmap)).
 
 ## Features
 
 - **Manual tracking** of expenses and incomes, each with a category
-- **Your own categories**, separate for expenses and incomes, each with an emoji and a color
+- **Your own categories**, separate for expenses and incomes, each with an emoji and a color, in the order you like
 - **A calm dashboard** with day, week and month views that shows what matters and nothing more
+- **Activity history** with search, filters, editing and swipe to delete (with undo)
+- **A buddy who reacts** to what you log, as often as you like, or not at all
+- **Light and dark themes**, designed as equals
+
+Coming next:
+
 - **Detailed statistics** with charts for when you want to dig deeper
 - **Soft spending limits** per category and period, with friendly warnings instead of hard blocks
 - **On-device AI import** that reads receipts and card statements. The model runs on your phone, so your data never leaves it
-- **Light and dark themes**, designed as equals
 
 ## Download
 
@@ -38,8 +43,8 @@ Android APKs are attached to each [release](https://github.com/LjubijankicAmir/c
 
 | Phase | Scope | Release |
 | --- | --- | --- |
-| 0. Foundation | Architecture, theme, DI, routing, localization, database, CI | |
-| 1. Core | Transactions, categories, dashboard, search and filters | `v0.1.0` |
+| 0. Foundation ✅ | Architecture, theme, DI, routing, localization, database, CI | |
+| 1. Core ✅ | Transactions, categories, dashboard, search and filters, settings, the buddy's reactions | `v0.1.0` |
 | 2. Insights | Statistics, spending limits, the buddy's messages, backup and export | `v0.2.0` |
 | 3. Smart import | Receipt and statement scanning with an on-device model, review before saving | `v1.0.0` |
 
