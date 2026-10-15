@@ -141,6 +141,25 @@ class TransactionForm extends StatelessWidget {
                   onTap: onChooseCategory,
                 ),
               ),
+              // Not when editing: the category is already set.
+              if (!state.isEditing && state.quickPicks.isNotEmpty) ...[
+                const SizedBox(height: CashundSpace.s3),
+                Wrap(
+                  spacing: CashundSpace.s2,
+                  runSpacing: CashundSpace.s2,
+                  children: [
+                    for (final pick in state.quickPicks)
+                      QuickChip(
+                        leading: CategoryMark(color: pick.color, height: 14),
+                        label: pick.label(l10n),
+                        selected: pick.id == state.categoryId,
+                        onTap: () => bloc.add(
+                          TransactionFormEvent.categorySelected(pick.id),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
               const SizedBox(height: CashundSpace.s5),
               FormFieldRow(
                 label: l10n.addTransactionTitle,
