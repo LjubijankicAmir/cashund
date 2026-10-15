@@ -361,5 +361,143 @@
   "@categoriesDragHandle": {
     "placeholders": { "name": { "type": "String", "example": "Groceries" } }
   },
-  "categoriesSaveFailed": "Couldn’t save that change. Please try again."
+  "categoriesSaveFailed": "Couldn’t save that change. Please try again.",
+  "reactionSaved": "Saved {amount}",
+  "@reactionSaved": {
+    "placeholders": { "amount": { "type": "String", "example": "−$42.75" } }
+  },
+  "transactionDeletedNamed": "Deleted “{name}”",
+  "@transactionDeletedNamed": {
+    "placeholders": { "name": { "type": "String", "example": "Lunch with Sara" } }
+  },
+  "editTransactionAdded": "Added {date} at {time}",
+  "@editTransactionAdded": {
+    "placeholders": {
+      "date": { "type": "String", "example": "Thu, Oct 8" },
+      "time": { "type": "String", "example": "12:41" }
+    }
+  },
+  "settingsReactions": "Reactions",
+  "settingsReactionsSubtitle": "When you log something",
+  "settingsReactionsAlways": "Every time",
+  "settingsReactionsOff": "Off",
+  "settingsReactionsPageSubtitle": "How often {buddyName} reacts right after you log something.",
+  "@settingsReactionsPageSubtitle": {
+    "placeholders": { "buddyName": { "type": "String", "example": "Biscuit" } }
+  },
+  "reactionFrequencyAlways": "After every transaction",
+  "reactionFrequencySometimes": "Every few transactions",
+  "reactionFrequencyNever": "Never",
+  "reactionEvery": "{count, plural, other{Every {count} transactions}}",
+  "@reactionEvery": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "reactionIntervalFewer": "Less often",
+  "reactionIntervalMore": "More often",
+
+  "reactionGroceries": "{index, select, 0{Stocked up. Anything in there for me?} 1{A full fridge is a happy fridge.} 2{I can smell the cheese from here.} 3{Good haul. I’ll guard the bags.} 4{Groceries in, good meals ahead.} 5{If there’s ham, I volunteer as taster.} 6{Nice! Cooking at home is a quiet win.} 7{Snacks secured. Mostly yours, sadly.} 8{Logged. The pantry thanks you.} 9{Fresh food, fresh week.} 10{Was that a sausage I heard? Just checking.} 11{Another trip done. Rest those feet.} other{Stocked up. Anything in there for me?}}",
+  "@reactionGroceries": {
+    "description": "Buddy reaction after logging: Groceries. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionEatingOut": "{index, select, 0{Smells good from here.} 1{Enjoy every bite. You earned it.} 2{Doggy bag? Asking for a friend.} 3{Nice! Someone else does the dishes tonight.} 4{A good meal is never wasted.} 5{Logged. Now go enjoy it.} 6{I’ll be under the table if you need me.} 7{Treating yourself counts as self-care.} 8{Food with friends tastes better.} 9{Save me a fry. Or two.} 10{No cooking tonight. Smart move.} 11{Bon appétit. I’ll wait right here.} other{Smells good from here.}}",
+  "@reactionEatingOut": {
+    "description": "Buddy reaction after logging: Eating Out. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionTransport": "{index, select, 0{Off you go. I’ll guard the couch.} 1{Safe travels. Come back soon.} 2{Window seat, I hope.} 3{Logged. Every trip gets you somewhere.} 4{I’d chase that bus for you.} 5{Wheels, rails or wings, I’ve got the numbers.} 6{Getting around, one ride at a time.} 7{Noted. Mind the gap.} 8{Drive safe. Ears out the window optional.} 9{Commute logged. Podcast time?} 10{Nice! Another trip, all accounted for.} 11{Places to be. I’ll keep the tally.} other{Off you go. I’ll guard the couch.}}",
+  "@reactionTransport": {
+    "description": "Buddy reaction after logging: Transport. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionHousing": "{index, select, 0{Home sweet home.} 1{A roof over us both. Good human.} 2{Logged. The couch is safe another month.} 3{Home is where the dog bed is.} 4{Nice! The roof is sorted.} 5{The most important bill, handled.} 6{Keeping our den cozy.} 7{Noted. I’ll keep the place guarded.} 8{A good home is worth every penny.} 9{That’s the big one, done.} 10{Our patch of the world, paid for.} 11{Done. Now we can relax at home.} other{Home sweet home.}}",
+  "@reactionHousing": {
+    "description": "Buddy reaction after logging: Housing. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionBills": "{index, select, 0{Paid and done. One less thing.} 1{Lights on, Wi-Fi up. Good.} 2{Nice! Bills sorted on time.} 3{Boring but important. Well done.} 4{Logged. Nothing to chase now.} 5{Bills in order, mind at ease.} 6{That’s off the list.} 7{Another one handled like a pro.} 8{Keeping the lights on for my naps.} 9{The grown-up stuff, done.} 10{Paid. Filed under “sorted”.} 11{Quietly handled. Respect.} other{Paid and done. One less thing.}}",
+  "@reactionBills": {
+    "description": "Buddy reaction after logging: Bills. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionHousehold": "{index, select, 0{A tidy den is a happy den.} 1{Fresh towels? I approve.} 2{Nice! The house thanks you.} 3{Logged. Little things make a home.} 4{If it squeaks, I’m borrowing it.} 5{Small things keep a home running.} 6{Cleaning stuff. I’ll stay out of the way.} 7{Noted. Home upgrades count.} 8{Every home needs this stuff.} 9{The house is in good paws.} 10{Sorted. One less thing missing.} 11{Making the place feel like home.} other{A tidy den is a happy den.}}",
+  "@reactionHousehold": {
+    "description": "Buddy reaction after logging: Household. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionHealth": "{index, select, 0{Taking care of yourself counts too.} 1{Health first, always.} 2{Feel better soon. I’ll stay close.} 3{Logged. Money well spent on you.} 4{Good human, looking after yourself.} 5{Nice! Your health is worth it.} 6{I’ll bring you my favorite toy.} 7{Rest up. I’ve got the numbers.} 8{Looking after you looks after both of us.} 9{Noted. Take it easy today.} 10{Healthy you, happy me.} 11{Every checkup counts.} other{Taking care of yourself counts too.}}",
+  "@reactionHealth": {
+    "description": "Buddy reaction after logging: Health. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionPersonalCare": "{index, select, 0{Looking sharp.} 1{Nice! A little care goes a long way.} 2{You smell nice. I checked.} 3{Logged. Treat yourself kindly.} 4{Fresh and fancy. I approve.} 5{Self-care is never silly.} 6{Noted. You deserve a pamper.} 7{Groomed and glowing.} 8{I like a good brushing too.} 9{Feeling good is part of the plan.} 10{Shiny. Like my coat after a bath.} 11{Care for yourself, then scratch my ears.} other{Looking sharp.}}",
+  "@reactionPersonalCare": {
+    "description": "Buddy reaction after logging: Personal Care. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionClothing": "{index, select, 0{Looking good in that.} 1{Nice! New threads.} 2{I’ll try not to nap on it.} 3{Logged. Style noted.} 4{A good fit is worth it.} 5{Fresh look, same great human.} 6{Any of it in dog size?} 7{Noted. Wear it well.} 8{Dressed to impress. Me, at least.} 9{Your wardrobe thanks you.} 10{Comfy or fancy, both count.} 11{I’ll sniff it for approval later.} other{Looking good in that.}}",
+  "@reactionClothing": {
+    "description": "Buddy reaction after logging: Clothing. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionSocialLife": "{index, select, 0{Have fun out there.} 1{Nice! Time with friends is precious.} 2{Good company is worth it.} 3{Logged. Now go enjoy yourself.} 4{Say hi to everyone for me.} 5{Memories are the best kind of spending.} 6{I’ll hold down the fort.} 7{Noted. Laugh a lot.} 8{Friends first, numbers later.} 9{Party on. I’ll keep count.} 10{Going out suits you.} 11{Bring back stories. And snacks.} other{Have fun out there.}}",
+  "@reactionSocialLife": {
+    "description": "Buddy reaction after logging: Social Life. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionGiftsGiven": "{index, select, 0{Nice! Somebody’s getting spoiled.} 1{Giving feels good, doesn’t it?} 2{Lucky someone.} 3{Logged. Kindness noted.} 4{Wrapping paper is my favorite toy.} 5{A good gift says a lot.} 6{Somebody’s day just got better.} 7{Noted. Generous as always.} 8{Is it for me? Worth asking.} 9{Thoughtful human, you are.} 10{The best gifts come from the heart.} 11{Gift sorted. Card next?} other{Nice! Somebody’s getting spoiled.}}",
+  "@reactionGiftsGiven": {
+    "description": "Buddy reaction after logging: Gifts (expense). One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionTravel": "{index, select, 0{Adventure time.} 1{Nice! Send me a postcard.} 2{New places, new smells.} 3{Logged. Have a wonderful trip.} 4{Can I fit in the suitcase?} 5{Trips make the best memories.} 6{Noted. Bon voyage.} 7{I’ll miss you. Come back soon.} 8{Exploring suits you.} 9{Getting away is good for you.} 10{Pack sunscreen. And treats for me.} 11{The world’s waiting. Enjoy it.} other{Adventure time.}}",
+  "@reactionTravel": {
+    "description": "Buddy reaction after logging: Travel. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionPets": "{index, select, 0{Every penny on a fellow pet is a penny well spent.} 1{Nice! Spoiling an animal. My favorite category.} 2{Fully approved by the pet community.} 3{Logged. Treats are an investment.} 4{Is it for me? Please say yes.} 5{Happy pets, happy home.} 6{Best spending of the day.} 7{A good human looks after their animals.} 8{I see you. I appreciate you.} 9{Noted with a wag.} 10{This one gets five paws.} 11{Pets first. Wise choice.} other{Every penny on a fellow pet is a penny well spent.}}",
+  "@reactionPets": {
+    "description": "Buddy reaction after logging: Pets. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionOtherExpense": "{index, select, 0{Got it. Saved.} 1{Logged. Nice and tidy.} 2{Noted. Every bit counts.} 3{Filed away. Good tracking.} 4{Saved. The numbers stay honest.} 5{Nice! Nothing slips past us.} 6{All in the books.} 7{Logged it. Onward.} 8{Tracked. You’re on top of things.} 9{Done. Thanks for keeping me posted.} 10{One more for the list.} 11{Saved and sorted.} other{Got it. Saved.}}",
+  "@reactionOtherExpense": {
+    "description": "Buddy reaction after logging: Other and custom expense categories. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionSalary": "{index, select, 0{Payday! I’ll keep an eye on it for you.} 1{Nice! Hard work paid off.} 2{Salary’s in. Good human.} 3{Logged. A fresh start for the month.} 4{The bowl is full again.} 5{All that work, rewarded.} 6{Payday. Treats all round?} 7{Noted. Steady and strong.} 8{Money in. Plans ahead.} 9{You earned every bit of it.} 10{Another month of good work.} 11{That’s the good kind of news.} other{Payday! I’ll keep an eye on it for you.}}",
+  "@reactionSalary": {
+    "description": "Buddy reaction after logging: Salary. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionBonus": "{index, select, 0{Nice! A bonus well earned.} 1{Extra! Somebody noticed your work.} 2{Bonus logged. Proud of you.} 3{Celebrate a little. You deserve it.} 4{That calls for a happy tail.} 5{Recognition looks good on you.} 6{Noted. A nice surprise.} 7{Extra in the bowl. Lovely.} 8{Hard work, extra reward.} 9{Well done, top human.} 10{A bonus. My tail approves.} 11{Logged. Enjoy this one.} other{Nice! A bonus well earned.}}",
+  "@reactionBonus": {
+    "description": "Buddy reaction after logging: Bonus. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionSideIncome": "{index, select, 0{Nice! The side hustle pays.} 1{Extra work, extra reward.} 2{Logged. Busy paws, full bowl.} 3{Look at you, earning on the side.} 4{Every bit adds up.} 5{Your hustle is paying off.} 6{Noted. Proud of the effort.} 7{Small gigs, real money.} 8{That’s initiative.} 9{Extra income, logged and loved.} 10{Keep it up, clever human.} 11{More in. Well done.} other{Nice! The side hustle pays.}}",
+  "@reactionSideIncome": {
+    "description": "Buddy reaction after logging: Side Income. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionGiftsReceived": "{index, select, 0{Nice! Someone thinks you’re great.} 1{A gift. You must be loved.} 2{Lucky you.} 3{Logged. Someone was generous.} 4{Gifts are the best surprise.} 5{Treasure the thought behind it.} 6{Noted. Say thanks for me.} 7{Somebody spoiled you. Good.} 8{Kind people around you.} 9{What a nice surprise.} 10{That’s love, in money form.} 11{Enjoy it. You deserve it.} other{Nice! Someone thinks you’re great.}}",
+  "@reactionGiftsReceived": {
+    "description": "Buddy reaction after logging: Gifts (income). One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionRefunds": "{index, select, 0{Money back. Nice.} 1{Refunded. As it should be.} 2{Logged. Back where it belongs.} 3{Nice! Every refund counts.} 4{Returned and recovered.} 5{Good catch getting that back.} 6{Noted. The bowl refills.} 7{That’s a small win.} 8{Back in your pocket.} 9{Refund received. Tail wag.} 10{Smart move, getting that back.} 11{Square again.} other{Money back. Nice.}}",
+  "@reactionRefunds": {
+    "description": "Buddy reaction after logging: Refunds. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionInterest": "{index, select, 0{Your money made money.} 1{Nice! Earning while you sleep.} 2{Interest in. I like naps that pay.} 3{Logged. Slow and steady.} 4{Patience pays.} 5{A little growth. Good sign.} 6{Money working for you.} 7{Noted. Compounding nicely.} 8{Every bit of growth counts.} 9{Quietly growing.} 10{That’s the long game paying off.} 11{Saving pays. Who knew?} other{Your money made money.}}",
+  "@reactionInterest": {
+    "description": "Buddy reaction after logging: Interest. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  },
+  "reactionOtherIncome": "{index, select, 0{Money in. Nice.} 1{Nice! More in the bowl.} 2{Logged. Good news for us.} 3{Income noted. Tail wag.} 4{Every bit in counts.} 5{That’s the good kind of entry.} 6{In it goes. Well done.} 7{Noted. Things are looking up.} 8{Good work bringing that in.} 9{Saved. Love to see it.} 10{Money in, worries out.} 11{Logged and appreciated.} other{Money in. Nice.}}",
+  "@reactionOtherIncome": {
+    "description": "Buddy reaction after logging: Other and custom income categories. One of 12 lines, picked by index 0–11.",
+    "placeholders": { "index": { "type": "String", "example": "0" } }
+  }
 }
