@@ -31,6 +31,12 @@ abstract class TransactionFormState with _$TransactionFormState {
   /// How many recently used categories the picker shows.
   static const recentCount = 3;
 
+  /// How many categories are offered as chips under the category field.
+  static const quickPickCount = 3;
+
+  /// The first categories in the user's order, for one-tap picks.
+  List<Category> get quickPicks => categories.take(quickPickCount).toList();
+
   int? get amountMinor => switch (currency) {
     final currency? => parseAmount(amountText, currency),
     null => null,

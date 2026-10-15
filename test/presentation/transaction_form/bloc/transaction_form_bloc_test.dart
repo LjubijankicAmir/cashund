@@ -113,6 +113,19 @@ void main() {
     await bloc.close();
   });
 
+  test('offers the first three categories in order as quick picks', () async {
+    final housing = _category(4, TransactionType.expense);
+    when(() => categories.watchActive(TransactionType.expense)).thenAnswer(
+      (_) => Stream<Result<List<Category>>>.value(
+        right([groceries, eatingOut, transport, housing]),
+      ),
+    );
+    final bloc = await opened(TransactionType.expense);
+
+    expect(bloc.state.quickPicks, [groceries, eatingOut, transport]);
+    await bloc.close();
+  });
+
   test(
     'switching type clears the category and follows the other lists',
     () async {

@@ -1,9 +1,11 @@
+import 'package:cashund/core/error/failure.dart';
 import 'package:cashund/core/utils/clock.dart';
 import 'package:cashund/data/datasources/local/app_database.dart';
 import 'package:cashund/data/datasources/local/seed/predefined_categories.dart';
 import 'package:cashund/data/repositories/category_repository_impl.dart';
 import 'package:cashund/data/repositories/transaction_repository_impl.dart';
 import 'package:cashund/domain/entities/category.dart';
+import 'package:cashund/domain/value_objects/category_color.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:drift/drift.dart' hide isNull;
 import 'package:drift/native.dart';
@@ -112,5 +114,130 @@ void main() {
     final [before, after] = await updates;
     expect(before.getRight().toNullable(), isEmpty);
     expect(after.getRight().toNullable()!.single.id, groceries.id);
+  });
+
+  group('managing categories', () {
+    Future<List<Category>> all(TransactionType type) async =>
+        (await categories.watchByType(type).first).getRight().toNullable()!;
+
+    Future<Category> byKey(String key) async =>
+        (await all(TransactionType.expense))
+            .firstWhere((c) => c.predefinedKey == key);
+
+    test('create adds a trimmed custom category after the others', () async {
+      final result = await categories.create(
+        type: TransactionType.expense,
+        name: '  Hobbies ',
+        emoji: '🎨',
+        color: CategoryColor.plum,
+      );
+
+      final created = result.getRight().toNullable()!;
+      expect(created.customName, 'Hobbies');
+      expect(created.predefinedKey, isNull);
+      expect(created.sortOrder, 14);
+      expect((await active(TransactionType.expense)).last.id, created.id);
+    });
+
+    test('create rejects a blank name', () async {
+      final result = await categories.create(
+        type: TransactionType.expense,
+        name: '   ',
+        emoji: '🎨',
+        color: CategoryColor.plum,
+      );
+
+      expect(result.getLeft().toNullable(), isA<ValidationFailure>());
+    });
+
+    test('update renames and recolors a built-in category', () async {
+      final groceries = await byKey('groceries');
+
+      await categories.update(
+        id: groceries.id,
+        customName: 'Food',
+        emoji: groceries.emoji,
+        color: CategoryColor.teal,
+      );
+      final renamed = await byKey('groceries');
+      expect(renamed.customName, 'Food');
+      expect(renamed.color, CategoryColor.teal);
+
+      await categories.update(
+        id: groceries.id,
+        customName: null,
+        emoji: groceries.emoji,
+        color: CategoryColor.teal,
+      );
+      expect((await byKey('groceries')).customName, isNull);
+    });
+
+    test("update keeps a built-in category's emoji", () async {
+      final groceries = await byKey('groceries');
+
+      final result = await categories.update(
+        id: groceries.id,
+        customName: null,
+        emoji: '🍕',
+        color: groceries.color,
+      );
+
+      expect(result.getLeft().toNullable(), isA<ValidationFailure>());
+      expect((await byKey('groceries')).emoji, groceries.emoji);
+    });
+
+    test('update requires a name for a custom category', () async {
+      final hobbies = (await categories.create(
+        type: TransactionType.expense,
+        name: 'Hobbies',
+        emoji: '🎨',
+        color: CategoryColor.plum,
+      )).getRight().toNullable()!;
+
+      final result = await categories.update(
+        id: hobbies.id,
+        customName: null,
+        emoji: '🎮',
+        color: CategoryColor.plum,
+      );
+      expect(result.getLeft().toNullable(), isA<ValidationFailure>());
+
+      await categories.update(
+        id: hobbies.id,
+        customName: 'Games',
+        emoji: '🎮',
+        color: CategoryColor.sky,
+      );
+      final changed = (await all(TransactionType.expense))
+          .firstWhere((c) => c.id == hobbies.id);
+      expect(changed.customName, 'Games');
+      expect(changed.emoji, '🎮');
+    });
+
+    test('reorder saves the new order', () async {
+      final ids = [for (final c in await all(TransactionType.expense)) c.id];
+      final reordered = [ids[2], ids[0], ids[1], ...ids.skip(3)];
+
+      await categories.reorder(TransactionType.expense, reordered);
+
+      expect([
+        for (final c in await all(TransactionType.expense)) c.id,
+      ], reordered);
+    });
+
+    test('archive hides a category from the active ones; restore brings it '
+        'back in its place', () async {
+      final transport = await byKey('transport');
+
+      await categories.setArchived(transport.id, archived: true);
+      expect(
+        (await active(TransactionType.expense)).map((c) => c.id),
+        isNot(contains(transport.id)),
+      );
+      expect((await byKey('transport')).isArchived, isTrue);
+
+      await categories.setArchived(transport.id, archived: false);
+      expect((await active(TransactionType.expense))[2].id, transport.id);
+    });
   });
 }

@@ -109,7 +109,7 @@ class SettingsHomeScreen extends StatelessWidget {
                         l10n.settingsCategoryCounts(expense, income),
                       null => null,
                     },
-                    // TODO(categories): open the categories page.
+                    onTap: () => context.router.push(const CategoriesRoute()),
                   ),
                 ],
               ),

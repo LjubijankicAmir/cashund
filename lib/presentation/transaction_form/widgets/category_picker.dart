@@ -3,6 +3,7 @@ import 'package:cashund/core/theme/cashund_text.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/domain/entities/category.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
+import 'package:cashund/presentation/category_editor/category_editor_sheet.dart';
 import 'package:cashund/presentation/common/extensions/category_display.dart';
 import 'package:cashund/presentation/common/widgets/category_mark.dart';
 import 'package:cashund/presentation/transaction_form/bloc/transaction_form_bloc.dart';
@@ -29,6 +30,13 @@ class _CategoryPickerState extends State<CategoryPicker> {
       TransactionFormEvent.categorySelected(category.id),
     );
     widget.onBack();
+  }
+
+  /// Opens the editor; a category made there is picked right away.
+  Future<void> _create() async {
+    final type = context.read<TransactionFormBloc>().state.type;
+    final created = await showCategoryEditor(context, type: type);
+    if (created != null && mounted) _pick(created);
   }
 
   @override
@@ -158,8 +166,7 @@ class _CategoryPickerState extends State<CategoryPicker> {
                 0,
               ),
               child: FilledButton.tonalIcon(
-                // TODO(categories): open the category editor once it's designed.
-                onPressed: () {},
+                onPressed: _create,
                 icon: const Icon(LucideIcons.plus),
                 label: Text(l10n.newCategory),
               ),

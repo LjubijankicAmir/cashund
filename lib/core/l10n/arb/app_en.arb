@@ -318,5 +318,48 @@
 
   "settingsBuddyNameTitle": "Buddy name",
   "settingsBuddyNameHelper": "Shows up wherever your buddy talks to you.",
-  "settingsSaveName": "Save name"
+  "settingsSaveName": "Save name",
+  "categoryEditorEdit": "Edit category",
+  "categoryEditorBuiltIn": "{type} · built-in",
+  "@categoryEditorBuiltIn": {
+    "placeholders": { "type": { "type": "String", "example": "Expense" } }
+  },
+  "categoryEditorPreview": "Preview",
+  "categoryEditorSampleExpense": "Paint set",
+  "categoryEditorSampleIncome": "Side gig",
+  "categoryEditorName": "Name",
+  "categoryEditorNameTaken": "You already have a category with this name.",
+  "categoryEditorEmoji": "Emoji",
+  "categoryEditorOtherEmoji": "Use another emoji",
+  "categoryEditorEmojiLocked": "Built-in emoji stays",
+  "emojiPickerSearchHint": "Search emoji",
+  "emojiPickerNoRecents": "Emoji you pick will show up here.",
+  "categoryEditorColor": "Color",
+  "categoryEditorSave": "Save category",
+  "categoryEditorSaveChanges": "Save changes",
+  "categoryEditorArchive": "Archive",
+  "categoryEditorSaveFailed": "Couldn’t save the category. Please try again.",
+  "categoryColorName": "{color, select, coral{Coral} sky{Sky} mustard{Mustard} plum{Plum} olive{Olive} periwinkle{Periwinkle} apricot{Apricot} teal{Teal} rose{Rose} slate{Slate} lavender{Lavender} cocoa{Cocoa} other{{color}}}",
+  "@categoryColorName": {
+    "description": "Display name of a category color, by its key.",
+    "placeholders": { "color": { "type": "String", "example": "plum" } }
+  },
+  "categoriesHint": "Drag to reorder. The first three show up as quick picks.",
+  "categoriesArchived": "Archived · {count}",
+  "@categoriesArchived": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "categoriesArchivedNote": "Archived categories keep their past transactions but can’t be picked for new ones.",
+  "categoriesEdit": "Edit",
+  "categoriesArchive": "Archive",
+  "categoriesRestore": "Restore",
+  "categoriesMoreOptions": "More options for {name}",
+  "@categoriesMoreOptions": {
+    "placeholders": { "name": { "type": "String", "example": "Groceries" } }
+  },
+  "categoriesDragHandle": "Reorder {name}",
+  "@categoriesDragHandle": {
+    "placeholders": { "name": { "type": "String", "example": "Groceries" } }
+  },
+  "categoriesSaveFailed": "Couldn’t save that change. Please try again."
 }
