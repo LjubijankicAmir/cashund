@@ -18,6 +18,26 @@ abstract final class CashundTheme {
       textTheme: CashundText.textTheme(scheme.onSurface),
       extensions: [colors, CategoryColors(scheme.brightness)],
       focusColor: scheme.primary,
+      // Floats 16pt above the bottom bar as a raised card.
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: scheme.surfaceContainerHigh,
+        contentTextStyle: CashundText.body.copyWith(color: scheme.onSurface),
+        actionTextColor: scheme.primary,
+        elevation: 6,
+        insetPadding: const EdgeInsets.fromLTRB(
+          CashundSpace.s4,
+          0,
+          CashundSpace.s4,
+          CashundSpace.s4,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(CashundRadius.md),
+          side: scheme.brightness == Brightness.dark
+              ? BorderSide(color: scheme.outlineVariant)
+              : BorderSide.none,
+        ),
+      ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
           minimumSize: const Size(64, 52),
