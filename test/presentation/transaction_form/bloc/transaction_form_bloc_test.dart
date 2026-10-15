@@ -65,6 +65,11 @@ void main() {
         ),
       ),
     );
+    when(() => categories.watchByType(any())).thenAnswer(
+      (_) => Stream<Result<List<Category>>>.value(
+        right([groceries, eatingOut, transport]),
+      ),
+    );
     when(() => categories.watchActive(TransactionType.expense)).thenAnswer(
       (_) => Stream<Result<List<Category>>>.value(
         right([groceries, eatingOut, transport]),
@@ -261,6 +266,26 @@ void main() {
         (bloc.state.title, bloc.state.date),
         ('Bus pass', DateTime(2026, 10, 6)),
       );
+      await bloc.close();
+    });
+
+    test('keeps its category when that category is archived', () async {
+      final oldTrips = _category(
+        9,
+        TransactionType.expense,
+      ).copyWith(isArchived: true);
+      when(() => categories.watchByType(TransactionType.expense)).thenAnswer(
+        (_) => Stream<Result<List<Category>>>.value(
+          right([groceries, eatingOut, transport, oldTrips]),
+        ),
+      );
+      final bloc = build()
+        ..add(TransactionFormEvent.editStarted(lunch.copyWith(categoryId: 9)));
+      await pumpEventQueue();
+
+      expect(bloc.state.selectedCategory, oldTrips);
+      expect(bloc.state.canSave, isTrue);
+      expect(bloc.state.categories, isNot(contains(oldTrips)));
       await bloc.close();
     });
 

@@ -23,6 +23,10 @@ abstract class TransactionFormState with _$TransactionFormState {
     /// The transaction being changed, as it was; `null` when adding.
     Transaction? original,
 
+    /// The [original]'s category when it's archived, so not in [categories]
+    /// but still its category until another is picked.
+    Category? archivedCategory,
+
     /// The transaction as saved, once [status] is `saved`.
     Transaction? saved,
   }) = _TransactionFormState;
@@ -46,7 +50,11 @@ abstract class TransactionFormState with _$TransactionFormState {
   };
 
   Category? get selectedCategory {
-    for (final category in [...categories, ...recentCategories]) {
+    for (final category in [
+      ...categories,
+      ...recentCategories,
+      ?archivedCategory,
+    ]) {
       if (category.id == categoryId) return category;
     }
     return null;

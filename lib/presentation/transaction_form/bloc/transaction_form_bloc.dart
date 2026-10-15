@@ -175,7 +175,10 @@ class TransactionFormBloc
   }
 
   /// Fills the form with [_EditStarted.transaction], in its own currency.
-  void _onEditStarted(_EditStarted event, Emitter<TransactionFormState> emit) {
+  Future<void> _onEditStarted(
+    _EditStarted event,
+    Emitter<TransactionFormState> emit,
+  ) async {
     final transaction = event.transaction;
     final currency =
         currencyByCode(transaction.currencyCode) ??
@@ -196,6 +199,16 @@ class TransactionFormBloc
       ),
     );
     add(TransactionFormEvent.categoriesWatched(transaction.type));
+
+    // Its category may be archived since, and so missing from the lists.
+    final all = (await _categories.watchByType(transaction.type).first)
+        .getRight()
+        .toNullable();
+    for (final category in all ?? const <Category>[]) {
+      if (category.id == transaction.categoryId && category.isArchived) {
+        emit(state.copyWith(archivedCategory: category));
+      }
+    }
   }
 
   Future<void> _onDeletePressed(
