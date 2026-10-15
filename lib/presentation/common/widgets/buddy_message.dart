@@ -14,12 +14,20 @@ class BuddyMessage extends StatelessWidget {
   const BuddyMessage({
     required this.buddyName,
     required this.message,
+    this.header,
+    this.footer,
     this.onDismiss,
     super.key,
   });
 
   final String buddyName;
   final String message;
+
+  /// Replaces the buddy's name line, e.g. to add what it's about.
+  final Widget? header;
+
+  /// Shown under the message, e.g. a timer bar.
+  final Widget? footer;
 
   /// Shows a close button when set.
   final VoidCallback? onDismiss;
@@ -38,54 +46,58 @@ class BuddyMessage extends StatelessWidget {
           constraints: BoxConstraints(
             maxWidth: constraints.maxWidth * _maxWidthFactor,
           ),
-          // A Container (unlike a DecoratedBox) adds the border's room for the
-          // tail on top of this padding.
-          child: Container(
-            decoration: ShapeDecoration(
-              color: scheme.primaryContainer,
-              shape: const SpeechBubbleBorder(radius: CashundRadius.lg),
-            ),
-            padding: EdgeInsets.fromLTRB(
-              CashundSpace.s4,
-              CashundSpace.s3,
-              onDismiss == null ? CashundSpace.s4 : CashundSpace.s1,
-              CashundSpace.s4,
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: CashundSpace.s1,
-                    children: [
-                      Text(
-                        buddyName,
-                        style: CashundText.buddyName.copyWith(
-                          color: scheme.primary,
+          child: Material(
+            color: scheme.primaryContainer,
+            shape: const SpeechBubbleBorder(radius: CashundRadius.lg),
+            child: Padding(
+              // The tail sits above the bubble's body, inside its shape.
+              padding: EdgeInsets.fromLTRB(
+                CashundSpace.s4,
+                SpeechBubbleBorder.tailHeight + CashundSpace.s3,
+                onDismiss == null ? CashundSpace.s4 : CashundSpace.s1,
+                CashundSpace.s4,
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: CashundSpace.s1,
+                      children: [
+                        header ??
+                            Text(
+                              buddyName,
+                              style: CashundText.buddyName.copyWith(
+                                color: scheme.primary,
+                              ),
+                            ),
+                        Text(
+                          message,
+                          style: CashundText.bodyLg.copyWith(
+                            color: scheme.onSurface,
+                          ),
                         ),
-                      ),
-                      Text(
-                        message,
-                        style: CashundText.bodyLg.copyWith(
-                          color: scheme.onSurface,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (onDismiss case final onDismiss?)
-                  IconButton(
-                    tooltip: context.l10n.dismiss,
-                    onPressed: onDismiss,
-                    visualDensity: VisualDensity.compact,
-                    style: IconButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      foregroundColor: scheme.onSurfaceVariant,
+                        if (footer case final footer?) ...[
+                          const SizedBox(height: CashundSpace.s1),
+                          footer,
+                        ],
+                      ],
                     ),
-                    icon: const Icon(LucideIcons.x, size: 18),
                   ),
-              ],
+                  if (onDismiss case final onDismiss?)
+                    IconButton(
+                      tooltip: context.l10n.dismiss,
+                      onPressed: onDismiss,
+                      visualDensity: VisualDensity.compact,
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: scheme.onSurfaceVariant,
+                      ),
+                      icon: const Icon(LucideIcons.x, size: 18),
+                    ),
+                ],
+              ),
             ),
           ),
         ),
@@ -102,16 +114,18 @@ class SpeechBubbleBorder extends ShapeBorder {
   final double radius;
 
   static const _tailWidth = 16.0;
-  static const _tailHeight = 10.0;
+
+  /// How far the tail rises above the bubble's body.
+  static const tailHeight = 10.0;
 
   @override
-  EdgeInsetsGeometry get dimensions => const EdgeInsets.only(top: _tailHeight);
+  EdgeInsetsGeometry get dimensions => const EdgeInsets.only(top: tailHeight);
 
   @override
   Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
     final body = Rect.fromLTRB(
       rect.left,
-      rect.top + _tailHeight,
+      rect.top + tailHeight,
       rect.right,
       rect.bottom,
     );

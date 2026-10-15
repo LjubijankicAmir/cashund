@@ -26,7 +26,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
   final Clock _clock;
 
   @override
-  FutureResult<Unit> add({
+  FutureResult<Transaction> add({
     required TransactionType type,
     required int amountMinor,
     required String currencyCode,
@@ -41,7 +41,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     return guardFuture(() async {
-      await _dao.insert(
+      final row = await _dao.insert(
         TransactionsTableCompanion.insert(
           type: type,
           amountMinor: amountMinor,
@@ -56,7 +56,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
           createdAt: _clock.now(),
         ),
       );
-      return unit;
+      return row.toEntity();
     });
   }
 

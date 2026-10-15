@@ -3,11 +3,10 @@ import 'package:cashund/core/theme/cashund_colors.dart';
 import 'package:cashund/core/theme/cashund_text.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/core/theme/category_colors.dart';
-import 'package:cashund/core/utils/money_format.dart';
 import 'package:cashund/domain/entities/transaction_with_category.dart';
-import 'package:cashund/domain/value_objects/currency.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:cashund/presentation/common/extensions/category_display.dart';
+import 'package:cashund/presentation/common/extensions/transaction_display.dart';
 import 'package:flutter/material.dart';
 
 /// One transaction in a list: its category, title and amount.
@@ -24,13 +23,6 @@ class TransactionRow extends StatelessWidget {
     final (transaction, category) = (entry.transaction, entry.category);
     final swatch = context.categoryColor(category.color);
     final isIncome = transaction.type == TransactionType.income;
-    final currency =
-        currencyByCode(transaction.currencyCode) ??
-        Currency(
-          code: transaction.currencyCode,
-          symbol: transaction.currencyCode,
-          decimalDigits: 2,
-        );
     final title = transaction.title;
 
     final row = Padding(
@@ -77,11 +69,7 @@ class TransactionRow extends StatelessWidget {
             ),
             Center(
               child: Text(
-                formatMoney(
-                  isIncome ? transaction.amountMinor : -transaction.amountMinor,
-                  currency,
-                  signed: true,
-                ),
+                transaction.signedAmount,
                 style: CashundText.amount.copyWith(
                   color: isIncome
                       ? Theme.of(context).extension<CashundColors>()!.positive

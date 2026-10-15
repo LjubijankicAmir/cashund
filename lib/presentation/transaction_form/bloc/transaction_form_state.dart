@@ -22,6 +22,9 @@ abstract class TransactionFormState with _$TransactionFormState {
 
     /// The transaction being changed, as it was; `null` when adding.
     Transaction? original,
+
+    /// The transaction as saved, once [status] is `saved`.
+    Transaction? saved,
   }) = _TransactionFormState;
 
   const TransactionFormState._();

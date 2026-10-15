@@ -164,6 +164,16 @@ void main() {
   });
 
   test('saves the parsed amount with the chosen details', () async {
+    final logged = Transaction(
+      id: 7,
+      type: TransactionType.expense,
+      amountMinor: 1840,
+      currencyCode: 'EUR',
+      categoryId: transport.id,
+      occurredOn: DateTime(2026, 10, 7),
+      createdAt: today,
+      title: 'Bus pass',
+    );
     when(
       () => transactions.add(
         type: any(named: 'type'),
@@ -173,7 +183,7 @@ void main() {
         occurredOn: any(named: 'occurredOn'),
         title: any(named: 'title'),
       ),
-    ).thenAnswer((_) async => right(unit));
+    ).thenAnswer((invocation) async => right(logged));
     final bloc = await opened(TransactionType.expense);
 
     bloc
@@ -185,6 +195,7 @@ void main() {
     await pumpEventQueue();
 
     expect(bloc.state.status, TransactionFormStatus.saved);
+    expect(bloc.state.saved, logged);
     verify(
       () => transactions.add(
         type: TransactionType.expense,
@@ -272,6 +283,7 @@ void main() {
       await pumpEventQueue();
 
       expect(bloc.state.status, TransactionFormStatus.saved);
+      expect(bloc.state.saved, lunch.copyWith(amountMinor: 2000));
       verify(
         () => transactions.update(
           id: 7,

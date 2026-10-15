@@ -16,8 +16,8 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
 
   static const _dates = DateOnlyConverter();
 
-  Future<int> insert(TransactionsTableCompanion row) =>
-      into(transactionsTable).insert(row);
+  Future<TransactionRow> insert(TransactionsTableCompanion row) =>
+      into(transactionsTable).insertReturning(row);
 
   /// Whether anything has been logged at all.
   Stream<bool> watchHasAny() {

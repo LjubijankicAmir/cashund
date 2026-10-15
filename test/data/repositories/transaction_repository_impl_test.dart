@@ -39,7 +39,7 @@ void main() {
       );
 
       final row = await database.select(database.transactionsTable).getSingle();
-      expect(result.isRight(), isTrue);
+      expect(result.getRight().toNullable()?.id, row.id);
       expect(row.amountMinor, 1840);
       expect(row.title, 'Lunch with Sara');
       expect(row.occurredOn, DateTime(2026, 10, 7));

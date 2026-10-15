@@ -10,7 +10,7 @@ import 'package:fpdart/fpdart.dart';
 
 abstract interface class TransactionRepository {
   /// Logs a new transaction. [amountMinor] must be above zero.
-  FutureResult<Unit> add({
+  FutureResult<Transaction> add({
     required TransactionType type,
     required int amountMinor,
     required String currencyCode,
