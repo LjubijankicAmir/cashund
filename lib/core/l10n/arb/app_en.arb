@@ -499,5 +499,155 @@
   "@reactionOtherIncome": {
     "description": "Buddy reaction after logging: Other and custom income categories. One of 12 lines, picked by index 0–11.",
     "placeholders": { "index": { "type": "String", "example": "0" } }
-  }
+  },
+  "limitAllSpending": "All spending",
+  "limitLeft": "{amount} left",
+  "@limitLeft": {
+    "placeholders": { "amount": { "type": "String", "example": "$13.60" } }
+  },
+  "limitOverBy": "Over by {amount}",
+  "@limitOverBy": {
+    "placeholders": { "amount": { "type": "String", "example": "$12.40" } }
+  },
+  "limitDaysLeft": "{count, plural, =1{1 day left} other{{count} days left}}",
+  "@limitDaysLeft": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "limitOf": "of {amount}",
+  "@limitOf": {
+    "placeholders": { "amount": { "type": "String", "example": "$600.00" } }
+  },
+  "limitPercent": "{percent}%",
+  "@limitPercent": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "limitPeriodWeek": "Week",
+  "limitPeriodMonth": "Month",
+  "limitThisPeriod": "{period, select, week{This week} other{This month}} · {range}",
+  "@limitThisPeriod": {
+    "placeholders": {
+      "period": { "type": "String", "example": "week" },
+      "range": { "type": "String", "example": "Oct 5 – 11" }
+    }
+  },
+  "limitWarning": "Warning",
+  "limitsTitle": "Limits",
+  "limitsSubtitle": "Soft limits. Nothing is ever blocked.",
+  "limitsByCategory": "By category · most used first",
+  "limitsAddOverall": "Add an overall limit",
+  "limitsAddOverallHint": "One limit for everything you spend {period, select, week{this week} other{this month}}.",
+  "@limitsAddOverallHint": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "limitsNew": "New limit",
+  "limitsEmptyTitle": "No limits yet",
+  "limitsEmptyBody": "Pick a category and a weekly or monthly amount. {buddyName} gives you a heads-up at 80%, and nothing ever gets blocked.",
+  "@limitsEmptyBody": {
+    "placeholders": { "buddyName": { "type": "String", "example": "Biscuit" } }
+  },
+  "limitsEmptyPeriod": "No {period, select, week{weekly} other{monthly}} limits yet.",
+  "@limitsEmptyPeriod": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "limitsSetLimit": "Set a limit",
+  "limitsDeleted": "Deleted the {name} limit",
+  "@limitsDeleted": {
+    "placeholders": { "name": { "type": "String", "example": "Eating Out" } }
+  },
+  "limitsSaveFailed": "Couldn’t save that change. Please try again.",
+
+  "limitEditorNew": "New limit",
+  "limitEditorEdit": "Edit limit",
+  "limitEditorPeriod": "Period",
+  "limitEditorCategory": "Category",
+  "limitEditorChooseCategory": "Choose a category",
+  "limitEditorFixed": "Fixed",
+  "limitEditorAmount": "{period, select, week{Limit per week} other{Limit per month}}",
+  "@limitEditorAmount": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "limitEditorPreview": "Preview",
+  "limitEditorPreviewNote": "{period, select, week{This week so far} other{This month so far}}",
+  "@limitEditorPreviewNote": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "limitEditorPreviewHeadsUp": "{period, select, week{This week so far} other{This month so far}} · {buddyName} would already give you a heads-up.",
+  "@limitEditorPreviewHeadsUp": {
+    "placeholders": {
+      "period": { "type": "String", "example": "week" },
+      "buddyName": { "type": "String", "example": "Biscuit" }
+    }
+  },
+  "limitEditorSave": "Save limit",
+  "limitEditorSaveChanges": "Save changes",
+  "limitEditorDelete": "Delete",
+  "limitEditorSaveFailed": "Couldn’t save the limit. Please try again.",
+  "limitPickerTitle": "{period, select, week{Weekly limit for…} other{Monthly limit for…}}",
+  "@limitPickerTitle": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "limitPickerAvailable": "{period, select, week{No weekly limit yet} other{No monthly limit yet}}",
+  "@limitPickerAvailable": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "limitPickerTaken": "{period, select, week{Already limited this week} other{Already limited this month}}",
+  "@limitPickerTaken": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "limitPickerHasLimit": "{period, select, week{Has a weekly limit} other{Has a monthly limit}}",
+  "@limitPickerHasLimit": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+
+  "limitDetailSubtitle": "{period, select, week{Weekly limit} other{Monthly limit}} · {amount}",
+  "@limitDetailSubtitle": {
+    "placeholders": {
+      "period": { "type": "String", "example": "week" },
+      "amount": { "type": "String", "example": "$100.00" }
+    }
+  },
+  "limitDetailHistory": "{period, select, week{Last 5 weeks} other{Last 5 months}}",
+  "@limitDetailHistory": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "limitDetailKept": "Under {kept} of the last {count}",
+  "@limitDetailKept": {
+    "placeholders": { "kept": { "type": "int" }, "count": { "type": "int" } }
+  },
+  "limitDetailTransactions": "{period, select, week{This week} other{This month}} · {count, plural, =1{1 transaction} other{{count} transactions}}",
+  "@limitDetailTransactions": {
+    "placeholders": {
+      "period": { "type": "String", "example": "week" },
+      "count": { "type": "int" }
+    }
+  },
+  "limitDetailNoTransactions": "Nothing spent here yet {period, select, week{this week} other{this month}}.",
+  "@limitDetailNoTransactions": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "limitDetailEdit": "Edit limit",
+  "trendLegendCurrent": "{period, select, week{This week} other{This month}}",
+  "@trendLegendCurrent": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "trendLegendUnder": "Under",
+  "trendLegendOver": "Over",
+  "trendLegendLimit": "{amount} limit",
+  "@trendLegendLimit": {
+    "placeholders": { "amount": { "type": "String", "example": "$100" } }
+  },
+
+  "homeLimitsTitle": "Limits",
+  "homeLimitsSeeAll": "See all",
+  "homeLimitsPrompt": "Set a soft weekly limit and {buddyName} gives you a heads-up at 80%. Nothing gets blocked.",
+  "@homeLimitsPrompt": {
+    "placeholders": { "buddyName": { "type": "String", "example": "Biscuit" } }
+  },
+  "homeLimitsNotNow": "Not now",
+  "settingsLimits": "Limits",
+  "settingsLimitCounts": "{week} weekly · {month} monthly",
+  "@settingsLimitCounts": {
+    "placeholders": { "week": { "type": "int" }, "month": { "type": "int" } }
+  },
+  "settingsNoLimits": "None yet"
 }

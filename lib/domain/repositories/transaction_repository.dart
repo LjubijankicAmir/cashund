@@ -35,6 +35,14 @@ abstract interface class TransactionRepository {
   /// Whether anything has been logged at all, in any currency.
   StreamResult<bool> watchHasAny();
 
+  /// Expenses per day over [range] in [currencyCode], for [categoryId] or
+  /// all categories. Days without any are missing.
+  StreamResult<Map<DateTime, int>> watchExpensesByDay(
+    DateRange range, {
+    required String currencyCode,
+    int? categoryId,
+  });
+
   /// How many transactions exist, in any currency.
   FutureResult<int> count();
 

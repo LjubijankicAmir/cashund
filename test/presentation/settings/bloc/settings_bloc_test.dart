@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:cashund/core/error/failure.dart';
 import 'package:cashund/core/error/result.dart';
+import 'package:cashund/domain/entities/spending_limit.dart';
 import 'package:cashund/domain/entities/user_preferences.dart';
 import 'package:cashund/domain/repositories/category_repository.dart';
+import 'package:cashund/domain/repositories/limit_repository.dart';
 import 'package:cashund/domain/repositories/preferences_repository.dart';
 import 'package:cashund/domain/repositories/transaction_repository.dart';
+import 'package:cashund/domain/value_objects/limit_period.dart';
 import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
@@ -21,6 +24,8 @@ class _MockCategories extends Mock implements CategoryRepository;
 
 class _MockTransactions extends Mock implements TransactionRepository;
 
+class _MockLimits extends Mock implements LimitRepository;
+
 void main() {
   const preferences = UserPreferences(
     currencyCode: 'USD',
@@ -32,6 +37,7 @@ void main() {
   late _MockPreferences preferencesRepository;
   late _MockCategories categories;
   late _MockTransactions transactions;
+  late _MockLimits limits;
 
   setUpAll(() => registerFallbackValue(preferences));
 
@@ -39,6 +45,24 @@ void main() {
     preferencesRepository = _MockPreferences();
     categories = _MockCategories();
     transactions = _MockTransactions();
+    limits = _MockLimits();
+    when(() => limits.watchAll(any())).thenAnswer(
+      (_) => Stream.value(
+        right([
+          for (final (id, period) in [
+            (1, LimitPeriod.week),
+            (2, LimitPeriod.week),
+            (3, LimitPeriod.month),
+          ])
+            SpendingLimit(
+              id: id,
+              period: period,
+              currencyCode: 'USD',
+              createdAt: DateTime(2026, 9),
+            ),
+        ]),
+      ),
+    );
     when(preferencesRepository.watch)
         .thenAnswer((_) => Stream.value(right(preferences)));
     when(categories.watchActiveCounts)
@@ -50,7 +74,7 @@ void main() {
   });
 
   SettingsBloc build() =>
-      SettingsBloc(preferencesRepository, categories, transactions);
+      SettingsBloc(preferencesRepository, categories, transactions, limits);
 
   /// Starts the bloc and waits until everything it shows has loaded.
   Future<SettingsBloc> started() async {
@@ -74,6 +98,7 @@ void main() {
     expect(bloc.state.preferences, preferences);
     expect(bloc.state.categoryCounts, (expense: 14, income: 7));
     expect(bloc.state.transactionsInCurrency, 23);
+    expect(bloc.state.limitCounts, (week: 2, month: 1));
     verify(() => transactions.watchCountInCurrency('USD')).called(1);
     await bloc.close();
   });

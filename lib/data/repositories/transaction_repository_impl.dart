@@ -99,6 +99,15 @@ class TransactionRepositoryImpl implements TransactionRepository {
   StreamResult<bool> watchHasAny() => guardStream(_dao.watchHasAny());
 
   @override
+  StreamResult<Map<DateTime, int>> watchExpensesByDay(
+    DateRange range, {
+    required String currencyCode,
+    int? categoryId,
+  }) => guardStream(
+    _dao.watchExpensesByDay(range, currencyCode, categoryId: categoryId),
+  );
+
+  @override
   FutureResult<int> count() => guardFuture(_dao.countAll);
 
   @override

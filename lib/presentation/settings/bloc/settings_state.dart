@@ -9,6 +9,9 @@ abstract class SettingsState with _$SettingsState {
     UserPreferences? preferences,
     ({int expense, int income})? categoryCounts,
 
+    /// Limits in the current currency, per period; `null` until loaded.
+    ({int week, int month})? limitCounts,
+
     /// Transactions logged in the current currency, which stay in it when
     /// the user switches.
     @Default(0) int transactionsInCurrency,

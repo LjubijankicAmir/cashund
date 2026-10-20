@@ -21,9 +21,20 @@ abstract class HomeState with _$HomeState {
 
     /// The selected period's spending, ready for the chart.
     @Default(<SpendingSlice>[]) List<SpendingSlice> slices,
+
+    /// The category limits for [limitPeriod], most used first; `null` until
+    /// loaded.
+    List<LimitProgress>? limits,
   }) = _HomeState;
 
   const HomeState._();
+
+  /// How many limits the Home card shows.
+  static const limitsShown = 3;
+
+  /// Limits run per week or month; the day view shows the week's.
+  LimitPeriod get limitPeriod =>
+      period == Period.month ? LimitPeriod.month : LimitPeriod.week;
 
   /// The days the overview covers, or `null` until preferences are loaded.
   DateRange? get range => switch (preferences) {

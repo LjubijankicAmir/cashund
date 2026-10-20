@@ -1,5 +1,6 @@
 import 'package:cashund/data/datasources/local/app_database.dart';
 import 'package:cashund/data/datasources/local/daos/categories_dao.dart';
+import 'package:cashund/data/datasources/local/daos/limits_dao.dart';
 import 'package:cashund/data/datasources/local/daos/preferences_dao.dart';
 import 'package:cashund/data/datasources/local/daos/transactions_dao.dart';
 import 'package:injectable/injectable.dart';
@@ -19,6 +20,9 @@ abstract class DatabaseModule {
   @lazySingleton
   TransactionsDao transactionsDao(AppDatabase database) =>
       database.transactionsDao;
+
+  @lazySingleton
+  LimitsDao limitsDao(AppDatabase database) => database.limitsDao;
 }
 
 Future<void> closeDatabase(AppDatabase database) => database.close();

@@ -12,6 +12,7 @@ extension PreferencesRowMapper on PreferencesRow {
       themePreference: themePreference,
       reactionFrequency: reactionFrequency,
       reactionInterval: reactionInterval,
+      limitsPromptDismissed: limitsPromptDismissed,
     );
   }
 }
@@ -26,6 +27,7 @@ extension UserPreferencesMapper on UserPreferences {
       themePreference: Value(themePreference),
       reactionFrequency: Value(reactionFrequency),
       reactionInterval: Value(reactionInterval),
+      limitsPromptDismissed: Value(limitsPromptDismissed),
     );
   }
 }

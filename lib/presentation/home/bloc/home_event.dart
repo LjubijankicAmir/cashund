@@ -10,6 +10,9 @@ sealed class HomeEvent with _$HomeEvent {
   /// The user closed the buddy's message.
   const factory HomeEvent.buddyMessageDismissed() = _BuddyMessageDismissed;
 
+  /// The user said "Not now" to setting a limit.
+  const factory HomeEvent.limitsPromptDismissed() = _LimitsPromptDismissed;
+
   /// Internal: follows the totals for [range] in [currencyCode].
   const factory HomeEvent.dataWatched(DateRange range, String currencyCode) =
       _DataWatched;

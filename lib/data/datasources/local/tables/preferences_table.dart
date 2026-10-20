@@ -34,6 +34,10 @@ class PreferencesTable extends Table {
     const Constant(UserPreferences.defaultReactionInterval),
   )();
 
+  /// Added in schema v6.
+  BoolColumn get limitsPromptDismissed =>
+      boolean().withDefault(const Constant(false))();
+
   @override
   Set<Column> get primaryKey => {id};
 
