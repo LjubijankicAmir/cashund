@@ -85,6 +85,34 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     );
   }
 
+  /// Expenses per day over [range] in [currencyCode], for one category or
+  /// all of them. Days without any are missing from the map.
+  Stream<Map<DateTime, int>> watchExpensesByDay(
+    DateRange range,
+    String currencyCode, {
+    int? categoryId,
+  }) {
+    return customSelect(
+      'SELECT occurred_on, SUM(amount_minor) AS total FROM transactions '
+      "WHERE type = 'expense' AND currency_code = ? "
+      'AND occurred_on >= ? AND occurred_on < ? '
+      '${categoryId == null ? '' : 'AND category_id = ? '}'
+      'GROUP BY occurred_on',
+      variables: [
+        ..._rangeVariables(range, currencyCode),
+        if (categoryId != null) Variable.withInt(categoryId),
+      ],
+      readsFrom: {transactionsTable},
+    ).watch().map(
+      (rows) => {
+        for (final row in rows)
+          _dates.fromSql(row.read<String>('occurred_on')): row.read<int>(
+            'total',
+          ),
+      },
+    );
+  }
+
   /// Dates are stored as yyyy-MM-dd text, which sorts like the dates
   /// themselves, so ranges are plain text comparisons.
   List<Variable<Object>> _rangeVariables(

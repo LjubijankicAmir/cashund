@@ -1,14 +1,17 @@
 import 'package:cashund/data/datasources/local/app_database.steps.dart';
 import 'package:cashund/data/datasources/local/converters/date_only_converter.dart';
 import 'package:cashund/data/datasources/local/daos/categories_dao.dart';
+import 'package:cashund/data/datasources/local/daos/limits_dao.dart';
 import 'package:cashund/data/datasources/local/daos/preferences_dao.dart';
 import 'package:cashund/data/datasources/local/daos/transactions_dao.dart';
 import 'package:cashund/data/datasources/local/seed/predefined_categories.dart';
 import 'package:cashund/data/datasources/local/tables/categories_table.dart';
+import 'package:cashund/data/datasources/local/tables/limits_table.dart';
 import 'package:cashund/data/datasources/local/tables/preferences_table.dart';
 import 'package:cashund/data/datasources/local/tables/transactions_table.dart';
 import 'package:cashund/domain/entities/user_preferences.dart';
 import 'package:cashund/domain/value_objects/category_color.dart';
+import 'package:cashund/domain/value_objects/limit_period.dart';
 import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
@@ -21,8 +24,14 @@ part 'app_database.g.dart';
 /// The app's single SQLite database. Tables are added by the features that
 /// own them.
 @DriftDatabase(
-  tables: [PreferencesTable, CategoriesTable, TransactionsTable],
-  daos: [PreferencesDao, CategoriesDao, TransactionsDao],
+  tables: [
+    PreferencesTable,
+    CategoriesTable,
+    TransactionsTable,
+    LimitsTable,
+    LimitAmountsTable,
+  ],
+  daos: [PreferencesDao, CategoriesDao, TransactionsDao, LimitsDao],
 )
 class AppDatabase extends _$AppDatabase {
   /// Pass an [executor] in tests, e.g. `NativeDatabase.memory()`.
@@ -30,7 +39,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'cashund'));
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -63,6 +72,14 @@ class AppDatabase extends _$AppDatabase {
         await migrator.addColumn(
           schema.preferences,
           schema.preferences.reactionInterval,
+        );
+      },
+      from5To6: (migrator, schema) async {
+        await migrator.createTable(schema.limits);
+        await migrator.createTable(schema.limitAmounts);
+        await migrator.addColumn(
+          schema.preferences,
+          schema.preferences.limitsPromptDismissed,
         );
       },
     ),

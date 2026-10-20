@@ -519,11 +519,211 @@ i1.GeneratedColumn<int> _column_20(String aliasedName) =>
       $customConstraints: 'NOT NULL DEFAULT 3',
       defaultValue: const i1.CustomExpression('3'),
     );
+
+final class Schema6 extends i0.VersionedSchema {
+  Schema6({required super.database}) : super(version: 6);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    preferences,
+    categories,
+    transactions,
+    limits,
+    limitAmounts,
+    transactionsOccurredOn,
+    transactionsCategoryId,
+  ];
+  late final Shape5 preferences = Shape5(
+    source: i0.VersionedTable(
+      entityName: 'preferences',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['PRIMARY KEY(id)', 'CHECK(id = 1)'],
+      columns: [
+        _column_0,
+        _column_1,
+        _column_2,
+        _column_3,
+        _column_4,
+        _column_18,
+        _column_19,
+        _column_20,
+        _column_21,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape1 categories = Shape1(
+    source: i0.VersionedTable(
+      entityName: 'categories',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['UNIQUE(type, predefined_key)'],
+      columns: [
+        _column_5,
+        _column_6,
+        _column_7,
+        _column_8,
+        _column_9,
+        _column_10,
+        _column_11,
+        _column_12,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape2 transactions = Shape2(
+    source: i0.VersionedTable(
+      entityName: 'transactions',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['CHECK(amount_minor > 0)'],
+      columns: [
+        _column_5,
+        _column_6,
+        _column_13,
+        _column_1,
+        _column_14,
+        _column_15,
+        _column_16,
+        _column_17,
+      ],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape6 limits = Shape6(
+    source: i0.VersionedTable(
+      entityName: 'limits',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: ['UNIQUE(category_id, period, currency_code)'],
+      columns: [_column_5, _column_22, _column_1, _column_23, _column_17],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  late final Shape7 limitAmounts = Shape7(
+    source: i0.VersionedTable(
+      entityName: 'limit_amounts',
+      withoutRowId: false,
+      isStrict: false,
+      tableConstraints: [
+        'PRIMARY KEY(limit_id, effective_from)',
+        'CHECK(amount_minor > 0)',
+      ],
+      columns: [_column_24, _column_25, _column_13],
+      attachedDatabase: database,
+    ),
+    alias: null,
+  );
+  final i1.Index transactionsOccurredOn = i1.Index(
+    'transactions_occurred_on',
+    'CREATE INDEX transactions_occurred_on ON transactions (occurred_on)',
+  );
+  final i1.Index transactionsCategoryId = i1.Index(
+    'transactions_category_id',
+    'CREATE INDEX transactions_category_id ON transactions (category_id)',
+  );
+}
+
+class Shape5 extends i0.VersionedTable {
+  Shape5({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get currencyCode =>
+      columnsByName['currency_code']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get buddyName =>
+      columnsByName['buddy_name']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get weekStart =>
+      columnsByName['week_start']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get onboardingCompleted =>
+      columnsByName['onboarding_completed']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get themePreference =>
+      columnsByName['theme_preference']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get reactionFrequency =>
+      columnsByName['reaction_frequency']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get reactionInterval =>
+      columnsByName['reaction_interval']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get limitsPromptDismissed =>
+      columnsByName['limits_prompt_dismissed']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_21(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'limits_prompt_dismissed',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints:
+          'NOT NULL DEFAULT 0 CHECK (limits_prompt_dismissed IN (0, 1))',
+      defaultValue: const i1.CustomExpression('0'),
+    );
+
+class Shape6 extends i0.VersionedTable {
+  Shape6({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get id =>
+      columnsByName['id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get period =>
+      columnsByName['period']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get currencyCode =>
+      columnsByName['currency_code']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get categoryId =>
+      columnsByName['category_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get createdAt =>
+      columnsByName['created_at']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<String> _column_22(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'period',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
+i1.GeneratedColumn<int> _column_23(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'category_id',
+      aliasedName,
+      true,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NULL REFERENCES categories(id)ON DELETE RESTRICT',
+    );
+
+class Shape7 extends i0.VersionedTable {
+  Shape7({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<int> get limitId =>
+      columnsByName['limit_id']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get effectiveFrom =>
+      columnsByName['effective_from']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get amountMinor =>
+      columnsByName['amount_minor']! as i1.GeneratedColumn<int>;
+}
+
+i1.GeneratedColumn<int> _column_24(String aliasedName) =>
+    i1.GeneratedColumn<int>(
+      'limit_id',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.int,
+      $customConstraints: 'NOT NULL REFERENCES limits(id)ON DELETE CASCADE',
+    );
+i1.GeneratedColumn<String> _column_25(String aliasedName) =>
+    i1.GeneratedColumn<String>(
+      'effective_from',
+      aliasedName,
+      false,
+      type: i1.DriftSqlType.string,
+      $customConstraints: 'NOT NULL',
+    );
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
   required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
+  required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -547,6 +747,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from4To5(migrator, schema);
         return 5;
+      case 5:
+        final schema = Schema6(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from5To6(migrator, schema);
+        return 6;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -558,11 +763,13 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
   required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
+  required Future<void> Function(i1.Migrator m, Schema6 schema) from5To6,
 }) => i0.VersionedSchema.stepByStepHelper(
   step: migrationSteps(
     from1To2: from1To2,
     from2To3: from2To3,
     from3To4: from3To4,
     from4To5: from4To5,
+    from5To6: from5To6,
   ),
 );
