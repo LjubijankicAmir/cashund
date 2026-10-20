@@ -37,6 +37,9 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: CategoriesRoute.page),
       ],
     ),
+    // Pushed over the tabs and Settings alike.
+    AutoRoute(page: LimitsRoute.page),
+    AutoRoute(page: LimitDetailRoute.page),
     AutoRoute(
       page: OnboardingRoute.page,
       children: [
