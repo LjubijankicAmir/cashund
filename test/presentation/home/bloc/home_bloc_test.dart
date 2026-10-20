@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:cashund/core/error/result.dart';
 import 'package:cashund/core/utils/clock.dart';
 import 'package:cashund/domain/entities/category.dart';
+import 'package:cashund/domain/entities/spending_limit.dart';
 import 'package:cashund/domain/entities/user_preferences.dart';
+import 'package:cashund/domain/repositories/limit_repository.dart';
 import 'package:cashund/domain/repositories/preferences_repository.dart';
 import 'package:cashund/domain/repositories/transaction_repository.dart';
 import 'package:cashund/domain/value_objects/category_color.dart';
 import 'package:cashund/domain/value_objects/category_spending.dart';
 import 'package:cashund/domain/value_objects/date_range.dart';
+import 'package:cashund/domain/value_objects/limit_period.dart';
+import 'package:cashund/domain/value_objects/limit_progress.dart';
 import 'package:cashund/domain/value_objects/period.dart';
 import 'package:cashund/domain/value_objects/period_summary.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
@@ -23,6 +27,8 @@ class _MockPreferences extends Mock implements PreferencesRepository;
 class _MockTransactions extends Mock implements TransactionRepository;
 
 class _MockClock extends Mock implements Clock;
+
+class _MockLimits extends Mock implements LimitRepository;
 
 void main() {
   // Thursday.
@@ -54,8 +60,35 @@ void main() {
   late StreamController<Result<UserPreferences?>> preferenceUpdates;
   late _MockTransactions transactions;
   late HomeBloc bloc;
+  late _MockLimits limits;
+  late _MockPreferences preferencesSaver;
 
-  setUpAll(() => registerFallbackValue(sundayWeek));
+  LimitProgress limitOn(int? categoryId, int spentMinor) => LimitProgress(
+    limit: SpendingLimit(
+      id: categoryId ?? 0,
+      period: LimitPeriod.week,
+      currencyCode: 'EUR',
+      createdAt: DateTime(2026, 9),
+      categoryId: categoryId,
+    ),
+    range: sundayWeek,
+    amountMinor: 10000,
+    spentMinor: spentMinor,
+  );
+  // Already sorted most used first, as the repository returns them.
+  final limitProgress = [
+    limitOn(null, 9500),
+    limitOn(1, 9000),
+    limitOn(2, 7000),
+    limitOn(3, 5000),
+    limitOn(4, 1000),
+  ];
+
+  setUpAll(() {
+    registerFallbackValue(sundayWeek);
+    registerFallbackValue(LimitPeriod.week);
+    registerFallbackValue(preferences);
+  });
 
   setUp(() {
     preferenceUpdates = StreamController();
@@ -82,9 +115,21 @@ void main() {
       ),
     );
 
+    limits = _MockLimits();
+    when(
+      () => limits.watchProgress(
+        period: any(named: 'period'),
+        currencyCode: any(named: 'currencyCode'),
+        range: any(named: 'range'),
+      ),
+    ).thenAnswer((_) => Stream.value(right(limitProgress)));
+    preferencesSaver = preferencesRepository;
+    when(() => preferencesRepository.save(any()))
+        .thenAnswer((_) async => right(unit));
+
     final clock = _MockClock();
     when(clock.now).thenReturn(today);
-    bloc = HomeBloc(preferencesRepository, transactions, clock)
+    bloc = HomeBloc(preferencesRepository, transactions, limits, clock)
       ..add(const HomeEvent.started());
   });
 
@@ -147,6 +192,56 @@ void main() {
     await pumpEventQueue();
 
     expect(bloc.state.buddyMessageDismissed, isTrue);
+  });
+
+  test(
+    'shows the top three category limits, without the overall one',
+    () async {
+      await loadPreferences();
+
+      expect(
+        [for (final l in bloc.state.limits!) l.limit.categoryId],
+        [1, 2, 3],
+      );
+      verify(
+        () => limits.watchProgress(
+          period: LimitPeriod.week,
+          currencyCode: 'EUR',
+          range: sundayWeek,
+        ),
+      ).called(1);
+    },
+  );
+
+  test('the day view shows the week’s limits; month the month’s', () async {
+    await loadPreferences();
+
+    bloc.add(const HomeEvent.periodSelected(Period.day));
+    await pumpEventQueue();
+    expect(bloc.state.limitPeriod, LimitPeriod.week);
+
+    bloc.add(const HomeEvent.periodSelected(Period.month));
+    await pumpEventQueue();
+    verify(
+      () => limits.watchProgress(
+        period: LimitPeriod.month,
+        currencyCode: 'EUR',
+        range: october,
+      ),
+    ).called(1);
+  });
+
+  test('"Not now" saves that Home should stop asking for limits', () async {
+    await loadPreferences();
+
+    bloc.add(const HomeEvent.limitsPromptDismissed());
+    await pumpEventQueue();
+
+    verify(
+      () => preferencesSaver.save(
+        preferences.copyWith(limitsPromptDismissed: true),
+      ),
+    ).called(1);
   });
 
   test('has no range before the preferences are loaded', () {

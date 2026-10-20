@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:cashund/core/di/injection.dart';
 import 'package:cashund/core/l10n/l10n.dart';
@@ -13,7 +15,9 @@ import 'package:cashund/presentation/home/bloc/home_bloc.dart';
 import 'package:cashund/presentation/home/widgets/home_band.dart';
 import 'package:cashund/presentation/home/widgets/home_buddy_message.dart';
 import 'package:cashund/presentation/home/widgets/home_empty_state.dart';
+import 'package:cashund/presentation/home/widgets/limits_card.dart';
 import 'package:cashund/presentation/home/widgets/spending_card.dart';
+import 'package:cashund/presentation/limits/limit_editor_sheet.dart';
 import 'package:cashund/presentation/reaction/bloc/reaction_cubit.dart';
 import 'package:cashund/presentation/reaction/transaction_actions.dart';
 import 'package:cashund/presentation/reaction/widgets/reaction_card.dart';
@@ -242,28 +246,58 @@ class _Content extends StatelessWidget {
       );
     }
 
-    // Only income so far: there's nothing to chart.
-    if (state.slices.isEmpty) {
-      return const SizedBox(
-        key: ValueKey('nothing-spent'),
-        width: double.infinity,
-      );
-    }
+    final preferences = state.preferences!;
+    final limits = state.limits ?? const [];
+    final Widget? limitsSection = switch (limits) {
+      [_, ...] => LimitsCard(
+        limits: limits,
+        currency: currency,
+        today: state.today,
+        onSeeAll: () => _openLimits(context),
+      ),
+      // Loaded and empty: a nudge, until "Not now".
+      [] when state.limits != null && !preferences.limitsPromptDismissed =>
+        LimitsPrompt(
+          buddyName: preferences.buddyName,
+          onSetLimit: () => _setLimit(context),
+          onNotNow: () => context.read<HomeBloc>().add(
+            const HomeEvent.limitsPromptDismissed(),
+          ),
+        ),
+      _ => null,
+    };
 
     return Padding(
-      key: const ValueKey('spending'),
+      key: const ValueKey('content'),
       padding: const EdgeInsets.fromLTRB(
         CashundSpace.s6,
         CashundSpace.s6,
         CashundSpace.s6,
         0,
       ),
-      child: SpendingCard(
-        period: state.period,
-        slices: state.slices,
-        totalMinor: summary.expenseMinor,
-        currency: currency,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: CashundSpace.s8,
+        children: [
+          ?limitsSection,
+          // Only income so far: there's nothing to chart.
+          if (state.slices.isNotEmpty)
+            SpendingCard(
+              period: state.period,
+              slices: state.slices,
+              totalMinor: summary.expenseMinor,
+              currency: currency,
+            ),
+        ],
       ),
     );
   }
+
+  /// Limits run per week or month; Home's day view opens the week's.
+  void _openLimits(BuildContext context) => unawaited(
+    context.router.root.push(LimitsRoute(period: state.limitPeriod)),
+  );
+
+  void _setLimit(BuildContext context) =>
+      unawaited(showLimitEditor(context, period: state.limitPeriod));
 }
