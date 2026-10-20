@@ -31,8 +31,9 @@ Cashund tracks your incomes and expenses without an account, a server or an inte
 
 Coming next:
 
-- **Detailed statistics** with charts for when you want to dig deeper
 - **Soft spending limits** per category and period, with friendly warnings instead of hard blocks
+- **Detailed statistics** with charts for when you want to dig deeper
+- **Home-screen widgets** for a glance at your week without opening the app
 - **On-device AI import** that reads receipts and card statements. The model runs on your phone, so your data never leaves it
 
 ## Download
@@ -45,8 +46,9 @@ Android APKs are attached to each [release](https://github.com/LjubijankicAmir/c
 | --- | --- | --- |
 | 0. Foundation ✅ | Architecture, theme, DI, routing, localization, database, CI | |
 | 1. Core ✅ | Transactions, categories, dashboard, search and filters, settings, the buddy's reactions | `v0.1.0` |
-| 2. Insights | Statistics, spending limits, the buddy's messages, backup and export | `v0.2.0` |
-| 3. Smart import | Receipt and statement scanning with an on-device model, review before saving | `v1.0.0` |
+| 2. Insights | Spending limits, statistics, the buddy's messages, backup and export | `v0.2.0` |
+| 3. Widgets | Home-screen and lock-screen widgets for iOS and Android, quick add | `v0.3.0` |
+| 4. Smart import | Receipt and statement scanning with an on-device model, review before saving | `v1.0.0` |
 
 ## Tech stack
 
