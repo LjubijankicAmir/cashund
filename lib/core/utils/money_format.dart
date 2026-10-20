@@ -35,3 +35,21 @@ bool _isWordSymbol(String symbol) =>
 /// (cents), e.g. 62.10 USD → 6210.
 int minorUnitsOf(num major, Currency currency) =>
     (major * pow(10, currency.decimalDigits)).round();
+
+/// A rounded amount for tight spots like chart labels: "$108", "$2.4k",
+/// "$12k". Never negative; signs are shown elsewhere.
+String formatMoneyShort(int minorUnits, Currency currency) {
+  final major = minorUnits.abs() / pow(10, currency.decimalDigits);
+  final gap = _isWordSymbol(currency.symbol) ? ' ' : '';
+  final String number;
+  if (major >= 9999.5) {
+    number = '${(major / 1000).round()}k';
+  } else if (major >= 999.5) {
+    final thousands = (major / 100).round() / 10;
+    number =
+        '${thousands == thousands.roundToDouble() ? thousands.toInt() : thousands}k';
+  } else {
+    number = '${major.round()}';
+  }
+  return '${currency.symbol}$gap$number';
+}

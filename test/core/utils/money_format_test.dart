@@ -32,4 +32,15 @@ void main() {
     expect(minorUnitsOf(62.10, usd), 6210);
     expect(minorUnitsOf(62.10, currencyByCode('JPY')!), 62);
   });
+
+  test('formatMoneyShort rounds for chart labels', () {
+    final usd = currencyByCode('USD')!;
+
+    expect(formatMoneyShort(10840, usd), r'$108');
+    expect(formatMoneyShort(99949, usd), r'$999');
+    expect(formatMoneyShort(240000, usd), r'$2.4k');
+    expect(formatMoneyShort(200000, usd), r'$2k');
+    expect(formatMoneyShort(1250000, usd), r'$13k');
+    expect(formatMoneyShort(-10840, usd), r'$108');
+  });
 }
