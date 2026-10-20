@@ -20,6 +20,9 @@ abstract class UserPreferences with _$UserPreferences {
     /// With [ReactionFrequency.sometimes], the buddy reacts to every n-th
     /// transaction.
     @Default(UserPreferences.defaultReactionInterval) int reactionInterval,
+
+    /// The user said "Not now" to setting a limit, so Home stops asking.
+    @Default(false) bool limitsPromptDismissed,
   }) = _UserPreferences;
 
   static const defaultBuddyName = 'Biscuit';
