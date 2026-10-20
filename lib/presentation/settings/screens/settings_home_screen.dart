@@ -126,6 +126,20 @@ class SettingsHomeScreen extends StatelessWidget {
                     },
                     onTap: () => context.router.push(const CategoriesRoute()),
                   ),
+                  SettingsRow(
+                    leading: const Icon(LucideIcons.gauge),
+                    title: l10n.settingsLimits,
+                    subtitle: switch (state.limitCounts) {
+                      (week: 0, month: 0) => l10n.settingsNoLimits,
+                      (:final week, :final month) => l10n.settingsLimitCounts(
+                        week,
+                        month,
+                      ),
+                      null => null,
+                    },
+                    // Over Settings, like from Home.
+                    onTap: () => context.router.root.push(LimitsRoute()),
+                  ),
                 ],
               ),
               const SizedBox(height: CashundSpace.s6),

@@ -1,8 +1,10 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:cashund/domain/entities/user_preferences.dart';
 import 'package:cashund/domain/repositories/category_repository.dart';
+import 'package:cashund/domain/repositories/limit_repository.dart';
 import 'package:cashund/domain/repositories/preferences_repository.dart';
 import 'package:cashund/domain/repositories/transaction_repository.dart';
+import 'package:cashund/domain/value_objects/limit_period.dart';
 import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
@@ -17,8 +19,12 @@ part 'settings_state.dart';
 /// Settings and its detail pages. Every change is saved right away.
 @injectable
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  SettingsBloc(this._preferences, this._categories, this._transactions)
-    : super(const SettingsState()) {
+  SettingsBloc(
+    this._preferences,
+    this._categories,
+    this._transactions,
+    this._limits,
+  ) : super(const SettingsState()) {
     on<_Started>(
       (event, emit) => Future.wait([
         emit.forEach(
@@ -41,13 +47,29 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       ]),
     );
     on<_CurrencyCountWatched>(
-      (event, emit) => emit.forEach(
-        _transactions.watchCountInCurrency(event.currencyCode),
-        onData: (result) => state.copyWith(
-          transactionsInCurrency:
-              result.getRight().toNullable() ?? state.transactionsInCurrency,
+      (event, emit) => Future.wait([
+        emit.forEach(
+          _transactions.watchCountInCurrency(event.currencyCode),
+          onData: (result) => state.copyWith(
+            transactionsInCurrency:
+                result.getRight().toNullable() ?? state.transactionsInCurrency,
+          ),
         ),
-      ),
+        emit.forEach(
+          _limits.watchAll(event.currencyCode),
+          onData: (result) => switch (result.getRight().toNullable()) {
+            final limits? => state.copyWith(
+              limitCounts: (
+                week: limits.where((l) => l.period == LimitPeriod.week).length,
+                month: limits
+                    .where((l) => l.period == LimitPeriod.month)
+                    .length,
+              ),
+            ),
+            null => state,
+          },
+        ),
+      ]),
       // A new currency replaces the old subscription.
       transformer: restartable(),
     );
@@ -109,6 +131,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final PreferencesRepository _preferences;
   final CategoryRepository _categories;
   final TransactionRepository _transactions;
+  final LimitRepository _limits;
 
   /// The currency the count subscription follows, to restart it only when
   /// the currency changes.
