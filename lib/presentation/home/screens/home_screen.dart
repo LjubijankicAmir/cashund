@@ -5,6 +5,7 @@ import 'package:cashund/core/di/injection.dart';
 import 'package:cashund/core/l10n/l10n.dart';
 import 'package:cashund/core/routing/app_router.gr.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
+import 'package:cashund/domain/services/home_messages.dart';
 import 'package:cashund/domain/value_objects/currency.dart';
 import 'package:cashund/domain/value_objects/insights_period.dart';
 import 'package:cashund/domain/value_objects/period.dart';
@@ -14,10 +15,12 @@ import 'package:cashund/presentation/common/widgets/brand_band_layout.dart';
 import 'package:cashund/presentation/common/widgets/buddy.dart';
 import 'package:cashund/presentation/common/widgets/buddy_message.dart';
 import 'package:cashund/presentation/home/bloc/home_bloc.dart';
+import 'package:cashund/presentation/home/bloc/home_message_bloc.dart';
 import 'package:cashund/presentation/home/widgets/home_band.dart';
 import 'package:cashund/presentation/home/widgets/home_buddy_message.dart';
 import 'package:cashund/presentation/home/widgets/home_empty_state.dart';
 import 'package:cashund/presentation/home/widgets/limits_card.dart';
+import 'package:cashund/presentation/home/widgets/priority_message.dart';
 import 'package:cashund/presentation/home/widgets/spending_card.dart';
 import 'package:cashund/presentation/limits/limit_editor_sheet.dart';
 import 'package:cashund/presentation/reaction/bloc/reaction_cubit.dart';
@@ -34,8 +37,16 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<HomeBloc>()..add(const HomeEvent.started()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => getIt<HomeBloc>()..add(const HomeEvent.started()),
+        ),
+        BlocProvider(
+          create: (_) =>
+              getIt<HomeMessageBloc>()..add(const HomeMessageEvent.started()),
+        ),
+      ],
       child: const _HomeView(),
     );
   }
@@ -50,6 +61,7 @@ class _HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<HomeBloc>().state;
     final reaction = context.watch<ReactionCubit>().state;
+    final priority = context.watch<HomeMessageBloc>().state.message;
     final (preferences, range, summary) = (
       state.preferences,
       state.range,
@@ -65,6 +77,7 @@ class _HomeView extends StatelessWidget {
         buddyWidth: _buddyWidth,
         buddy:
             reaction?.line.expression ??
+            (priority == null ? null : expressionFor(priority)) ??
             ((summary?.balanceMinor ?? 0) > 0
                 ? BuddyExpression.happy
                 : BuddyExpression.listening),
@@ -97,6 +110,23 @@ class _HomeView extends StatelessWidget {
                         (final reaction?, _) => _ReactionMessage(
                           key: ValueKey(('reaction', reaction.id)),
                           reaction: reaction,
+                        ),
+                        // A limit warning or a recap comes before the
+                        // everyday message, closed or not.
+                        _ when priority != null => Padding(
+                          key: ValueKey(HomeMessages.keyOf(priority)),
+                          padding: const EdgeInsets.fromLTRB(
+                            CashundSpace.s6,
+                            CashundSpace.s5,
+                            CashundSpace.s6,
+                            0,
+                          ),
+                          child: PriorityMessage(
+                            message: priority,
+                            buddyName: preferences.buddyName,
+                            currency: currency,
+                            today: state.today,
+                          ),
                         ),
                         (null, true) => const SizedBox(
                           key: ValueKey('no-message'),
