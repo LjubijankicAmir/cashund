@@ -1,5 +1,6 @@
 import 'package:cashund/data/datasources/local/app_database.steps.dart';
 import 'package:cashund/data/datasources/local/converters/date_only_converter.dart';
+import 'package:cashund/data/datasources/local/daos/backup_dao.dart';
 import 'package:cashund/data/datasources/local/daos/categories_dao.dart';
 import 'package:cashund/data/datasources/local/daos/dismissed_messages_dao.dart';
 import 'package:cashund/data/datasources/local/daos/limits_dao.dart';
@@ -40,6 +41,7 @@ part 'app_database.g.dart';
     TransactionsDao,
     LimitsDao,
     DismissedMessagesDao,
+    BackupDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -48,7 +50,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'cashund'));
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -93,6 +95,12 @@ class AppDatabase extends _$AppDatabase {
       },
       from6To7: (migrator, schema) async {
         await migrator.createTable(schema.dismissedMessages);
+      },
+      from7To8: (migrator, schema) async {
+        await migrator.addColumn(
+          schema.preferences,
+          schema.preferences.lastBackupAt,
+        );
       },
     ),
     beforeOpen: (details) async {

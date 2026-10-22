@@ -23,6 +23,9 @@ abstract class UserPreferences with _$UserPreferences {
 
     /// The user said "Not now" to setting a limit, so Home stops asking.
     @Default(false) bool limitsPromptDismissed,
+
+    /// When a backup was last shared; `null` before the first.
+    DateTime? lastBackupAt,
   }) = _UserPreferences;
 
   static const defaultBuddyName = 'Biscuit';

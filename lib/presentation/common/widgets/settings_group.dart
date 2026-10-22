@@ -5,9 +5,10 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// A labelled card of [SettingsRow]s with hairlines between them.
 class SettingsGroup extends StatelessWidget {
-  const SettingsGroup({required this.label, required this.rows, super.key});
+  const SettingsGroup({required this.rows, this.label, super.key});
 
-  final String label;
+  /// Above the card; a group on its own can go without.
+  final String? label;
   final List<Widget> rows;
 
   @override
@@ -19,16 +20,19 @@ class SettingsGroup extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            left: CashundSpace.s1,
-            bottom: CashundSpace.s3,
+        if (label case final label?)
+          Padding(
+            padding: const EdgeInsets.only(
+              left: CashundSpace.s1,
+              bottom: CashundSpace.s3,
+            ),
+            child: Text(
+              label,
+              style: CashundText.labelSm.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
           ),
-          child: Text(
-            label,
-            style: CashundText.labelSm.copyWith(color: scheme.onSurfaceVariant),
-          ),
-        ),
         Material(
           color: scheme.surfaceContainerLowest,
           shape: RoundedRectangleBorder(
@@ -69,12 +73,16 @@ class SettingsRow extends StatelessWidget {
     this.value,
     this.onTap,
     this.below,
+    this.titleStyle,
     super.key,
   });
 
   /// Settings icons are 20pt line icons, e.g. `Icon(LucideIcons.calendar)`.
   final Widget leading;
   final String title;
+
+  /// Overrides the title's look, e.g. a quieter one.
+  final TextStyle? titleStyle;
   final String? subtitle;
   final String? value;
 
@@ -102,10 +110,12 @@ class SettingsRow extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: CashundText.body.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: scheme.onSurface,
-                ),
+                style:
+                    titleStyle ??
+                    CashundText.body.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: scheme.onSurface,
+                    ),
               ),
               if (subtitle case final subtitle?)
                 Text(

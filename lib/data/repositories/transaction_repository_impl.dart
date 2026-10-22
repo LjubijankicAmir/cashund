@@ -115,6 +115,10 @@ class TransactionRepositoryImpl implements TransactionRepository {
   FutureResult<int> count() => guardFuture(_dao.countAll);
 
   @override
+  StreamResult<int> watchCountCreatedAfter(DateTime moment) =>
+      guardStream(_dao.watchCountCreatedAfter(moment));
+
+  @override
   StreamResult<int> watchCountInCurrency(String currencyCode) =>
       guardStream(_dao.watchCountInCurrency(currencyCode));
 

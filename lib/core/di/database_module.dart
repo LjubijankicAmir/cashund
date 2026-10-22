@@ -1,4 +1,5 @@
 import 'package:cashund/data/datasources/local/app_database.dart';
+import 'package:cashund/data/datasources/local/daos/backup_dao.dart';
 import 'package:cashund/data/datasources/local/daos/categories_dao.dart';
 import 'package:cashund/data/datasources/local/daos/dismissed_messages_dao.dart';
 import 'package:cashund/data/datasources/local/daos/limits_dao.dart';
@@ -28,6 +29,9 @@ abstract class DatabaseModule {
   @lazySingleton
   DismissedMessagesDao dismissedMessagesDao(AppDatabase database) =>
       database.dismissedMessagesDao;
+
+  @lazySingleton
+  BackupDao backupDao(AppDatabase database) => database.backupDao;
 }
 
 Future<void> closeDatabase(AppDatabase database) => database.close();

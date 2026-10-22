@@ -64,6 +64,24 @@ void main() {
     expect((await repository.count()).getRight().toNullable(), 3);
   });
 
+  test('counts what was logged after a moment', () async {
+    await repository.add(
+      type: TransactionType.expense,
+      amountMinor: 100,
+      currencyCode: 'EUR',
+      categoryId: groceriesId,
+      occurredOn: DateTime(2026, 10, 7),
+    );
+
+    Future<int> after(DateTime moment) async =>
+        (await repository.watchCountCreatedAfter(moment).first)
+            .getRight()
+            .toNullable()!;
+    // Logged at 12:30 by the mocked clock.
+    expect(await after(DateTime(2026, 10, 8, 12)), 1);
+    expect(await after(DateTime(2026, 10, 8, 13)), 0);
+  });
+
   test('the first day is the earliest in that currency', () async {
     Future<DateTime?> firstDay(String currencyCode) async =>
         (await repository.watchFirstDay(currencyCode).first)

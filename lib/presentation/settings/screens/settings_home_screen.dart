@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cashund/core/l10n/l10n.dart';
 import 'package:cashund/core/routing/app_router.gr.dart';
-import 'package:cashund/core/theme/cashund_text.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/domain/value_objects/reaction_frequency.dart';
 import 'package:cashund/domain/value_objects/theme_preference.dart';
@@ -10,6 +9,8 @@ import 'package:cashund/presentation/common/widgets/pushed_page_header.dart';
 import 'package:cashund/presentation/common/widgets/segmented_pills.dart';
 import 'package:cashund/presentation/common/widgets/settings_group.dart';
 import 'package:cashund/presentation/common/widgets/week_start_options.dart';
+import 'package:cashund/presentation/data_settings/widgets/data_section.dart';
+import 'package:cashund/presentation/data_settings/widgets/privacy_line.dart';
 import 'package:cashund/presentation/settings/bloc/settings_bloc.dart';
 import 'package:cashund/presentation/settings/screens/settings_screen.dart';
 import 'package:cashund/presentation/settings/widgets/about_group.dart';
@@ -25,7 +26,6 @@ class SettingsHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final scheme = Theme.of(context).colorScheme;
     final locale = Localizations.localeOf(context).toString();
     final state = context.watch<SettingsBloc>().state;
     final bloc = context.read<SettingsBloc>();
@@ -143,15 +143,11 @@ class SettingsHomeScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: CashundSpace.s6),
+              const DataSection(),
+              const SizedBox(height: CashundSpace.s6),
               const AboutGroup(),
               const SizedBox(height: CashundSpace.s8),
-              Text(
-                l10n.settingsFooter,
-                textAlign: TextAlign.center,
-                style: CashundText.body.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
-              ),
+              const PrivacyLine(),
             ],
           ],
         ),
