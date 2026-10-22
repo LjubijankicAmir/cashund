@@ -108,6 +108,10 @@ class TransactionRepositoryImpl implements TransactionRepository {
   );
 
   @override
+  StreamResult<DateTime?> watchFirstDay(String currencyCode) =>
+      guardStream(_dao.watchFirstDay(currencyCode));
+
+  @override
   FutureResult<int> count() => guardFuture(_dao.countAll);
 
   @override

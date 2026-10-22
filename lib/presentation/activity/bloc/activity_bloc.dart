@@ -6,6 +6,7 @@ import 'package:cashund/domain/entities/user_preferences.dart';
 import 'package:cashund/domain/repositories/preferences_repository.dart';
 import 'package:cashund/domain/repositories/transaction_repository.dart';
 import 'package:cashund/domain/value_objects/transaction_filter.dart';
+import 'package:cashund/presentation/activity/activity_filter_requests.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -17,8 +18,12 @@ part 'activity_state.dart';
 /// The full history: what matches the filter, searched by the user.
 @injectable
 class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
-  ActivityBloc(this._transactions, this._preferences, Clock clock)
-    : super(ActivityState(today: _dateOnly(clock.now()))) {
+  ActivityBloc(
+    this._transactions,
+    this._preferences,
+    this._filterRequests,
+    Clock clock,
+  ) : super(ActivityState(today: _dateOnly(clock.now()))) {
     on<_Started>(_onStarted);
     on<_SearchChanged>(
       (event, emit) => emit(state.copyWith(query: event.query)),
@@ -35,18 +40,35 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
 
   final TransactionRepository _transactions;
   final PreferencesRepository _preferences;
+  final ActivityFilterRequests _filterRequests;
 
   static DateTime _dateOnly(DateTime moment) =>
       DateTime(moment.year, moment.month, moment.day);
 
   Future<void> _onStarted(_Started event, Emitter<ActivityState> emit) async {
-    add(ActivityEvent.entriesWatched(state.filter));
-    await emit.forEach(
-      _preferences.watch(),
-      onData: (result) => state.copyWith(
-        preferences: result.getRight().toNullable() ?? state.preferences,
+    // Opened from elsewhere with a filter, e.g. from Insights.
+    if (_filterRequests.take() case final filter?) {
+      _showRequested(filter);
+    } else {
+      add(ActivityEvent.entriesWatched(state.filter));
+    }
+    await Future.wait([
+      emit.forEach(
+        _preferences.watch(),
+        onData: (result) => state.copyWith(
+          preferences: result.getRight().toNullable() ?? state.preferences,
+        ),
       ),
-    );
+      _filterRequests.requests.forEach((_) {
+        if (_filterRequests.take() case final filter?) _showRequested(filter);
+      }),
+    ]);
+  }
+
+  /// A filter asked for from elsewhere replaces the search too.
+  void _showRequested(TransactionFilter filter) {
+    add(const ActivityEvent.searchChanged(''));
+    add(ActivityEvent.filterChanged(filter));
   }
 
   Future<void> _onEntriesWatched(

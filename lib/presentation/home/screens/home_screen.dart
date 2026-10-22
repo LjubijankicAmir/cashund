@@ -6,6 +6,8 @@ import 'package:cashund/core/l10n/l10n.dart';
 import 'package:cashund/core/routing/app_router.gr.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/domain/value_objects/currency.dart';
+import 'package:cashund/domain/value_objects/insights_period.dart';
+import 'package:cashund/domain/value_objects/period.dart';
 import 'package:cashund/domain/value_objects/period_summary.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:cashund/presentation/common/widgets/brand_band_layout.dart';
@@ -283,10 +285,18 @@ class _Content extends StatelessWidget {
           // Only income so far: there's nothing to chart.
           if (state.slices.isNotEmpty)
             SpendingCard(
-              period: state.period,
               slices: state.slices,
               totalMinor: summary.expenseMinor,
               currency: currency,
+              onInsights: () => unawaited(
+                context.router.root.push(
+                  InsightsRoute(
+                    period: state.period == Period.month
+                        ? InsightsPeriod.month
+                        : InsightsPeriod.week,
+                  ),
+                ),
+              ),
             ),
         ],
       ),

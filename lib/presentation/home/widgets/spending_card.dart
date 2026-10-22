@@ -7,25 +7,27 @@ import 'package:cashund/core/theme/category_colors.dart';
 import 'package:cashund/core/utils/money_format.dart';
 import 'package:cashund/domain/services/spending_breakdown.dart';
 import 'package:cashund/domain/value_objects/currency.dart';
-import 'package:cashund/domain/value_objects/period.dart';
 import 'package:cashund/presentation/common/extensions/category_display.dart';
 import 'package:cashund/presentation/common/widgets/category_mark.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 /// Where the period's money went: a donut of the top categories and a legend.
 class SpendingCard extends StatelessWidget {
   const SpendingCard({
-    required this.period,
     required this.slices,
     required this.totalMinor,
     required this.currency,
+    required this.onInsights,
     super.key,
   });
 
-  final Period period;
   final List<SpendingSlice> slices;
   final int totalMinor;
   final Currency currency;
+
+  /// Opens Insights: "more of this".
+  final VoidCallback onInsights;
 
   static const _donutSize = 120.0;
 
@@ -53,9 +55,11 @@ class SpendingCard extends StatelessWidget {
                 style: CashundText.title.copyWith(color: scheme.onSurface),
               ),
             ),
-            Text(
-              l10n.homeSpendingPeriod(period.name),
-              style: CashundText.body.copyWith(color: scheme.onSurfaceVariant),
+            TextButton.icon(
+              onPressed: onInsights,
+              iconAlignment: IconAlignment.end,
+              icon: const Icon(LucideIcons.chevronRight, size: 18),
+              label: Text(l10n.insightsLink),
             ),
           ],
         ),

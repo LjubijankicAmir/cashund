@@ -43,4 +43,12 @@ void main() {
     expect(formatMoneyShort(1250000, usd), r'$13k');
     expect(formatMoneyShort(-10840, usd), r'$108');
   });
+
+  test('formatMoneyWhole rounds to whole units', () {
+    final usd = currencyByCode('USD')!;
+
+    expect(formatMoneyWhole(234349, usd), r'$2,343');
+    expect(formatMoneyWhole(234350, usd), r'$2,344');
+    expect(formatMoneyWhole(-1000, usd), '$minusSign\$10');
+  });
 }

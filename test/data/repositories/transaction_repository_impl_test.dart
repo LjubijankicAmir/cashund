@@ -64,6 +64,30 @@ void main() {
     expect((await repository.count()).getRight().toNullable(), 3);
   });
 
+  test('the first day is the earliest in that currency', () async {
+    Future<DateTime?> firstDay(String currencyCode) async =>
+        (await repository.watchFirstDay(currencyCode).first)
+            .getRight()
+            .toNullable();
+    expect(await firstDay('EUR'), isNull);
+
+    for (final (currencyCode, day) in [
+      ('EUR', DateTime(2026, 10, 2)),
+      ('EUR', DateTime(2026, 9, 14)),
+      ('USD', DateTime(2026, 8)),
+    ]) {
+      await repository.add(
+        type: TransactionType.expense,
+        amountMinor: 100,
+        currencyCode: currencyCode,
+        categoryId: groceriesId,
+        occurredOn: day,
+      );
+    }
+
+    expect(await firstDay('EUR'), DateTime(2026, 9, 14));
+  });
+
   test('stores a blank title as no title', () async {
     await repository.add(
       type: TransactionType.expense,

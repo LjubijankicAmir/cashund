@@ -13,6 +13,7 @@ import 'package:cashund/domain/value_objects/date_range.dart';
 import 'package:cashund/domain/value_objects/transaction_filter.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
+import 'package:cashund/presentation/activity/activity_filter_requests.dart';
 import 'package:cashund/presentation/activity/bloc/activity_bloc.dart';
 import 'package:cashund/presentation/activity/bloc/activity_filters_bloc.dart';
 import 'package:cashund/presentation/activity/date_preset.dart';
@@ -83,8 +84,12 @@ void main() {
 
   group('ActivityBloc', () {
     test('starts on all time and follows a new filter', () async {
-      final bloc = ActivityBloc(transactions, preferencesRepository, clock)
-        ..add(const ActivityEvent.started());
+      final bloc = ActivityBloc(
+        transactions,
+        preferencesRepository,
+        ActivityFilterRequests(),
+        clock,
+      )..add(const ActivityEvent.started());
       await pumpEventQueue();
 
       expect(bloc.state.entries, isEmpty);
@@ -101,9 +106,43 @@ void main() {
       await bloc.close();
     });
 
+    test(
+      'shows a filter asked for from elsewhere, before or after it opened',
+      () async {
+        final requests = ActivityFilterRequests();
+        final groceriesInOctober = TransactionFilter(
+          categoryIds: {groceries.id},
+          range: october,
+        );
+        requests.open(groceriesInOctober);
+        final bloc = ActivityBloc(
+          transactions,
+          preferencesRepository,
+          requests,
+          clock,
+        )..add(const ActivityEvent.started());
+        await pumpEventQueue();
+        expect(bloc.state.filter, groceriesInOctober);
+
+        bloc.add(const ActivityEvent.searchChanged('sushi'));
+        requests.open(const TransactionFilter(type: TransactionType.income));
+        await pumpEventQueue();
+        expect(
+          bloc.state.filter,
+          const TransactionFilter(type: TransactionType.income),
+        );
+        expect(bloc.state.query, isEmpty);
+        await bloc.close();
+      },
+    );
+
     test('keeps the search text', () async {
-      final bloc = ActivityBloc(transactions, preferencesRepository, clock)
-        ..add(const ActivityEvent.searchChanged('sushi'));
+      final bloc = ActivityBloc(
+        transactions,
+        preferencesRepository,
+        ActivityFilterRequests(),
+        clock,
+      )..add(const ActivityEvent.searchChanged('sushi'));
       await pumpEventQueue();
 
       expect(bloc.state.query, 'sushi');
@@ -136,8 +175,12 @@ void main() {
     });
 
     Future<ActivityBloc> started() async {
-      final bloc = ActivityBloc(transactions, preferencesRepository, clock)
-        ..add(const ActivityEvent.started());
+      final bloc = ActivityBloc(
+        transactions,
+        preferencesRepository,
+        ActivityFilterRequests(),
+        clock,
+      )..add(const ActivityEvent.started());
       await pumpEventQueue();
       return bloc;
     }

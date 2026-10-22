@@ -53,3 +53,13 @@ String formatMoneyShort(int minorUnits, Currency currency) {
   }
   return '${currency.symbol}$gap$number';
 }
+
+/// An amount rounded to whole units, e.g. an average: "$2,343".
+String formatMoneyWhole(int minorUnits, Currency currency) {
+  final unit = pow(10, currency.decimalDigits).toInt();
+  final whole = (minorUnits / unit).round();
+  return formatMoney(
+    whole * unit,
+    currency,
+  ).replaceFirst(RegExp(r'[.,]0+$'), '');
+}

@@ -130,92 +130,103 @@ class _ActivityViewState extends State<_ActivityView> {
       null => null,
     };
 
-    return ColoredBox(
-      color: scheme.surface,
-      child: SafeArea(
-        bottom: false,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                CashundSpace.s6,
-                CashundSpace.s5,
-                CashundSpace.s6,
-                CashundSpace.s4,
-              ),
-              child: Text(
-                l10n.activityTitle,
-                style: CashundText.pageTitle.copyWith(color: scheme.onSurface),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: CashundSpace.s6),
-              child: ValueListenableBuilder(
-                valueListenable: _search,
-                builder: (context, value, _) => TextField(
-                  controller: _search,
-                  onChanged: _setSearch,
-                  textInputAction: TextInputAction.search,
-                  decoration: InputDecoration(
-                    // White on the grey page, like a card.
-                    fillColor: scheme.surfaceContainerLowest,
-                    hintText: l10n.activitySearchHint,
-                    prefixIcon: const Icon(LucideIcons.search, size: 20),
-                    suffixIcon: value.text.isEmpty
-                        ? null
-                        : Padding(
-                            padding: const EdgeInsets.only(
-                              right: CashundSpace.s2,
-                            ),
-                            // Small to look at; the touch area stays 48pt.
-                            child: IconButton(
-                              tooltip: l10n.activityClearSearch,
-                              onPressed: () => _setSearch(''),
-                              style: IconButton.styleFrom(
-                                minimumSize: const Size.square(28),
-                                fixedSize: const Size.square(28),
-                                padding: EdgeInsets.zero,
-                                tapTargetSize: MaterialTapTargetSize.padded,
-                              ),
-                              icon: const Icon(LucideIcons.x, size: 16),
-                            ),
-                          ),
+    return BlocListener<ActivityBloc, ActivityState>(
+      // A search cleared from elsewhere, e.g. opening Activity from Insights.
+      listenWhen: (previous, current) => previous.query != current.query,
+      listener: (context, state) {
+        if (_search.text != state.query) _search.text = state.query;
+      },
+      child: ColoredBox(
+        color: scheme.surface,
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  CashundSpace.s6,
+                  CashundSpace.s5,
+                  CashundSpace.s6,
+                  CashundSpace.s4,
+                ),
+                child: Text(
+                  l10n.activityTitle,
+                  style: CashundText.pageTitle.copyWith(
+                    color: scheme.onSurface,
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: CashundSpace.s3),
-            ActivityChips(
-              filter: state.filter,
-              dateLabel: dateLabel,
-              onFiltersPressed: () => _openFilters(state),
-              onFilterChanged: (filter) =>
-                  bloc.add(ActivityEvent.filterChanged(filter)),
-            ),
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                child: switch (visible) {
-                  null => const SizedBox.shrink(key: ValueKey('loading')),
-                  [] => _Empty(
-                    key: ValueKey(('empty', state.query, state.filter)),
-                    state: state,
-                    dateLabel: dateLabel,
-                    onClearSearch: () => _setSearch(''),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: CashundSpace.s6,
+                ),
+                child: ValueListenableBuilder(
+                  valueListenable: _search,
+                  builder: (context, value, _) => TextField(
+                    controller: _search,
+                    onChanged: _setSearch,
+                    textInputAction: TextInputAction.search,
+                    decoration: InputDecoration(
+                      // White on the grey page, like a card.
+                      fillColor: scheme.surfaceContainerLowest,
+                      hintText: l10n.activitySearchHint,
+                      prefixIcon: const Icon(LucideIcons.search, size: 20),
+                      suffixIcon: value.text.isEmpty
+                          ? null
+                          : Padding(
+                              padding: const EdgeInsets.only(
+                                right: CashundSpace.s2,
+                              ),
+                              // Small to look at; the touch area stays 48pt.
+                              child: IconButton(
+                                tooltip: l10n.activityClearSearch,
+                                onPressed: () => _setSearch(''),
+                                style: IconButton.styleFrom(
+                                  minimumSize: const Size.square(28),
+                                  fixedSize: const Size.square(28),
+                                  padding: EdgeInsets.zero,
+                                  tapTargetSize: MaterialTapTargetSize.padded,
+                                ),
+                                icon: const Icon(LucideIcons.x, size: 16),
+                              ),
+                            ),
+                    ),
                   ),
-                  final visible => _History(
-                    key: const ValueKey('history'),
-                    entries: visible,
-                    today: state.today,
-                    currency: currency,
-                    onEdit: _edit,
-                    onDelete: _swipeAway,
-                  ),
-                },
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: CashundSpace.s3),
+              ActivityChips(
+                filter: state.filter,
+                dateLabel: dateLabel,
+                onFiltersPressed: () => _openFilters(state),
+                onFilterChanged: (filter) =>
+                    bloc.add(ActivityEvent.filterChanged(filter)),
+              ),
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  child: switch (visible) {
+                    null => const SizedBox.shrink(key: ValueKey('loading')),
+                    [] => _Empty(
+                      key: ValueKey(('empty', state.query, state.filter)),
+                      state: state,
+                      dateLabel: dateLabel,
+                      onClearSearch: () => _setSearch(''),
+                    ),
+                    final visible => _History(
+                      key: const ValueKey('history'),
+                      entries: visible,
+                      today: state.today,
+                      currency: currency,
+                      onEdit: _edit,
+                      onDelete: _swipeAway,
+                    ),
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

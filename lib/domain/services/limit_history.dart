@@ -1,4 +1,5 @@
 import 'package:cashund/domain/entities/spending_limit.dart';
+import 'package:cashund/domain/services/period_totals.dart';
 import 'package:cashund/domain/value_objects/date_range.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -34,9 +35,7 @@ abstract final class LimitHistory {
         LimitPeriodResult(
           range: range,
           amountMinor: LimitAmount.amountFor(amounts, range.start),
-          spentMinor: spentByDay.entries
-              .where((day) => range.contains(day.key))
-              .fold(0, (sum, day) => sum + day.value),
+          spentMinor: PeriodTotals.sumIn(spentByDay, range),
         ),
     ];
   }
