@@ -113,6 +113,20 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     );
   }
 
+  /// The day of the earliest transaction in [currencyCode], or `null`
+  /// before there is one.
+  Stream<DateTime?> watchFirstDay(String currencyCode) {
+    return customSelect(
+      'SELECT MIN(occurred_on) AS first_day FROM transactions '
+      'WHERE currency_code = ?',
+      variables: [Variable.withString(currencyCode)],
+      readsFrom: {transactionsTable},
+    ).watchSingle().map((row) {
+      final day = row.read<String?>('first_day');
+      return day == null ? null : _dates.fromSql(day);
+    });
+  }
+
   /// Dates are stored as yyyy-MM-dd text, which sorts like the dates
   /// themselves, so ranges are plain text comparisons.
   List<Variable<Object>> _rangeVariables(

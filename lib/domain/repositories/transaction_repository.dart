@@ -43,6 +43,10 @@ abstract interface class TransactionRepository {
     int? categoryId,
   });
 
+  /// The day of the earliest transaction in [currencyCode]; `null` before
+  /// there is one.
+  StreamResult<DateTime?> watchFirstDay(String currencyCode);
+
   /// How many transactions exist, in any currency.
   FutureResult<int> count();
 
