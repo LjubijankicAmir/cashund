@@ -25,7 +25,7 @@ class InsightsBloc extends Bloc<InsightsEvent, InsightsState> {
   InsightsBloc(this._transactions, this._preferences, Clock clock)
     : super(InsightsState(today: clock.now())) {
     on<_Started>((event, emit) {
-      emit(state.copyWith(period: event.period));
+      emit(state.copyWith(period: event.period, range: event.range));
       return emit.forEach(
         _preferences.watch(),
         onData: (result) {

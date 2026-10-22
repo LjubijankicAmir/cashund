@@ -1,11 +1,13 @@
 import 'package:cashund/data/datasources/local/app_database.steps.dart';
 import 'package:cashund/data/datasources/local/converters/date_only_converter.dart';
 import 'package:cashund/data/datasources/local/daos/categories_dao.dart';
+import 'package:cashund/data/datasources/local/daos/dismissed_messages_dao.dart';
 import 'package:cashund/data/datasources/local/daos/limits_dao.dart';
 import 'package:cashund/data/datasources/local/daos/preferences_dao.dart';
 import 'package:cashund/data/datasources/local/daos/transactions_dao.dart';
 import 'package:cashund/data/datasources/local/seed/predefined_categories.dart';
 import 'package:cashund/data/datasources/local/tables/categories_table.dart';
+import 'package:cashund/data/datasources/local/tables/dismissed_messages_table.dart';
 import 'package:cashund/data/datasources/local/tables/limits_table.dart';
 import 'package:cashund/data/datasources/local/tables/preferences_table.dart';
 import 'package:cashund/data/datasources/local/tables/transactions_table.dart';
@@ -30,8 +32,15 @@ part 'app_database.g.dart';
     TransactionsTable,
     LimitsTable,
     LimitAmountsTable,
+    DismissedMessagesTable,
   ],
-  daos: [PreferencesDao, CategoriesDao, TransactionsDao, LimitsDao],
+  daos: [
+    PreferencesDao,
+    CategoriesDao,
+    TransactionsDao,
+    LimitsDao,
+    DismissedMessagesDao,
+  ],
 )
 class AppDatabase extends _$AppDatabase {
   /// Pass an [executor] in tests, e.g. `NativeDatabase.memory()`.
@@ -39,7 +48,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'cashund'));
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -81,6 +90,9 @@ class AppDatabase extends _$AppDatabase {
           schema.preferences,
           schema.preferences.limitsPromptDismissed,
         );
+      },
+      from6To7: (migrator, schema) async {
+        await migrator.createTable(schema.dismissedMessages);
       },
     ),
     beforeOpen: (details) async {

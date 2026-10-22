@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cashund/core/l10n/l10n.dart';
 import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:cashund/presentation/common/widgets/buddy.dart';
+import 'package:cashund/presentation/reaction/buddy_line.dart';
 import 'package:flutter/foundation.dart';
 
 /// A set of lines the buddy picks from after something is logged: one per
@@ -44,7 +45,6 @@ enum ReactionPool {
 
   /// The pool for a transaction of [type] in the category with
   /// [predefinedKey], or the type's generic pool.
-  // TODO(limits): a category near or over its limit comes first, worried.
   static ReactionPool of(TransactionType type, String? predefinedKey) {
     for (final pool in values) {
       if (pool.type == type &&
@@ -86,14 +86,16 @@ enum ReactionPool {
 
 /// One line from a [pool]: what the buddy says, and how they look saying it.
 @immutable
-class ReactionLine {
+class ReactionLine implements BuddyLine {
   const ReactionLine(this.pool, this.index);
 
   final ReactionPool pool;
   final int index;
 
+  @override
   BuddyExpression get expression => pool.expression;
 
+  @override
   String text(AppLocalizations l10n) => pool.line(l10n, index);
 
   @override

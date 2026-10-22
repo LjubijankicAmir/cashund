@@ -2,8 +2,12 @@ part of 'insights_bloc.dart';
 
 @freezed
 sealed class InsightsEvent with _$InsightsEvent {
-  /// Opens on the current [period], following every change.
-  const factory InsightsEvent.started(InsightsPeriod period) = _Started;
+  /// Opens on [range], or the current [period] without one, following
+  /// every change.
+  const factory InsightsEvent.started(
+    InsightsPeriod period, {
+    DateRange? range,
+  }) = _Started;
 
   /// Switches to the current week, month or year.
   const factory InsightsEvent.periodSelected(InsightsPeriod period) =

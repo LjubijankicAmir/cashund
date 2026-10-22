@@ -808,5 +808,160 @@
       "category": { "type": "String", "example": "🛒 Groceries" },
       "label": { "type": "String", "example": "October" }
     }
-  }
+  },
+
+  "limitLineNear": "{index, select, 0{Heads up! {category} is at {percent} of {periodPossessive} limit.} 1{Heads up! Only {amount} left for {category} {period}.} 2{{category} is getting close: {percent} used, {amount} to go.} 3{Psst. {category} has {amount} left {period}. Just so you know.} 4{Easy now! {category} is at {percent}. I’m keeping an ear on it.} 5{{amount} left in {category} {period}. You’ve got this.} 6{Heads up! {category} is nearly there, {percent} used.} 7{Getting close on {category}. {amount} left before the limit.} 8{Sniff sniff. {category} is at {percent} of {periodPossessive} limit.} 9{Heads up! {category} has used {percent}. Maybe a slower few days?} 10{Almost at the {category} limit. {amount} left {period}.} 11{Just a nudge: {category} is at {percent}. No pressure, only numbers.} other{Heads up! {category} is at {percent} of {periodPossessive} limit.}}",
+  "@limitLineNear": {
+    "description": "The buddy on a limit at 80% or more. One of 12 lines, picked by index 0–11.",
+    "placeholders": {
+      "index": { "type": "String", "example": "0" },
+      "category": { "type": "String", "example": "Eating Out" },
+      "percent": { "type": "String", "example": "86%" },
+      "amount": { "type": "String", "example": "$13.60" },
+      "period": { "type": "String", "example": "this week" },
+      "periodPossessive": { "type": "String", "example": "this week’s" }
+    }
+  },
+  "limitLineOver": "{index, select, 0{{category} is {amount} over {periodPossessive} limit. A fresh one starts soon.} 1{We went {amount} over on {category}. It happens.} 2{Over by {amount} on {category}. Nothing’s blocked, I just wanted you to know.} 3{{category} passed its limit by {amount}. Let’s keep the rest gentle.} 4{Oops! {category} is {amount} over. We’ll get it next time.} 5{{category} is at {percent}. I’ll skip a treat too, in solidarity.} 6{That’s {amount} over for {category} {period}. Want a look at your limits?} 7{Limit passed on {category}, by {amount}. Totally fixable.} 8{{category} went over by {amount}. You’re still the boss of this money.} 9{{amount} past the {category} limit. A quiet few days could even it out.} 10{{category} is {amount} over {period}. Ears down, but no worries.} 11{Heads up! {category} is over by {amount}. The limit is a guide, not a fence.} other{{category} is {amount} over {periodPossessive} limit. A fresh one starts soon.}}",
+  "@limitLineOver": {
+    "description": "The buddy on a limit that was passed. One of 12 lines, picked by index 0–11.",
+    "placeholders": {
+      "index": { "type": "String", "example": "0" },
+      "category": { "type": "String", "example": "Eating Out" },
+      "percent": { "type": "String", "example": "86%" },
+      "amount": { "type": "String", "example": "$13.60" },
+      "period": { "type": "String", "example": "this week" },
+      "periodPossessive": { "type": "String", "example": "this week’s" }
+    }
+  },
+  "recapWeekLess": "Nice! You spent {diff} less than {previous}.",
+  "@recapWeekLess": {
+    "placeholders": {
+      "period": { "type": "String", "example": "Oct 5 – 11" },
+      "previous": { "type": "String", "example": "the week before" },
+      "amount": { "type": "String", "example": "$468.90" },
+      "diff": { "type": "String", "example": "$41.40" },
+      "income": { "type": "String", "example": "$2,750.00" },
+      "topCategory": { "type": "String", "example": "🛒 Groceries" },
+      "kept": { "type": "String", "example": "18%" },
+      "limitsKept": { "type": "String", "example": "3 of 4" }
+    }
+  },
+  "recapWeekMore": "Last week came to {amount}, {diff} more than {previous}. Fresh week, fresh start.",
+  "@recapWeekMore": {
+    "placeholders": {
+      "period": { "type": "String", "example": "Oct 5 – 11" },
+      "previous": { "type": "String", "example": "the week before" },
+      "amount": { "type": "String", "example": "$468.90" },
+      "diff": { "type": "String", "example": "$41.40" },
+      "income": { "type": "String", "example": "$2,750.00" },
+      "topCategory": { "type": "String", "example": "🛒 Groceries" },
+      "kept": { "type": "String", "example": "18%" },
+      "limitsKept": { "type": "String", "example": "3 of 4" }
+    }
+  },
+  "recapWeekTopCategory": "Last week’s biggest category was {topCategory}. {amount} in total.",
+  "@recapWeekTopCategory": {
+    "placeholders": {
+      "period": { "type": "String", "example": "Oct 5 – 11" },
+      "previous": { "type": "String", "example": "the week before" },
+      "amount": { "type": "String", "example": "$468.90" },
+      "diff": { "type": "String", "example": "$41.40" },
+      "income": { "type": "String", "example": "$2,750.00" },
+      "topCategory": { "type": "String", "example": "🛒 Groceries" },
+      "kept": { "type": "String", "example": "18%" },
+      "limitsKept": { "type": "String", "example": "3 of 4" }
+    }
+  },
+  "recapWeekLimitsKept": "Good week! You kept {limitsKept} limits.",
+  "@recapWeekLimitsKept": {
+    "placeholders": {
+      "period": { "type": "String", "example": "Oct 5 – 11" },
+      "previous": { "type": "String", "example": "the week before" },
+      "amount": { "type": "String", "example": "$468.90" },
+      "diff": { "type": "String", "example": "$41.40" },
+      "income": { "type": "String", "example": "$2,750.00" },
+      "topCategory": { "type": "String", "example": "🛒 Groceries" },
+      "kept": { "type": "String", "example": "18%" },
+      "limitsKept": { "type": "String", "example": "3 of 4" }
+    }
+  },
+  "recapMonthLess": "{period} is done: {amount} spent, {diff} less than {previous}.",
+  "@recapMonthLess": {
+    "placeholders": {
+      "period": { "type": "String", "example": "Oct 5 – 11" },
+      "previous": { "type": "String", "example": "the week before" },
+      "amount": { "type": "String", "example": "$468.90" },
+      "diff": { "type": "String", "example": "$41.40" },
+      "income": { "type": "String", "example": "$2,750.00" },
+      "topCategory": { "type": "String", "example": "🛒 Groceries" },
+      "kept": { "type": "String", "example": "18%" },
+      "limitsKept": { "type": "String", "example": "3 of 4" }
+    }
+  },
+  "recapMonthMore": "{period} came in {diff} over {previous}. Want to see where it went?",
+  "@recapMonthMore": {
+    "placeholders": {
+      "period": { "type": "String", "example": "Oct 5 – 11" },
+      "previous": { "type": "String", "example": "the week before" },
+      "amount": { "type": "String", "example": "$468.90" },
+      "diff": { "type": "String", "example": "$41.40" },
+      "income": { "type": "String", "example": "$2,750.00" },
+      "topCategory": { "type": "String", "example": "🛒 Groceries" },
+      "kept": { "type": "String", "example": "18%" },
+      "limitsKept": { "type": "String", "example": "3 of 4" }
+    }
+  },
+  "recapMonthKept": "You kept {kept} of what came in during {period}. Good human.",
+  "@recapMonthKept": {
+    "placeholders": {
+      "period": { "type": "String", "example": "Oct 5 – 11" },
+      "previous": { "type": "String", "example": "the week before" },
+      "amount": { "type": "String", "example": "$468.90" },
+      "diff": { "type": "String", "example": "$41.40" },
+      "income": { "type": "String", "example": "$2,750.00" },
+      "topCategory": { "type": "String", "example": "🛒 Groceries" },
+      "kept": { "type": "String", "example": "18%" },
+      "limitsKept": { "type": "String", "example": "3 of 4" }
+    }
+  },
+  "recapMonthSummary": "{period} in one line: {amount} out, {income} in, {topCategory} on top.",
+  "@recapMonthSummary": {
+    "placeholders": {
+      "period": { "type": "String", "example": "Oct 5 – 11" },
+      "previous": { "type": "String", "example": "the week before" },
+      "amount": { "type": "String", "example": "$468.90" },
+      "diff": { "type": "String", "example": "$41.40" },
+      "income": { "type": "String", "example": "$2,750.00" },
+      "topCategory": { "type": "String", "example": "🛒 Groceries" },
+      "kept": { "type": "String", "example": "18%" },
+      "limitsKept": { "type": "String", "example": "3 of 4" }
+    }
+  },
+  "limitPeriodThis": "{period, select, week{this week} other{this month}}",
+  "@limitPeriodThis": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "limitPeriodThisPossessive": "{period, select, week{this week’s} other{this month’s}}",
+  "@limitPeriodThisPossessive": {
+    "placeholders": { "period": { "type": "String", "example": "week" } }
+  },
+  "recapWeekBefore": "the week before",
+  "recapMetaWeek": "Your week, {range}",
+  "@recapMetaWeek": {
+    "placeholders": { "range": { "type": "String", "example": "Oct 5 – 11" } }
+  },
+  "recapMetaMonth": "Your {month}",
+  "@recapMetaMonth": {
+    "placeholders": { "month": { "type": "String", "example": "September" } }
+  },
+  "recapStatSpent": "Spent",
+  "recapStatTop": "Top category",
+  "recapStatLimitsKept": "Limits kept",
+  "recapLimitsKeptValue": "{kept} of {count}",
+  "@recapLimitsKeptValue": {
+    "placeholders": { "kept": { "type": "int" }, "count": { "type": "int" } }
+  },
+  "recapSeeInsights": "See insights",
+  "limitMessageSeeLimits": "See limits"
 }

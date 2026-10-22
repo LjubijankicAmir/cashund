@@ -146,6 +146,30 @@ void main() {
     await bloc.close();
   });
 
+  test('opens on a given period, e.g. from a recap', () async {
+    final preferences = _MockPreferences();
+    when(preferences.watch).thenAnswer(
+      (_) => Stream.value(
+        right(
+          const UserPreferences(
+            currencyCode: 'USD',
+            buddyName: 'Biscuit',
+            weekStart: WeekStart.monday,
+            onboardingCompleted: true,
+          ),
+        ),
+      ),
+    );
+    final clock = _MockClock();
+    when(clock.now).thenReturn(today);
+    final bloc = InsightsBloc(transactions, preferences, clock)
+      ..add(InsightsEvent.started(InsightsPeriod.month, range: september));
+    await pumpEventQueue();
+
+    expect(bloc.state.range, september);
+    await bloc.close();
+  });
+
   test('steps back a period and forward again', () async {
     final bloc = await opened(InsightsPeriod.month);
 
