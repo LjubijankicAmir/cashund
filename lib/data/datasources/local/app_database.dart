@@ -1,5 +1,6 @@
 import 'package:cashund/data/datasources/local/app_database.steps.dart';
 import 'package:cashund/data/datasources/local/converters/date_only_converter.dart';
+import 'package:cashund/data/datasources/local/daos/backup_dao.dart';
 import 'package:cashund/data/datasources/local/daos/categories_dao.dart';
 import 'package:cashund/data/datasources/local/daos/dismissed_messages_dao.dart';
 import 'package:cashund/data/datasources/local/daos/limits_dao.dart';
@@ -40,6 +41,7 @@ part 'app_database.g.dart';
     TransactionsDao,
     LimitsDao,
     DismissedMessagesDao,
+    BackupDao,
   ],
 )
 class AppDatabase extends _$AppDatabase {
