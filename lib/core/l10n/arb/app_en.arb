@@ -649,5 +649,168 @@
   "@settingsLimitCounts": {
     "placeholders": { "week": { "type": "int" }, "month": { "type": "int" } }
   },
-  "settingsNoLimits": "None yet"
+  "settingsNoLimits": "None yet",
+  "insightsTitle": "Insights",
+  "insightsLink": "Insights",
+  "periodYear": "Year",
+  "insightsPrevious": "Previous",
+  "insightsNext": "Next",
+  "insightsWeekOf": "Week of {date}",
+  "@insightsWeekOf": {
+    "placeholders": { "date": { "type": "String", "example": "Oct 5" } }
+  },
+  "insightsSoFar": "{range} · so far",
+  "@insightsSoFar": {
+    "placeholders": { "range": { "type": "String", "example": "Oct 1 – 22" } }
+  },
+  "insightsLastWeek": "last week",
+  "insightsLess": "Nice! {diff} less than {previous} by this point.",
+  "@insightsLess": {
+    "placeholders": {
+      "diff": { "type": "String", "example": "$84.00" },
+      "previous": { "type": "String", "example": "September" }
+    }
+  },
+  "insightsLessWhole": "Nice! {diff} less than {previous}.",
+  "@insightsLessWhole": {
+    "placeholders": {
+      "diff": { "type": "String", "example": "$84.00" },
+      "previous": { "type": "String", "example": "September" }
+    }
+  },
+  "insightsMore": "{diff} more than {previous} by this point. Still plenty of time.",
+  "@insightsMore": {
+    "placeholders": {
+      "diff": { "type": "String", "example": "$84.00" },
+      "previous": { "type": "String", "example": "September" }
+    }
+  },
+  "insightsMoreWhole": "{diff} more than {previous}. A fresh one’s already started.",
+  "@insightsMoreWhole": {
+    "placeholders": {
+      "diff": { "type": "String", "example": "$84.00" },
+      "previous": { "type": "String", "example": "September" }
+    }
+  },
+  "insightsYear": "So far this year: {amount} spent, about {average} a month.",
+  "@insightsYear": {
+    "placeholders": {
+      "amount": { "type": "String", "example": "$22,351.00" },
+      "average": { "type": "String", "example": "$2,235" }
+    }
+  },
+  "insightsYearWhole": "{year} came to {amount} spent, about {average} a month.",
+  "@insightsYearWhole": {
+    "placeholders": {
+      "year": { "type": "String", "example": "2025" },
+      "amount": { "type": "String", "example": "$22,351.00" },
+      "average": { "type": "String", "example": "$2,235" }
+    }
+  },
+  "insightsFew": "{count, plural, =1{1 transaction so far.} other{{count} transactions so far.}} Keep logging and I’ll spot the patterns.",
+  "@insightsFew": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "insightsSpent": "{amount} spent here so far.",
+  "@insightsSpent": {
+    "placeholders": { "amount": { "type": "String", "example": "$412.35" } }
+  },
+  "insightsSpendingTitle": "Spending",
+  "insightsTapHint": "Tap a category for details",
+  "insightsSpentLabel": "spent",
+  "insightsOther": "Other · {count, plural, =1{1 category} other{{count} categories}}",
+  "@insightsOther": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "insightsOtherTitle": "Other categories",
+  "insightsTrendWeeks": "Last 5 weeks",
+  "insightsTrendMonths": "Last 6 months",
+  "insightsTrendYear": "By month",
+  "insightsAverage": "Avg {amount}",
+  "@insightsAverage": {
+    "placeholders": { "amount": { "type": "String", "example": "$2,343" } }
+  },
+  "insightsLegendSoFar": "{label} so far",
+  "@insightsLegendSoFar": {
+    "placeholders": { "label": { "type": "String", "example": "October" } }
+  },
+  "insightsLegendEarlier": "{period, select, week{Earlier weeks} other{Earlier months}}",
+  "@insightsLegendEarlier": {
+    "placeholders": { "period": { "type": "String", "example": "month" } }
+  },
+  "insightsInOut": "In & out",
+  "insightsIn": "In",
+  "insightsOut": "Out",
+  "insightsNet": "Net",
+  "insightsSpentShare": "Spent {percent}%",
+  "@insightsSpentShare": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "insightsKeptShare": "Kept {percent}%",
+  "@insightsKeptShare": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "insightsSpentOfIncome": "Spent {percent}% of income",
+  "@insightsSpentOfIncome": {
+    "placeholders": { "percent": { "type": "int" } }
+  },
+  "insightsCurrencyNote": "Totals only count transactions in {code}, your selected currency.",
+  "@insightsCurrencyNote": {
+    "placeholders": { "code": { "type": "String", "example": "USD" } }
+  },
+  "insightsEmptyTitle": "Nothing logged in {label}",
+  "@insightsEmptyTitle": {
+    "placeholders": { "label": { "type": "String", "example": "September" } }
+  },
+  "insightsEmptyBeforeFirst": "Your first transaction is from {date}, so there’s nothing to show for this {period, select, week{week} month{month} other{year}}.",
+  "@insightsEmptyBeforeFirst": {
+    "placeholders": {
+      "date": { "type": "String", "example": "Oct 2" },
+      "period": { "type": "String", "example": "month" }
+    }
+  },
+  "insightsEmptyBody": "Nothing was logged this {period, select, week{week} month{month} other{year}}. Biscuit had a quiet one too.",
+  "@insightsEmptyBody": {
+    "placeholders": { "period": { "type": "String", "example": "month" } }
+  },
+  "insightsGoTo": "Go to {label}",
+  "@insightsGoTo": {
+    "placeholders": { "label": { "type": "String", "example": "October" } }
+  },
+  "insightsCategoryShare": "{label} · {percent}% of spending",
+  "@insightsCategoryShare": {
+    "placeholders": {
+      "label": { "type": "String", "example": "October" },
+      "percent": { "type": "int" }
+    }
+  },
+  "insightsCategoryMore": "{diff} more than {previous}",
+  "@insightsCategoryMore": {
+    "placeholders": {
+      "diff": { "type": "String", "example": "$22.50" },
+      "previous": { "type": "String", "example": "September" }
+    }
+  },
+  "insightsCategoryLess": "{diff} less than {previous}",
+  "@insightsCategoryLess": {
+    "placeholders": {
+      "diff": { "type": "String", "example": "$22.50" },
+      "previous": { "type": "String", "example": "September" }
+    }
+  },
+  "insightsTransactionCount": "{count, plural, =1{1 transaction} other{{count} transactions}}",
+  "@insightsTransactionCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "insightsSeeInActivity": "{count, plural, =1{See 1 transaction in Activity} other{See {count} transactions in Activity}}",
+  "@insightsSeeInActivity": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "insightsLegendCategory": "{category}, {label}",
+  "@insightsLegendCategory": {
+    "placeholders": {
+      "category": { "type": "String", "example": "🛒 Groceries" },
+      "label": { "type": "String", "example": "October" }
+    }
+  }
 }
