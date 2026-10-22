@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:cashund/core/di/injection.dart';
 import 'package:cashund/core/routing/app_router.gr.dart';
 import 'package:cashund/core/theme/cashund_tokens.dart';
+import 'package:cashund/presentation/activity/activity_filter_requests.dart';
 import 'package:cashund/presentation/reaction/bloc/reaction_cubit.dart';
 import 'package:cashund/presentation/reaction/transaction_actions.dart';
 import 'package:cashund/presentation/reaction/widgets/reaction_card.dart';
@@ -20,6 +23,7 @@ class MainShellScreen extends StatelessWidget {
 
   /// Home has the buddy peeking already, so it shows reactions itself.
   static const _homeIndex = 0;
+  static const _activityIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -34,48 +38,87 @@ class MainShellScreen extends StatelessWidget {
           final reaction = context.watch<ReactionCubit>().state;
           final floating = tabs.activeIndex == _homeIndex ? null : reaction;
 
-          return Scaffold(
-            body: Stack(
-              children: [
-                Positioned.fill(child: child),
-                Positioned(
-                  left: CashundSpace.s4,
-                  right: CashundSpace.s4,
-                  bottom: CashundSpace.s4,
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    transitionBuilder: (child, animation) => FadeTransition(
-                      opacity: animation,
-                      child: SlideTransition(
-                        position: Tween(
-                          begin: const Offset(0, 0.2),
-                          end: Offset.zero,
-                        ).animate(animation),
-                        child: child,
+          return _ActivityRequestListener(
+            onRequest: () => tabs.setActiveIndex(_activityIndex),
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  Positioned.fill(child: child),
+                  Positioned(
+                    left: CashundSpace.s4,
+                    right: CashundSpace.s4,
+                    bottom: CashundSpace.s4,
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 250),
+                      transitionBuilder: (child, animation) => FadeTransition(
+                        opacity: animation,
+                        child: SlideTransition(
+                          position: Tween(
+                            begin: const Offset(0, 0.2),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: child,
+                        ),
                       ),
+                      child: floating == null
+                          ? const SizedBox.shrink()
+                          : ReactionCard(
+                              key: ValueKey(floating.id),
+                              reaction: floating,
+                              visibleFor: context
+                                  .read<ReactionCubit>()
+                                  .visibleFor,
+                              onDismiss: context.read<ReactionCubit>().dismiss,
+                            ),
                     ),
-                    child: floating == null
-                        ? const SizedBox.shrink()
-                        : ReactionCard(
-                            key: ValueKey(floating.id),
-                            reaction: floating,
-                            visibleFor: context
-                                .read<ReactionCubit>()
-                                .visibleFor,
-                            onDismiss: context.read<ReactionCubit>().dismiss,
-                          ),
                   ),
-                ),
-              ],
-            ),
-            bottomNavigationBar: CashundNavBar(
-              currentIndex: tabs.activeIndex,
-              onTabSelected: tabs.setActiveIndex,
-              onAddPressed: () => logTransaction(context),
+                ],
+              ),
+              bottomNavigationBar: CashundNavBar(
+                currentIndex: tabs.activeIndex,
+                onTabSelected: tabs.setActiveIndex,
+                onAddPressed: () => logTransaction(context),
+              ),
             ),
           );
         },
       ),
     );
   }
+}
+
+/// Switches to Activity when something asks it to show a filtered list.
+class _ActivityRequestListener extends StatefulWidget {
+  const _ActivityRequestListener({
+    required this.onRequest,
+    required this.child,
+  });
+
+  final VoidCallback onRequest;
+  final Widget child;
+
+  @override
+  State<_ActivityRequestListener> createState() =>
+      _ActivityRequestListenerState();
+}
+
+class _ActivityRequestListenerState extends State<_ActivityRequestListener> {
+  late final StreamSubscription<void> _subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _subscription = getIt<ActivityFilterRequests>().requests.listen(
+      (_) => widget.onRequest(),
+    );
+  }
+
+  @override
+  void dispose() {
+    unawaited(_subscription.cancel());
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
