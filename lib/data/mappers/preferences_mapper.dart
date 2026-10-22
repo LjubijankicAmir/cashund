@@ -13,6 +13,7 @@ extension PreferencesRowMapper on PreferencesRow {
       reactionFrequency: reactionFrequency,
       reactionInterval: reactionInterval,
       limitsPromptDismissed: limitsPromptDismissed,
+      lastBackupAt: lastBackupAt,
     );
   }
 }
@@ -28,6 +29,7 @@ extension UserPreferencesMapper on UserPreferences {
       reactionFrequency: Value(reactionFrequency),
       reactionInterval: Value(reactionInterval),
       limitsPromptDismissed: Value(limitsPromptDismissed),
+      lastBackupAt: Value(lastBackupAt),
     );
   }
 }

@@ -50,6 +50,9 @@ abstract interface class TransactionRepository {
   /// How many transactions exist, in any currency.
   FutureResult<int> count();
 
+  /// How many transactions were logged after [moment], in any currency.
+  StreamResult<int> watchCountCreatedAfter(DateTime moment);
+
   /// How many transactions are in [currencyCode].
   StreamResult<int> watchCountInCurrency(String currencyCode);
 

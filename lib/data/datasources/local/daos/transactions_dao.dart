@@ -33,6 +33,15 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
     return query.map((row) => row.read(count) ?? 0).getSingle();
   }
 
+  /// How many transactions were logged after [moment], in any currency.
+  Stream<int> watchCountCreatedAfter(DateTime moment) {
+    final count = transactionsTable.id.count();
+    final query = selectOnly(transactionsTable)
+      ..addColumns([count])
+      ..where(transactionsTable.createdAt.isBiggerThanValue(moment));
+    return query.watchSingle().map((row) => row.read(count) ?? 0);
+  }
+
   Stream<int> watchCountInCurrency(String currencyCode) {
     final count = transactionsTable.id.count();
     final query = selectOnly(transactionsTable)

@@ -48,7 +48,7 @@ class AppDatabase extends _$AppDatabase {
     : super(executor ?? driftDatabase(name: 'cashund'));
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -93,6 +93,12 @@ class AppDatabase extends _$AppDatabase {
       },
       from6To7: (migrator, schema) async {
         await migrator.createTable(schema.dismissedMessages);
+      },
+      from7To8: (migrator, schema) async {
+        await migrator.addColumn(
+          schema.preferences,
+          schema.preferences.lastBackupAt,
+        );
       },
     ),
     beforeOpen: (details) async {

@@ -38,6 +38,9 @@ class PreferencesTable extends Table {
   BoolColumn get limitsPromptDismissed =>
       boolean().withDefault(const Constant(false))();
 
+  /// Added in schema v8.
+  DateTimeColumn get lastBackupAt => dateTime().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 
