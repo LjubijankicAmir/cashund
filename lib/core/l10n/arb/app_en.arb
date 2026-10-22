@@ -277,7 +277,6 @@
     }
   },
   "settingsLicenses": "Open-source licenses",
-  "settingsFooter": "Everything stays on this phone.",
   "settingsSaveFailed": "Couldn’t save that change. Please try again.",
 
   "settingsCurrencySubtitle": "Used for new transactions and all totals.",
@@ -963,5 +962,103 @@
     "placeholders": { "kept": { "type": "int" }, "count": { "type": "int" } }
   },
   "recapSeeInsights": "See insights",
-  "limitMessageSeeLimits": "See limits"
+  "limitMessageSeeLimits": "See limits",
+  "settingsPrivacy": "Everything stays on this phone. Cashund has no account and no cloud. Backups are files you keep and share yourself, and only you can restore them.",
+  "settingsData": "Data",
+  "dataBackUp": "Back up",
+  "dataLastBackup": "Last backup: {date} · {age}",
+  "@dataLastBackup": {
+    "placeholders": {
+      "date": { "type": "String", "example": "Oct 19" },
+      "age": { "type": "String", "example": "3 days ago" }
+    }
+  },
+  "dataBackupAge": "{days, plural, =0{today} =1{yesterday} other{{days} days ago}}",
+  "@dataBackupAge": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "dataNoBackup": "No backup yet",
+  "dataRestore": "Restore from backup",
+  "dataRestoreSubtitle": "Replaces everything on this phone",
+  "dataExport": "Export CSV",
+  "dataExportSubtitle": "Transactions for spreadsheets",
+  "dataDelete": "Delete all data",
+  "dataReminderNone": "No backup yet. A backup file lets you move to a new phone or get your data back after a reset.",
+  "dataReminderOld": "Last backup was {days} days ago.",
+  "@dataReminderOld": {
+    "placeholders": { "days": { "type": "int" } }
+  },
+  "dataBackUpNow": "Back up now",
+  "dataBackupSaved": "Backup saved · {count, plural, =1{1 transaction} other{{count} transactions}}",
+  "@dataBackupSaved": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "dataBackupFailed": "Couldn’t make the backup. Please try again.",
+  "dataCancel": "Cancel",
+
+  "restoreTitle": "Replace everything with this backup?",
+  "restoreFileMeta": "Backup from {date} · {count, plural, =1{1 transaction} other{{count} transactions}}",
+  "@restoreFileMeta": {
+    "placeholders": {
+      "date": { "type": "String", "example": "Oct 2, 2026" },
+      "count": { "type": "int" }
+    }
+  },
+  "restoreReplaceNote": "The {count, plural, =1{1 transaction} other{{count} transactions}}, categories, limits and settings on this phone now will be replaced. This can’t be undone.",
+  "@restoreReplaceNote": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "restoreKeepNote": "Want to keep them? Back up this phone first.",
+  "restoreReplace": "Replace with backup",
+  "restoreBackUpFirst": "Back up this phone first",
+  "restoreDoneTitle": "Restored",
+  "restoreDoneBody": "{count, plural, =1{1 transaction} other{{count} transactions}}, your categories, limits and settings from {date} are back.",
+  "@restoreDoneBody": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "date": { "type": "String", "example": "Oct 2, 2026" }
+    }
+  },
+  "restoreGoHome": "Go to Home",
+  "restoreFailedTitle": "Can’t read this file",
+  "restoreFailedBody": "Nothing on this phone was changed. Pick a Cashund backup (a .cashund file) made with this version of the app or an earlier one.",
+  "restoreChooseAnother": "Choose another file",
+
+  "exportTitle": "Export CSV",
+  "exportAllTime": "All time",
+  "exportThisMonth": "This month",
+  "exportLastMonth": "Last month",
+  "exportCustom": "Custom range",
+  "exportFrom": "From",
+  "exportTo": "To",
+  "exportNote": "One row per transaction: date, type, category, title, amount, currency. All currencies included.",
+  "exportButton": "{count, plural, =0{Nothing to export} =1{Export 1 transaction} other{Export {count} transactions}}",
+  "@exportButton": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "exportFailed": "Couldn’t export. Please try again.",
+
+  "deleteTitle": "Delete all data",
+  "deleteBody": "This removes everything from this phone, for good. Cashund has no cloud copy to bring it back.",
+  "deleteTransactions": "{count, plural, =1{1 transaction} other{{count} transactions}}",
+  "@deleteTransactions": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "deleteCategoriesAndLimits": "{categories} categories and {limits, plural, =1{1 limit} other{{limits} limits}}",
+  "@deleteCategoriesAndLimits": {
+    "placeholders": {
+      "categories": { "type": "int" },
+      "limits": { "type": "int" }
+    }
+  },
+  "deleteSettings": "Your buddy’s name and all settings",
+  "deleteBackUpFirst": "Back up first",
+  "deleteTypeToConfirm": "Type {word} to confirm",
+  "@deleteTypeToConfirm": {
+    "placeholders": { "word": { "type": "String", "example": "DELETE" } }
+  },
+  "deleteWord": "DELETE",
+  "deleteEverything": "Delete everything",
+  "deleteAfterwards": "Afterwards Cashund starts over at onboarding.",
+  "deleteFailed": "Couldn’t delete everything. Nothing was removed."
 }

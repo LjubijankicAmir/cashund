@@ -5,6 +5,8 @@ import 'package:cashund/core/di/injection.dart';
 import 'package:cashund/core/l10n/l10n.dart';
 import 'package:cashund/domain/value_objects/currency.dart';
 import 'package:cashund/presentation/common/widgets/confirm_sheet.dart';
+import 'package:cashund/presentation/data_settings/bloc/data_bloc.dart';
+import 'package:cashund/presentation/data_settings/widgets/data_flows.dart';
 import 'package:cashund/presentation/settings/bloc/settings_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,8 +20,17 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<SettingsBloc>()..add(const SettingsEvent.started()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) =>
+              getIt<SettingsBloc>()..add(const SettingsEvent.started()),
+        ),
+        // Settings › Data and the delete page share it.
+        BlocProvider(
+          create: (_) => getIt<DataBloc>()..add(const DataEvent.started()),
+        ),
+      ],
       child: MultiBlocListener(
         listeners: [
           BlocListener<SettingsBloc, SettingsState>(
@@ -39,7 +50,7 @@ class SettingsScreen extends StatelessWidget {
                 unawaited(_confirmCurrencySwitch(context, state)),
           ),
         ],
-        child: const AutoRouter(),
+        child: const DataFlows(child: AutoRouter()),
       ),
     );
   }

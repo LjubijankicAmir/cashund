@@ -35,6 +35,7 @@ class AppRouter extends RootStackRouter {
         AutoRoute(page: SettingsBuddyNameRoute.page),
         AutoRoute(page: SettingsReactionsRoute.page),
         AutoRoute(page: CategoriesRoute.page),
+        AutoRoute(page: SettingsDeleteDataRoute.page),
       ],
     ),
     // Pushed over the tabs and Settings alike.
