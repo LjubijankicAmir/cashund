@@ -9,6 +9,7 @@ import 'package:cashund/core/theme/cashund_tokens.dart';
 import 'package:cashund/core/utils/money_format.dart';
 import 'package:cashund/domain/entities/category.dart';
 import 'package:cashund/domain/services/spending_breakdown.dart';
+import 'package:cashund/domain/value_objects/date_range.dart';
 import 'package:cashund/domain/value_objects/insights_period.dart';
 import 'package:cashund/presentation/common/extensions/category_display.dart';
 import 'package:cashund/presentation/common/widgets/buddy.dart';
@@ -30,15 +31,25 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 /// Where the money went, one week, month or year at a time.
 @RoutePage()
 class InsightsScreen extends StatelessWidget {
-  const InsightsScreen({this.period = InsightsPeriod.month, super.key});
+  const InsightsScreen({
+    this.period = InsightsPeriod.month,
+    this.range,
+    super.key,
+  });
 
   /// The kind of period it opens on, e.g. the one selected on Home.
   final InsightsPeriod period;
 
+  /// A particular period to open on, e.g. last week from its recap; the
+  /// current one without it.
+  final DateRange? range;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => getIt<InsightsBloc>()..add(InsightsEvent.started(period)),
+      create: (_) =>
+          getIt<InsightsBloc>()
+            ..add(InsightsEvent.started(period, range: range)),
       child: const _InsightsView(),
     );
   }
