@@ -144,10 +144,6 @@
     }
   },
   "homeSpendingTitle": "Spending",
-  "homeSpendingPeriod": "{period, select, day{Today} week{This week} month{This month} other{}}",
-  "@homeSpendingPeriod": {
-    "placeholders": { "period": { "type": "String", "example": "week" } }
-  },
   "homeSpendingSpent": "spent",
   "homeSpendingOther": "Other",
   "homeSpendingChart": "Spending chart",
