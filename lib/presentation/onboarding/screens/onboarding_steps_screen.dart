@@ -87,6 +87,10 @@ class _OnboardingStepsScreenState extends State<OnboardingStepsScreen> {
         child: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
           child: Scaffold(
+            // While searching for a currency, the keyboard covers Continue
+            // rather than pushing it up over the list. Naming the buddy keeps
+            // its button above the keyboard.
+            resizeToAvoidBottomInset: step != 0,
             body: BrandBandLayout(
               buddyWidth: _buddyWidth,
               buddyController: _buddy,
@@ -212,13 +216,12 @@ class _Footer extends StatelessWidget {
 
     return SafeArea(
       top: false,
-      minimum: const EdgeInsets.only(bottom: CashundSpace.s4),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(
           CashundSpace.s6,
           CashundSpace.s3,
           CashundSpace.s6,
-          0,
+          CashundSpace.s4,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

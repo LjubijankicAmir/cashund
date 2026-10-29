@@ -295,13 +295,12 @@ class _FiltersSheetState extends State<_FiltersSheet> {
           ),
           SafeArea(
             top: false,
-            minimum: const EdgeInsets.only(bottom: CashundSpace.s4),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
                 CashundSpace.s4,
                 CashundSpace.s2,
                 CashundSpace.s6,
-                0,
+                CashundSpace.s4,
               ),
               child: Row(
                 spacing: CashundSpace.s2,

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#2F4BFF</color>
+    <!-- ink: icons on the app shortcuts menu -->
+    <color name="shortcut_icon">#14183A</color>
+    <!-- primary-soft: the disc behind Biscuit on the widgets -->
+    <color name="buddy_disc">#EEF1FF</color>
 </resources>

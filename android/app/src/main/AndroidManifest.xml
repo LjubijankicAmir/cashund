@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Lets the widgets' scheduled redraws survive a reboot. -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:label="Cashund"
         android:name="${applicationName}"
@@ -25,6 +28,97 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Home-screen widgets (Glance). Each draws the snapshot the app
+             saves through home_widget; the quick-add ones only open the app. -->
+        <receiver
+            android:name=".widgets.SpendingWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_spending_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_spending" />
+        </receiver>
+        <receiver
+            android:name=".widgets.TodayWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_today_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_today" />
+        </receiver>
+        <receiver
+            android:name=".widgets.LimitsWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_limits_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_limits" />
+        </receiver>
+        <receiver
+            android:name=".widgets.TodayWeekWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_today_week_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_today_week" />
+        </receiver>
+        <receiver
+            android:name=".widgets.CompactWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_compact_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_compact" />
+        </receiver>
+        <receiver
+            android:name=".widgets.QuickAddWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_quick_add_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_quick_add" />
+        </receiver>
+        <receiver
+            android:name=".widgets.QuickAddPillWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_add_expense">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_quick_add_pill" />
+        </receiver>
+        <!-- Redraws the widgets at midnight and when a new week or month
+             starts, even while the app isn't running (home_widget's
+             scheduler); re-armed after a reboot or an app update. -->
+        <receiver
+            android:name="es.antonborri.home_widget.HomeWidgetScheduledUpdateReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

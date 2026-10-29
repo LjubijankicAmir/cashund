@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The app shortcuts look their icons up by name at runtime, so release
+     builds must not strip them as unused. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/shortcut_*" />

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home-screen widgets: their names and descriptions in the widget
+         picker, and the few fixed words they show. Everything else they show
+         comes worded from the app. -->
+    <string name="widget_spending_name">This week</string>
+    <string name="widget_spending_description">What you spent this week, against your limit</string>
+    <string name="widget_today_name">Today</string>
+    <string name="widget_today_description">What went out today, and this week</string>
+    <string name="widget_limits_name">Limits</string>
+    <string name="widget_limits_description">Your two busiest limits</string>
+    <string name="widget_today_week_name">Today and this week</string>
+    <string name="widget_today_week_description">Today, and the week\'s out, in and top category</string>
+    <string name="widget_compact_name">Left this week</string>
+    <string name="widget_compact_description">What\'s left of your weekly limit</string>
+    <string name="widget_quick_add_name">Quick add</string>
+    <string name="widget_quick_add_description">Log an expense in one tap</string>
+    <string name="widget_add_expense">Add expense</string>
+    <string name="widget_add">+ Add</string>
+    <string name="widget_not_set_up">Open Cashund to get started</string>
+
+    <!-- The sample the widget picker previews show. -->
+    <string name="preview_this_week">This week</string>
+    <string name="preview_of_limit">of %1$s this week</string>
+    <string name="preview_today">Today</string>
+    <string name="preview_transactions">2 transactions</string>
+    <string name="preview_out">Out</string>
+    <string name="preview_in">In</string>
+    <string name="preview_top">Top</string>
+    <string name="preview_groceries">Groceries</string>
+    <string name="preview_eating_out">Eating Out</string>
+    <string name="preview_left_this_week">left this week</string>
+    <string name="preview_limits_title">Limits · this week</string>
+    <string name="preview_limit_close">%1$s is close</string>
+</resources>
