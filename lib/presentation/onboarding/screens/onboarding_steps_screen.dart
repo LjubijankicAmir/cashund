@@ -87,6 +87,10 @@ class _OnboardingStepsScreenState extends State<OnboardingStepsScreen> {
         child: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
           child: Scaffold(
+            // While searching for a currency, the keyboard covers Continue
+            // rather than pushing it up over the list. Naming the buddy keeps
+            // its button above the keyboard.
+            resizeToAvoidBottomInset: step != 0,
             body: BrandBandLayout(
               buddyWidth: _buddyWidth,
               buddyController: _buddy,

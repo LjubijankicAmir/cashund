@@ -32,7 +32,12 @@ class CurrencyStep extends StatelessWidget {
           Expanded(
             child: CurrencyOptions(
               selectedCode: selected,
-              listPadding: EdgeInsets.only(bottom: stepBodyPadding.bottom),
+              // Room to scroll the last currencies up from under the keyboard.
+              listPadding: EdgeInsets.only(
+                bottom:
+                    stepBodyPadding.bottom +
+                    MediaQuery.viewInsetsOf(context).bottom,
+              ),
               onSelected: (currency) => context.read<OnboardingBloc>().add(
                 OnboardingEvent.currencySelected(currency.code),
               ),
