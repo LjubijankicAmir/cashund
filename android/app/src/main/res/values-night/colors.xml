@@ -2,4 +2,6 @@
 <resources>
     <!-- ink in dark -->
     <color name="shortcut_icon">#EEF0FF</color>
+    <!-- primary-soft in dark -->
+    <color name="buddy_disc">#232A66</color>
 </resources>

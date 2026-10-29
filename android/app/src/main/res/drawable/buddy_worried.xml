@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generated from assets/buddy/biscuit-worried.svg: Biscuit's head in the
+     round avatar disc, as on the home-screen widgets. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <path
+        android:pathData="M0,20a20,20 0 1,0 40,0a20,20 0 1,0 -40,0Z"
+        android:fillColor="@color/buddy_disc" />
+    <group>
+        <clip-path android:pathData="M0,20a20,20 0 1,0 40,0a20,20 0 1,0 -40,0Z" />
+        <group
+            android:scaleX="0.3"
+            android:scaleY="0.3"
+            android:translateX="-5.5"
+            android:translateY="-1.2">
+            <path
+                android:pathData="M50 30 C 26 30, 14 66, 18 112 C 20 140, 42 146, 48 122 C 52 100, 50 70, 58 44 Z"
+                android:fillColor="#9A5420" />
+            <path
+                android:pathData="M120 30 C 144 30, 156 66, 152 112 C 150 140, 128 146, 122 122 C 118 100, 120 70, 112 44 Z"
+                android:fillColor="#9A5420" />
+            <path
+                android:pathData="M85 14 C 116 14, 130 36, 128 64 C 126 84, 118 96, 116 108 C 114 124, 102 134, 85 134 C 68 134, 56 124, 54 108 C 52 96, 44 84, 42 64 C 40 36, 54 14, 85 14 Z"
+                android:fillColor="#C9772E" />
+            <path
+                android:pathData="M70 24 q15 -6 30 0"
+                android:strokeColor="#DB8B45"
+                android:strokeWidth="5"
+                android:strokeLineCap="round" />
+            <path
+                android:pathData="M60.0,106.0a25.0,24.0 0 1,0 50.0,0a25.0,24.0 0 1,0 -50.0,0Z"
+                android:fillColor="#F3D2A8" />
+            <path
+                android:pathData="M75 90 h20 q5 0 2 5 l-8 8 q-4 3 -8 0 l-8 -8 q-3 -5 2 -5z"
+                android:fillColor="#3B2418" />
+            <path
+                android:pathData="M53.0,90.0a7.0,4.5 0 1,0 14.0,0a7.0,4.5 0 1,0 -14.0,0Z"
+                android:fillColor="#F29C86"
+                android:fillAlpha="0.8" />
+            <path
+                android:pathData="M103.0,90.0a7.0,4.5 0 1,0 14.0,0a7.0,4.5 0 1,0 -14.0,0Z"
+                android:fillColor="#F29C86"
+                android:fillAlpha="0.8" />
+            <path
+                android:pathData="M59.0,68.0a7.0,8.5 0 1,0 14.0,0a7.0,8.5 0 1,0 -14.0,0Z"
+                android:fillColor="#3B2418" />
+            <path
+                android:pathData="M97.0,68.0a7.0,8.5 0 1,0 14.0,0a7.0,8.5 0 1,0 -14.0,0Z"
+                android:fillColor="#3B2418" />
+            <path
+                android:pathData="M65.9,64.5a2.6,2.6 0 1,0 5.2,0a2.6,2.6 0 1,0 -5.2,0Z"
+                android:fillColor="#FFFFFF" />
+            <path
+                android:pathData="M103.9,64.5a2.6,2.6 0 1,0 5.2,0a2.6,2.6 0 1,0 -5.2,0Z"
+                android:fillColor="#FFFFFF" />
+            <path
+                android:pathData="M56 56 l15 -6 M114 56 l-15 -6"
+                android:strokeColor="#3B2418"
+                android:strokeWidth="4.5"
+                android:strokeLineCap="round" />
+            <path
+                android:pathData="M77 116 q8 -6 16 0"
+                android:strokeColor="#3B2418"
+                android:strokeWidth="4.5"
+                android:strokeLineCap="round" />
+        </group>
+    </group>
+</vector>
