@@ -204,13 +204,12 @@ class _Editor extends StatelessWidget {
         ),
         SafeArea(
           top: false,
-          minimum: const EdgeInsets.only(bottom: CashundSpace.s4),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(
               CashundSpace.s6,
               CashundSpace.s3,
               CashundSpace.s6,
-              0,
+              CashundSpace.s4,
             ),
             child: state.isNew || original!.isArchived
                 ? PrimaryButton(

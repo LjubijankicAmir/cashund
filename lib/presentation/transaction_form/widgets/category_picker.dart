@@ -157,13 +157,12 @@ class _CategoryPickerState extends State<CategoryPicker> {
           ),
           child: SafeArea(
             top: false,
-            minimum: const EdgeInsets.only(bottom: CashundSpace.s4),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
                 CashundSpace.s6,
                 CashundSpace.s4,
                 CashundSpace.s6,
-                0,
+                CashundSpace.s4,
               ),
               child: FilledButton.tonalIcon(
                 onPressed: _create,
