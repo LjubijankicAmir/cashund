@@ -18,7 +18,7 @@
 
 Cashund tracks your incomes and expenses without an account, a server or an internet connection. Everything lives in a database on your phone. Biscuit, a dachshund buddy, keeps an eye on your spending: he gives you a heads-up when you're close to a limit you've set and cheers when you've spent less than planned.
 
-> **Status:** Phase 2 is out as `v0.2.0`: spending limits, insights, the buddy's messages, and backup and export join tracking, categories and the dashboard. Home-screen widgets come next (see [Roadmap](#roadmap)).
+> **Status:** Phase 3 is out as `v0.3.0`: Android home-screen widgets, quick add and app shortcuts join tracking, limits, insights and backups. On-device AI import comes next (see [Roadmap](#roadmap)).
 
 ## Features
 
@@ -31,11 +31,12 @@ Cashund tracks your incomes and expenses without an account, a server or an inte
 - **Insights** with trends and a per-category breakdown for when you want to dig deeper
 - **A buddy who keeps you posted**: limit warnings and a recap of your last week and month on Home
 - **Backup, restore and CSV export**, all as files you own, plus a way to delete everything
+- **Home-screen widgets** on Android for a glance at your week, your limits or a one-tap add, plus shortcuts on the app icon
 - **Light and dark themes**, designed as equals
 
 Coming next:
 
-- **Home-screen widgets** for a glance at your week without opening the app
+- **iOS widgets**, once the project has a paid Apple developer team (sharing data with them needs an App Group)
 - **On-device AI import** that reads receipts and card statements. The model runs on your phone, so your data never leaves it
 
 ## Download
@@ -49,7 +50,7 @@ Android APKs are attached to each [release](https://github.com/LjubijankicAmir/c
 | 0. Foundation ✅ | Architecture, theme, DI, routing, localization, database, CI | |
 | 1. Core ✅ | Transactions, categories, dashboard, search and filters, settings, the buddy's reactions | `v0.1.0` |
 | 2. Insights ✅ | Spending limits, statistics, the buddy's messages, backup and export | `v0.2.0` |
-| 3. Widgets | Android home-screen widgets, quick add and app shortcuts (iOS widgets later, they need a paid Apple team) | `v0.3.0` |
+| 3. Widgets ✅ | Android home-screen widgets, quick add and app shortcuts (iOS widgets later, they need a paid Apple team) | `v0.3.0` |
 | 4. Smart import | Receipt and statement scanning with an on-device model, review before saving | `v1.0.0` |
 
 ## Tech stack
