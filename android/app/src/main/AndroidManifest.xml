@@ -28,6 +28,63 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Home-screen widgets (Glance). Each draws the snapshot the app
+             saves through home_widget; the quick-add ones only open the app. -->
+        <receiver
+            android:name=".widgets.SpendingWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_spending_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_spending" />
+        </receiver>
+        <receiver
+            android:name=".widgets.TodayWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_today_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_today" />
+        </receiver>
+        <receiver
+            android:name=".widgets.LimitsWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_limits_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_limits" />
+        </receiver>
+        <receiver
+            android:name=".widgets.TodayWeekWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_today_week_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_today_week" />
+        </receiver>
+        <receiver
+            android:name=".widgets.CompactWidgetReceiver"
+            android:exported="true"
+            android:label="@string/widget_compact_name">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_compact" />
+        </receiver>
         <!-- Redraws the widgets at midnight and when a new week or month
              starts, even while the app isn't running (home_widget's
              scheduler); re-armed after a reboot or an app update. -->

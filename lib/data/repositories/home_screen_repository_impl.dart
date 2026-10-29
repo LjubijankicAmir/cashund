@@ -15,7 +15,13 @@ class HomeScreenRepositoryImpl implements HomeScreenRepository {
   static const snapshotKey = 'snapshot';
 
   /// The Android widget providers to redraw, by class name.
-  static const _androidWidgets = <String>[];
+  static const _androidWidgets = [
+    'com.cashund.app.widgets.SpendingWidgetReceiver',
+    'com.cashund.app.widgets.TodayWidgetReceiver',
+    'com.cashund.app.widgets.LimitsWidgetReceiver',
+    'com.cashund.app.widgets.TodayWeekWidgetReceiver',
+    'com.cashund.app.widgets.CompactWidgetReceiver',
+  ];
 
   static const _quickActions = QuickActions();
 
