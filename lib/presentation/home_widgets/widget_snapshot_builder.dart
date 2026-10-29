@@ -9,7 +9,9 @@ import 'package:cashund/domain/value_objects/limit_period.dart';
 import 'package:cashund/domain/value_objects/limit_progress.dart';
 import 'package:cashund/domain/value_objects/period.dart';
 import 'package:cashund/domain/value_objects/period_summary.dart';
+import 'package:cashund/domain/value_objects/transaction_type.dart';
 import 'package:cashund/domain/value_objects/week_start.dart';
+import 'package:cashund/presentation/app_links/app_link.dart';
 import 'package:cashund/presentation/common/extensions/category_display.dart';
 import 'package:cashund/presentation/home_widgets/widget_snapshot.dart';
 
@@ -39,6 +41,8 @@ typedef WidgetInputs = ({
 /// so the later entries are exactly what the widgets should show then.
 abstract final class WidgetSnapshotBuilder {
   static const limitsShown = 2;
+
+  static final _home = '${const AppLink.home().toUri()}';
 
   static WidgetSnapshot build(WidgetInputs inputs, AppLocalizations l10n) {
     final now = inputs.now;
@@ -120,6 +124,7 @@ abstract final class WidgetSnapshotBuilder {
         caption: l10n.widgetTransactions(inputs.today.transactionCount),
         weekLabel: l10n.widgetThisWeek,
         weekValue: money(-inputs.week.expenseMinor),
+        link: _home,
       ),
       todayWeek: TodayWeekTile(
         todayTitle: l10n.widgetToday,
@@ -141,6 +146,7 @@ abstract final class WidgetSnapshotBuilder {
         topLabel: l10n.widgetTop,
         topValue: inputs.weekTopCategory?.label(l10n) ?? l10n.widgetTopNone,
         topColor: inputs.weekTopCategory?.color,
+        link: _home,
       ),
       compact: _compact(inputs, l10n, weekOverall, money),
       limits: _limits(inputs, l10n, money),
@@ -171,6 +177,7 @@ abstract final class WidgetSnapshotBuilder {
         title: l10n.widgetThisWeek,
         hero: l10n.widgetNothingYet,
         caption: l10n.widgetLogFirst,
+        link: '${const AppLink.add(TransactionType.expense).toUri()}',
       );
     }
     if (overs.isNotEmpty) {
@@ -184,6 +191,7 @@ abstract final class WidgetSnapshotBuilder {
           null => l10n.widgetOverOverall(over.limit.period.name),
         },
         fraction: 1,
+        link: '${AppLink.limitDetail(over.limit.id).toUri()}',
       );
     }
     return SpendingTile(
@@ -194,6 +202,7 @@ abstract final class WidgetSnapshotBuilder {
           ? l10n.widgetSpentThisWeek
           : l10n.widgetOfLimit(_limitAmount(weekOverall, inputs.currency)),
       fraction: weekOverall == null ? null : _filled(weekOverall),
+      link: _home,
     );
   }
 
@@ -207,6 +216,7 @@ abstract final class WidgetSnapshotBuilder {
       return CompactTile(
         hero: money(inputs.week.expenseMinor),
         caption: l10n.widgetSpentThisWeek,
+        link: _home,
       );
     }
     final over = weekOverall.status == LimitStatus.over;
@@ -214,6 +224,7 @@ abstract final class WidgetSnapshotBuilder {
       hero: money(over ? weekOverall.overByMinor : weekOverall.leftMinor),
       caption: over ? l10n.widgetOverThisWeek : l10n.widgetLeftThisWeek,
       fraction: _filled(weekOverall),
+      link: _home,
     );
   }
 
@@ -245,6 +256,7 @@ abstract final class WidgetSnapshotBuilder {
         LimitStatus.under => l10n.widgetAllUnder,
       },
       warns: top.status != LimitStatus.under,
+      link: '${AppLink.limits(period).toUri()}',
       rows: [
         for (final limit in shown)
           LimitRowTile(
@@ -256,6 +268,7 @@ abstract final class WidgetSnapshotBuilder {
             fraction: _filled(limit),
             status: limit.status,
             color: limit.category!.color,
+            link: '${AppLink.limitDetail(limit.limit.id).toUri()}',
           ),
       ],
     );

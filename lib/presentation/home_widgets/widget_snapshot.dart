@@ -89,6 +89,9 @@ abstract class SpendingTile with _$SpendingTile {
     required String hero,
     required String caption,
 
+    /// The `cashund://` link a tap opens.
+    required String link,
+
     /// How full the bar is, from 0 to 1; `null` hides the bar.
     double? fraction,
   }) = _SpendingTile;
@@ -100,6 +103,7 @@ abstract class SpendingTile with _$SpendingTile {
     'title': title,
     'hero': hero,
     'caption': caption,
+    'link': link,
     'fraction': fraction,
   };
 }
@@ -114,6 +118,9 @@ abstract class TodayTile with _$TodayTile {
     required String caption,
     required String weekLabel,
     required String weekValue,
+
+    /// The `cashund://` link a tap opens.
+    required String link,
   }) = _TodayTile;
 
   const TodayTile._();
@@ -124,6 +131,7 @@ abstract class TodayTile with _$TodayTile {
     'caption': caption,
     'weekLabel': weekLabel,
     'weekValue': weekValue,
+    'link': link,
   };
 }
 
@@ -142,6 +150,9 @@ abstract class TodayWeekTile with _$TodayWeekTile {
     required String topLabel,
     required String topValue,
 
+    /// The `cashund://` link a tap opens.
+    required String link,
+
     /// The top category's color; `null` before anything was spent.
     CategoryColor? topColor,
   }) = _TodayWeekTile;
@@ -159,6 +170,7 @@ abstract class TodayWeekTile with _$TodayWeekTile {
     'inValue': inValue,
     'topLabel': topLabel,
     'topValue': topValue,
+    'link': link,
     'topColor': topColor?.name,
   };
 }
@@ -172,6 +184,9 @@ abstract class LimitsTile with _$LimitsTile {
 
     /// Whether [status] warns, e.g. "Over by $12.40".
     required bool warns,
+
+    /// The `cashund://` link a tap opens.
+    required String link,
     required List<LimitRowTile> rows,
   }) = _LimitsTile;
 
@@ -181,6 +196,7 @@ abstract class LimitsTile with _$LimitsTile {
     'title': title,
     'status': status,
     'warns': warns,
+    'link': link,
     'rows': [for (final row in rows) row.toJson()],
   };
 }
@@ -199,6 +215,9 @@ abstract class LimitRowTile with _$LimitRowTile {
     required double fraction,
     required LimitStatus status,
     required CategoryColor color,
+
+    /// The `cashund://` link a tap opens.
+    required String link,
   }) = _LimitRowTile;
 
   const LimitRowTile._();
@@ -212,6 +231,7 @@ abstract class LimitRowTile with _$LimitRowTile {
     'fraction': fraction,
     'status': status.name,
     'color': color.name,
+    'link': link,
   };
 }
 
@@ -222,6 +242,9 @@ abstract class CompactTile with _$CompactTile {
     required String hero,
     required String caption,
 
+    /// The `cashund://` link a tap opens.
+    required String link,
+
     /// How full the ring is, from 0 to 1; `null` hides the ring.
     double? fraction,
   }) = _CompactTile;
@@ -231,6 +254,7 @@ abstract class CompactTile with _$CompactTile {
   Map<String, Object?> toJson() => {
     'hero': hero,
     'caption': caption,
+    'link': link,
     'fraction': fraction,
   };
 }

@@ -52,6 +52,7 @@ void main() {
   setUpAll(() async {
     registerFallbackValue(DateRange(start: now, end: now));
     registerFallbackValue(LimitPeriod.week);
+    registerFallbackValue(<DateTime>[]);
     await initializeDateFormatting('en');
   });
 
@@ -99,8 +100,9 @@ void main() {
         range: any(named: 'range'),
       ),
     ).thenAnswer((_) => Stream.value(right(const [])));
-    when(() => homeScreen.showOnWidgets(any()))
-        .thenAnswer((_) async => right(unit));
+    when(
+      () => homeScreen.showOnWidgets(any(), redrawAt: any(named: 'redrawAt')),
+    ).thenAnswer((_) async => right(unit));
 
     sync = WidgetSync(
       preferencesRepository,
@@ -123,7 +125,10 @@ void main() {
 
   List<Map<String, Object?>> shown() => [
     for (final json in verify(
-      () => homeScreen.showOnWidgets(captureAny()),
+      () => homeScreen.showOnWidgets(
+        captureAny(),
+        redrawAt: any(named: 'redrawAt'),
+      ),
     ).captured)
       jsonDecode(json as String) as Map<String, Object?>,
   ];
@@ -141,14 +146,29 @@ void main() {
     sync.start();
     preferenceUpdates.add(right(preferences));
     await settled();
-    verifyNever(() => homeScreen.showOnWidgets(any()));
+    verifyNever(
+      () => homeScreen.showOnWidgets(any(), redrawAt: any(named: 'redrawAt')),
+    );
 
     weekUpdates.add(
       right(const PeriodSummary(expenseMinor: 41235, transactionCount: 9)),
     );
     await settled();
 
-    final entry = (shown().single['entries']! as List<Object?>).first! as Map;
+    final [json, redrawAt] = verify(
+      () => homeScreen.showOnWidgets(
+        captureAny(),
+        redrawAt: captureAny(named: 'redrawAt'),
+      ),
+    ).captured;
+    final snapshot = jsonDecode(json as String) as Map<String, Object?>;
+    final entry = (snapshot['entries']! as List<Object?>).first! as Map;
+    // Redrawn at midnight, when the week starts over and when the month does.
+    expect(redrawAt, [
+      DateTime(2026, 10, 8),
+      DateTime(2026, 10, 12),
+      DateTime(2026, 11),
+    ]);
     expect((entry['spending']! as Map)['hero'], r'$412.35');
     expect((entry['today']! as Map)['hero'], r'−$42.75');
   });

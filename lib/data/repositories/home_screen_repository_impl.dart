@@ -20,12 +20,20 @@ class HomeScreenRepositoryImpl implements HomeScreenRepository {
   static const _quickActions = QuickActions();
 
   @override
-  FutureResult<Unit> showOnWidgets(String snapshotJson) => _guard(() async {
+  FutureResult<Unit> showOnWidgets(
+    String snapshotJson, {
+    List<DateTime> redrawAt = const [],
+  }) => _guard(() async {
     // No iOS widgets yet: sharing data with them takes an App Group.
     if (!Platform.isAndroid) return;
     await HomeWidget.saveWidgetData<String>(snapshotKey, snapshotJson);
     for (final name in _androidWidgets) {
       await HomeWidget.updateWidget(qualifiedAndroidName: name);
+      // Replaces the times set with the last snapshot.
+      await HomeWidget.scheduleWidgetUpdates(
+        redrawAt,
+        qualifiedAndroidName: name,
+      );
     }
   });
 

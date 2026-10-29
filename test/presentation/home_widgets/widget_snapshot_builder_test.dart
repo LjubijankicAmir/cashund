@@ -115,6 +115,7 @@ void main() {
         title: 'This week',
         hero: 'Nothing yet',
         caption: 'Log your first one',
+        link: 'cashund://add?type=expense',
       ),
     );
     expect(entry.limits, isNull);
@@ -133,6 +134,7 @@ void main() {
         caption: '2 transactions',
         weekLabel: 'This week',
         weekValue: r'−$412.35',
+        link: 'cashund://home',
       ),
     );
     expect(entry.todayWeek.weekTitle, 'This week · Oct 5 – 11');
@@ -158,6 +160,7 @@ void main() {
           hero: r'$187.65',
           caption: 'left this week',
           fraction: entry.spending.fraction,
+          link: 'cashund://home',
         ),
       );
     });
@@ -177,7 +180,11 @@ void main() {
       expect(entry.spending.fraction, isNull);
       expect(
         entry.compact,
-        const CompactTile(hero: r'$412.35', caption: 'spent this week'),
+        const CompactTile(
+          hero: r'$412.35',
+          caption: 'spent this week',
+          link: 'cashund://home',
+        ),
       );
     });
 
@@ -199,6 +206,7 @@ void main() {
           hero: r'$12.40',
           caption: 'over the 🍔 Eating Out limit',
           fraction: 1,
+          link: 'cashund://limits/2',
         ),
       );
       expect(
@@ -207,6 +215,7 @@ void main() {
           hero: r'$10.00',
           caption: 'over this week',
           fraction: 1,
+          link: 'cashund://home',
         ),
       );
     });
@@ -249,6 +258,7 @@ void main() {
       );
 
       expect(entry.limits!.title, 'Limits · this week');
+      expect(entry.limits!.link, 'cashund://limits?period=week');
       expect(entry.limits!.status, 'Eating Out is close');
       expect(entry.limits!.warns, isTrue);
       expect(entry.limits!.rows, [
@@ -261,6 +271,7 @@ void main() {
           fraction: 0.864,
           status: LimitStatus.near,
           color: CategoryColor.apricot,
+          link: 'cashund://limits/2',
         ),
         const LimitRowTile(
           limitId: 3,
@@ -271,6 +282,7 @@ void main() {
           fraction: 0.741,
           status: LimitStatus.under,
           color: CategoryColor.olive,
+          link: 'cashund://limits/3',
         ),
       ]);
     });
@@ -317,6 +329,7 @@ void main() {
       );
 
       expect(entry.limits!.title, 'Limits · this month');
+      expect(entry.limits!.link, 'cashund://limits?period=month');
       expect(entry.limits!.rows.single.limitId, 6);
     });
 
@@ -463,6 +476,7 @@ void main() {
       'fraction': 0.864,
       'status': 'near',
       'color': 'apricot',
+      'link': 'cashund://limits/2',
     });
   });
 }

@@ -188,15 +188,21 @@ class WidgetSync {
         weekLimits: weekLimits,
         monthLimits: monthLimits,
       ), _l10n);
-      unawaited(_show(jsonEncode(snapshot.toJson())));
+      unawaited(
+        _show(
+          jsonEncode(snapshot.toJson()),
+          // The first entry is shown right away.
+          redrawAt: [for (final entry in snapshot.entries.skip(1)) entry.from],
+        ),
+      );
     }
   }
 
   /// Hands [json] to the widgets, unless they show it already.
-  Future<void> _show(String json) async {
+  Future<void> _show(String json, {List<DateTime> redrawAt = const []}) async {
     if (json == _shown) return;
     _shown = json;
-    final result = await _homeScreen.showOnWidgets(json);
+    final result = await _homeScreen.showOnWidgets(json, redrawAt: redrawAt);
     // Tried again with the next change.
     if (result.isLeft()) _shown = null;
   }
