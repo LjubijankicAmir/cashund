@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cashund/app.dart';
 import 'package:cashund/core/di/injection.dart';
 import 'package:cashund/presentation/app_links/app_link_requests.dart';
+import 'package:cashund/presentation/home_widgets/widget_sync.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -14,5 +15,6 @@ void main() {
   configureDependencies();
   // Before the first frame, so the link that launched the app isn't missed.
   unawaited(getIt<AppLinkRequests>().start());
+  getIt<WidgetSync>().start();
   runApp(const CashundApp());
 }
