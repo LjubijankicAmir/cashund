@@ -5,6 +5,7 @@ import 'package:cashund/core/di/injection.dart';
 import 'package:cashund/core/l10n/l10n.dart';
 import 'package:cashund/core/locale/locale_defaults.dart';
 import 'package:cashund/core/routing/app_router.gr.dart';
+import 'package:cashund/presentation/app_links/app_link_requests.dart';
 import 'package:cashund/presentation/onboarding/bloc/onboarding_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,6 +36,8 @@ class OnboardingScreen extends StatelessWidget {
         listener: (context, state) {
           switch (state.status) {
             case OnboardingStatus.completed:
+              // A shortcut tapped before onboarding doesn't open afterwards.
+              getIt<AppLinkRequests>().take();
               if (onCompleted case final onCompleted?) {
                 onCompleted();
               } else {
